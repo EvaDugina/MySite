@@ -1,0 +1,20 @@
+{
+    "txt": {
+        "type": "text"
+    }, 
+    "json": {
+        "type": "json"
+    },
+    "jpeg": {
+        "type": "image"
+    },
+    "jpg": {
+        "type": "image"
+    },
+    "png": {
+        "type": "image"
+    },
+    "gif": {
+        "type": "image"
+    }
+}
