@@ -15,6 +15,10 @@
   --secondary-bg-color: #000;
   --main-text-color: #000;
   --secondary-text-color: darkred;
+    -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard */
 }
 
 

@@ -49,7 +49,13 @@ foreach ($files as $chapter_file) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Г. Гамлет</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PALKHHHHHHHHHHHHHHHHH</title>
+
+    <!-- Иконка -->
+    <link rel="icon" href="src/icon.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="src/icon.jpg" type="image/x-icon">
+
     <!-- Подключение внешнего файла -->
     <link rel="stylesheet" href="index.css">
 </head>
@@ -61,7 +67,7 @@ foreach ($files as $chapter_file) {
         <div class="w-50 me-2">
 
             <div class="d-flex flex-row justify-content-end">
-                <h4>Геннадий Гамлет</h4>
+                <h4>ПАЛЬХ</h4>
             </div>
 
             <div class="d-flex flex-row justify-content-end mb-2">
