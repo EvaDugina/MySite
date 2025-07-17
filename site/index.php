@@ -50,7 +50,7 @@ foreach ($files as $chapter_file) {
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>PALKHHHHHHHHHHHHHHHHH</title>
+    <title>PALKHHHHHHHHHHHHH</title>
 
     <!-- Иконка -->
     <link rel="icon" href="src/icon.jpg" type="image/x-icon">
