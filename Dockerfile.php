@@ -12,6 +12,7 @@ RUN sed -i "s/^user = www-data/user = root/" /usr/local/etc/php-fpm.d/www.conf &
 
 # COPY ./for_docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./for_docker/php/php.ini /usr/local/etc/php
+COPY ./site /var/www/html
 
 RUN mkdir -p /var/lib/php/sessions && chmod 777 /var/lib/php/sessions
 
