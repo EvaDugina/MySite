@@ -29,3 +29,8 @@ function sortFiles(array $files): array
     sort($files, SORT_NATURAL);
     return $files;
 }
+
+function is_not_chapter_exist($chapter_folder_path): bool
+{
+    return !file_exists($chapter_folder_path) || !is_dir($chapter_folder_path);
+}

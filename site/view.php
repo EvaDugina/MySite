@@ -5,13 +5,12 @@ require_once("utilities.php");
 // Проверка корректности входных данных
 
 if (isset($_POST['chapter_name'])) {
-    $chapter_name = $_POST['chapter_name'];
-    $chapter_folder_path = $FOLDER_SRC . "/" . $chapter_name;
+    $chapter_folder_path = $FOLDER_SRC . "/" . $_POST['chapter_name'];
 } else {
     // echo "Ошибка! Не задан 'chapter_name'";
     exit;
 }
-if (!file_exists($chapter_folder_path) || !is_dir($chapter_folder_path)) {
+if (is_not_chapter_exist($chapter_folder_path)) {
     // echo "Ошибка! Не корректный 'chapter_name'";
     exit;
 }

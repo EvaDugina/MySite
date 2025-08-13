@@ -183,8 +183,9 @@ button {
 .link {
   position: relative;
   text-decoration: none;
+  outline: none !important;
 }
-.link:after {
+.link:after{
 	display: block;
 	position: absolute;
 	right: 0; /*изменить на right:0;, чтобы изменить направление подчёркивания */

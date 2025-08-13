@@ -17,31 +17,50 @@ $files = sortFiles($files);
 foreach ($files as $chapter_file) {
     $chapter_file_path = $FOLDER_SRC . "/" . $chapter_file;
     if (is_dir($chapter_file_path)) {
-        $chapter_name = $chapter_file;
+        $chapter_path = $chapter_file;
 
-        if (isFolderHidden($chapter_name))
+        if (isFolderHidden($chapter_path))
             continue;
 
         $subchapter_files = array_diff(scandir($chapter_file_path), array('.', '..'));
         $files = sortFiles($files);
         // if (count($subchapter_files) < 1)
         // continue;
-        $subchapter_names = [];
+        $subchapters = [];
         foreach ($subchapter_files as $subchapter_file) {
             $subchapter_file_path = $chapter_file_path . "/" . $subchapter_file;
             if (is_dir($subchapter_file_path)) {
                 if (isFolderHidden($subchapter_file_path))
                     continue;
-                array_push($subchapter_names, $subchapter_file);
+                $subchapters = array_merge($subchapters, array(
+                    mb_strtoupper(getFolderBasename($subchapter_file)) => array(
+                        "path" => $subchapter_file
+                    )
+                ));
             }
         }
-        $chapters_and_subchapters = array_merge($chapters_and_subchapters, [
-            $chapter_name => [
-                "subchapter_names" => $subchapter_names
+
+        $chapters_and_subchapters = array_merge($chapters_and_subchapters, array(
+            mb_strtoupper(getFolderBasename($chapter_path)) => [
+                "chapter_path" => $chapter_path,
+                "subchapters" => $subchapters
             ]
-        ]);
+        ));
     }
 }
+
+if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chapters_and_subchapters)) {
+    $chapter_name = mb_strtoupper($_GET['chapter']);
+    echo "<script>var CURRENT_CHAPTER = '$chapter_name';</script>";
+    if (isset($_GET['subchapter']) && key_exists(mb_strtoupper($_GET['subchapter']), $chapters_and_subchapters[$chapter_name]["subchapters"])) {
+        $subchapter_name = mb_strtoupper($_GET['subchapter']);
+        echo "<script>var CURRENT_SUBCHAPTER = '$subchapter_name';</script>";
+    } else
+        echo "<script>var CURRENT_SUBCHAPTER = null;</script>";
+} else {
+    echo "<script>var CURRENT_CHAPTER = null;</script>";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -76,9 +95,8 @@ foreach ($files as $chapter_file) {
                 foreach ($chapters_and_subchapters as $key => $chapter) {
                 ?>
                     <div class="form_radio_btn ms-1" onclick="clickToChapter('<?= $key ?>')">
-                        <input id="input-radio-<?= $key ?>" type="radio"
-                            name="input-radio" value="<?= $key ?>">
-                        <label for="input-radio-<?= $key ?>"><?= getFolderBasename($key) ?></label>
+                        <input id="input-radio-<?= $key ?>" type="radio" name="input-radio" value="<?= $key ?>">
+                        <label for="input-radio-<?= $key ?>"><?= $key ?></label>
                     </div>
                 <?php
                 } ?>
@@ -90,10 +108,10 @@ foreach ($files as $chapter_file) {
                 foreach ($chapters_and_subchapters as $key => $chapter) { ?>
                     <div id="div-<?= $key ?>" class="d-flex flex-column d-none mt-1">
                         <?php
-                        foreach ($chapter['subchapter_names'] as $subchapter_name) { ?>
+                        foreach ($chapter['subchapters'] as $key => $subchapter) { ?>
                             <div class="d-flex flex-row justify-content-end">
-                                <button class="link text-secondary mb-1" onclick="clickToSubchapter('<?= $subchapter_name ?>')">
-                                    <?= getFolderBasename($subchapter_name) ?>
+                                <button id="button-subchapter-<?= $key ?>" class="link text-secondary mb-1" onclick="clickToSubchapter('<?= $key ?>')">
+                                    <?= $key ?>
                                 </button>
                             </div>
                         <?php } ?>
@@ -126,8 +144,22 @@ foreach ($files as $chapter_file) {
 
 <script src="src/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-    var CURRENT_CHAPTER = null;
     const CHAPTERS_AND_SUBCHAPTERS = <?= json_encode($chapters_and_subchapters) ?>;
+
+    $(document).ready(function() {
+        if (CURRENT_CHAPTER != null) {
+            let chapter_name = CURRENT_CHAPTER;
+            CURRENT_CHAPTER = null;
+            document.getElementById("input-radio-" + chapter_name).click();
+
+            if (CURRENT_SUBCHAPTER != null) {
+                let subchapter_name = CURRENT_SUBCHAPTER;
+                CURRENT_SUBCHAPTER = null;
+                document.getElementById("button-subchapter-" + subchapter_name).click();
+                document.getElementById("button-subchapter-" + subchapter_name).focus();
+            }
+        }
+    });
 
     function isCorrectChapter(chapter_name) {
         let flag = false;
@@ -141,6 +173,9 @@ foreach ($files as $chapter_file) {
     }
 
     async function clickToChapter(chapter_name) {
+
+        if (CURRENT_CHAPTER == chapter_name)
+            return;
 
         if (!isCorrectChapter(chapter_name))
             return;
@@ -161,9 +196,8 @@ foreach ($files as $chapter_file) {
 
     function isCorrectSubchapter(subchapter_name) {
         let flag = false;
-        // Object.entries(CHAPTERS_AND_SUBCHAPTERS[CURRENT_CHAPTER]).forEach(([key, value]) => {});
-        CHAPTERS_AND_SUBCHAPTERS[CURRENT_CHAPTER]['subchapter_names'].forEach(element => {
-            if (element == subchapter_name) {
+        Object.entries(CHAPTERS_AND_SUBCHAPTERS[CURRENT_CHAPTER]['subchapters']).forEach(([key, value]) => {
+            if (key == subchapter_name) {
                 flag = true;
                 return;
             }
@@ -197,9 +231,9 @@ foreach ($files as $chapter_file) {
     async function ajaxGetSubChapterHtml(chapter_name, subchapter_name = null) {
 
         var formData = new FormData();
-        formData.append('chapter_name', chapter_name);
+        formData.append('chapter_name', CHAPTERS_AND_SUBCHAPTERS[chapter_name]['chapter_path']);
         if (subchapter_name != null)
-            formData.append('subchapter_name', subchapter_name);
+            formData.append('subchapter_name', CHAPTERS_AND_SUBCHAPTERS[chapter_name]['subchapters'][subchapter_name]['path']);
 
         let response = null;
         try {
@@ -212,7 +246,7 @@ foreach ($files as $chapter_file) {
                 data: formData,
                 dataType: 'html'
             });
-            console.log(response.trim());
+            // console.log(response.trim());
             response = response.trim();
         } catch (error) {
             console.error('Ошибка запроса:', error);
