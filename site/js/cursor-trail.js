@@ -1,3 +1,5 @@
+// https://codepen.io/jrkdv/pen/qBYYPyw
+
 document.addEventListener('DOMContentLoaded', () => {
     // Настройки эффекта следа
     const trailSettings = {

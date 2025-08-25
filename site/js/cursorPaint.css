@@ -10,7 +10,7 @@ body {
 canvas {
   pointer-events: none; 
   mix-blend-mode: difference;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 10;
