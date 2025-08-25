@@ -77,9 +77,12 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
 
     <!-- Подключение внешнего файла -->
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="js/cursorPaint.css">
 </head>
 
 <body class="overflow-y">
+
+    <canvas id="canvas"></canvas>
 
     <div class="d-flex flex-row fixed-panel w-100">
 
@@ -96,7 +99,7 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
                 ?>
                     <div class="form_radio_btn ms-1" onclick="clickToChapter('<?= $key ?>')">
                         <input id="input-radio-<?= $key ?>" type="radio" name="input-radio" value="<?= $key ?>">
-                        <label for="input-radio-<?= $key ?>"><?= $key ?></label>
+                        <label for="input-radio-<?= $key ?>">&nbsp;<?= $key ?>&nbsp;</label>
                     </div>
                 <?php
                 } ?>
@@ -111,7 +114,7 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
                         foreach ($chapter['subchapters'] as $key => $subchapter) { ?>
                             <div class="d-flex flex-row justify-content-end">
                                 <button id="button-subchapter-<?= $key ?>" class="link text-secondary mb-1" onclick="clickToSubchapter('<?= $key ?>')">
-                                    <?= $key ?>
+                                    &nbsp;<?= $key ?>&nbsp;
                                 </button>
                             </div>
                         <?php } ?>
@@ -139,10 +142,11 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
 
     </div>
 
-
+    <!-- <script src="js/cursor-trail.js"></script> -->
 </body>
 
 <script src="src/jquery-3.7.1.min.js"></script>
+<script src="js/cursorPaint.js"></script>
 <script type="text/javascript">
     const CHAPTERS_AND_SUBCHAPTERS = <?= json_encode($chapters_and_subchapters) ?>;
 
