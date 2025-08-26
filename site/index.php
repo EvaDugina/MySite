@@ -88,18 +88,18 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
 
         <div class="w-50 me-2">
 
-            <div class="d-flex flex-row justify-content-end">
-                <h4>ПАЛЬХ</h4>
+            <div class="d-flex flex-row justify-content-end mt-1">
+                <h4 class="title">ПАЛЬХ</h4>
             </div>
 
-            <div class="d-flex flex-row justify-content-end mb-2">
+            <div class="d-flex flex-row justify-content-end mb-2 mt-1">
 
                 <?php
                 foreach ($chapters_and_subchapters as $key => $chapter) {
                 ?>
                     <div class="form_radio_btn ms-1" onclick="clickToChapter('<?= $key ?>')">
                         <input id="input-radio-<?= $key ?>" type="radio" name="input-radio" value="<?= $key ?>">
-                        <label for="input-radio-<?= $key ?>">&nbsp;<?= $key ?>&nbsp;</label>
+                        <label for="input-radio-<?= $key ?>"><?= $key ?></label>
                     </div>
                 <?php
                 } ?>
@@ -114,7 +114,7 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
                         foreach ($chapter['subchapters'] as $key => $subchapter) { ?>
                             <div class="d-flex flex-row justify-content-end">
                                 <button id="button-subchapter-<?= $key ?>" class="link text-secondary mb-1" onclick="clickToSubchapter('<?= $key ?>')">
-                                    &nbsp;<?= $key ?>&nbsp;
+                                    <?= $key ?>
                                 </button>
                             </div>
                         <?php } ?>
@@ -132,7 +132,7 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
 
         <div class="w-50 me-2"></div>
 
-        <div id="div-view" class="w-100 z-2">
+        <div id="div-view" class="w-100 z-0">
 
             <div id="div-view-chapter" class="d-flex flex-column"></div>
             <div id="div-view-subchapter" class="d-flex flex-column"></div>

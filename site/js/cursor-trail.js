@@ -1,4 +1,5 @@
 // https://codepen.io/jrkdv/pen/qBYYPyw
+// https://dev-postnov.ru/cursor-trail/
 
 document.addEventListener('DOMContentLoaded', () => {
     // Настройки эффекта следа

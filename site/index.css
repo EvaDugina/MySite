@@ -34,7 +34,7 @@ button {
   border: none;
   background: inherit;
   font: unset;
-  cursor: pointer;
+  cursor: none;
   padding: 0;
 }
 
@@ -161,6 +161,10 @@ button {
   height: 100%;
 }
 
+.z-0 {
+  z-index: 0;
+}
+
 .z-1 {
   z-index: 1;
 }
@@ -181,11 +185,72 @@ button {
 
 /* КНОПКИ */
 
+.title {
+  margin: 0 !important;
+  color: var(--main-bg-color);
+  font-size: xx-large;
+  -webkit-text-stroke: 1px var(--main-text-color); /* Толщина и цвет обводки */
+  text-shadow: 1px 1px 2px var(--secondary-bg-color);
+  padding: 1.33em 0.75em 1em;
+}
+
+
+/* RADIO */
+
+.form_radio_btn {
+  position: relative;
+  text-decoration: none;
+  padding: 2px;
+}
+.form_radio_btn input[type=radio] {
+	display: none;
+}
+.form_radio_btn label {
+	display: inline-block;
+	cursor: none;
+  background: inherit;
+	user-select: none;
+  font-size: large;
+  -webkit-text-stroke: 1px var(--main-text-color);
+  /* text-shadow: 1px 1px 2px var(--secondary-bg-color); */
+  padding: 0.4em 0.75em 0.3em;
+}
+.form_radio_btn label:hover {
+	background-color: var(--secondary-bg-color);
+  color: var(--main-text-color);
+  -webkit-text-stroke: 1px var(--main-bg-color);
+  text-shadow: 1px 1px 2px var(--secondary-bg-color);
+  box-shadow: 0em 0em 0em 0.1em var(--main-bg-color) inset;
+}
+.form_radio_btn label:after {
+  display: block;
+	position: absolute;
+	right: 0; /*изменить на right:0;, чтобы изменить направление подчёркивания */
+  width: 0;
+	height: 2px; /*задаём ширину линии*/
+	background-color: var(--main-bg-color); /*задаём цвет линии*/
+  mix-blend-mode: difference;
+	content: "";
+	transition: width 0.3s ease-out; /*задаём время анимации*/
+}
+
+.form_radio_btn input[type=radio]:checked + label:after,
+.form_radio_btn input[type=radio] + label:hover:after {
+	width: 100%; /*устанавливаем значение 100% чтобы ссылка подчёркивалась полностью*/
+}
+ 
+/* Disabled */
+.form_radio_btn input[type=radio]:disabled + label {
+	background: var(--main-bg-color);
+	color: #666;
+}
+
+
 .link {
   position: relative;
   text-decoration: none;
   outline: none !important;
-  padding: 2px;
+  padding: 0.3em 0.75em 0.2em;
 }
 .link:hover {
 	background-color: var(--secondary-text-color);
@@ -206,48 +271,6 @@ button {
 .link:hover:after,
 .link:focus:after {
 	width: 100%; /*устанавливаем значение 100% чтобы ссылка подчёркивалась полностью*/
-}
-
-/* RADIO */
-
-.form_radio_btn {
-  position: relative;
-  text-decoration: none;
-  padding: 2px;
-}
-.form_radio_btn input[type=radio] {
-	display: none;
-}
-.form_radio_btn label {
-	display: inline-block;
-	cursor: pointer;
-  background: inherit;
-	user-select: none;
-}
-.form_radio_btn label:hover {
-	background-color: var(--secondary-bg-color);
-  color: var(--main-bg-color);
-}
-.form_radio_btn label:after {
-  display: block;
-	position: absolute;
-	right: 0; /*изменить на right:0;, чтобы изменить направление подчёркивания */
-  width: 0;
-	height: 2px; /*задаём ширину линии*/
-	background-color: currentColor; /*задаём цвет линии*/
-	content: "";
-	transition: width 0.3s ease-out; /*задаём время анимации*/
-}
-
-.form_radio_btn input[type=radio]:checked + label:after,
-.form_radio_btn input[type=radio] + label:hover:after {
-	width: 100%; /*устанавливаем значение 100% чтобы ссылка подчёркивалась полностью*/
-}
- 
-/* Disabled */
-.form_radio_btn input[type=radio]:disabled + label {
-	background: var(--main-bg-color);
-	color: #666;
 }
 
 /*  */
