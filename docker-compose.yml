@@ -8,8 +8,8 @@ services:
       context: .
       dockerfile: Dockerfile.php
     user: root
-    volumes:
-      - ./site:${HOST_DIR}
+    # volumes:
+    #   - ./site:${HOST_DIR}
     environment:
       TZ: Europe/Moscow
     # ДЛЯ ОТЛАДКИ (XDEBUG):
@@ -34,8 +34,8 @@ services:
       - "8080:80"
     environment:
       - TZ=Europe/Moscow
-    volumes:
-      - ./site:${HOST_DIR}
+    # volumes:
+    #   - ./site:${HOST_DIR}
     #   - ./for_docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     #   - ./for_docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
