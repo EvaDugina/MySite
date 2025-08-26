@@ -1,5 +1,6 @@
 function initOciliator(remove) {
 
+    var canvas = document.getElementById("canvasPaint");
 
     if (!remove) {
 
@@ -331,7 +332,7 @@ function initOciliator(remove) {
         })();
 
 
-        ctx = document.getElementById('canvas').getContext('2d');
+        ctx = canvas.getContext('2d');
 
         ctx.running = true;
         ctx.frame = 1;

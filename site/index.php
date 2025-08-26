@@ -82,53 +82,55 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
 
 <body class="overflow-y">
 
-    <canvas id="canvas"></canvas>
+    <canvas id="canvasPaint" class="canvas-paint"></canvas>
 
-    <div class="d-flex flex-row fixed-panel w-100">
+    <div class="z-2" style="position:absolute; width: 35%;">
 
-        <div class="w-50 me-2">
+        <div class="d-flex flex-row justify-content-end mt-1">
+            <h4 class="title">ПАЛЬХ</h4>
+        </div>
 
-            <div class="d-flex flex-row justify-content-end mt-1">
-                <h4 class="title">ПАЛЬХ</h4>
-            </div>
+        <div class="d-flex flex-row justify-content-end mb-2 mt-1">
 
-            <div class="d-flex flex-row justify-content-end mb-2 mt-1">
-
-                <?php
-                foreach ($chapters_and_subchapters as $key => $chapter) {
-                ?>
-                    <div class="form_radio_btn ms-1" onclick="clickToChapter('<?= $key ?>')">
-                        <input id="input-radio-<?= $key ?>" type="radio" name="input-radio" value="<?= $key ?>">
-                        <label for="input-radio-<?= $key ?>"><?= $key ?></label>
-                    </div>
-                <?php
-                } ?>
-
-            </div>
-
-            <div id="div-chapters-description">
-                <?php
-                foreach ($chapters_and_subchapters as $key => $chapter) { ?>
-                    <div id="div-<?= $key ?>" class="d-flex flex-column d-none mt-1">
-                        <?php
-                        foreach ($chapter['subchapters'] as $key => $subchapter) { ?>
-                            <div class="d-flex flex-row justify-content-end">
-                                <button id="button-subchapter-<?= $key ?>" class="link text-secondary mb-1" onclick="clickToSubchapter('<?= $key ?>')">
-                                    <?= $key ?>
-                                </button>
-                            </div>
-                        <?php } ?>
-                    </div>
-                <?php } ?>
-            </div>
+            <?php
+            foreach ($chapters_and_subchapters as $key => $chapter) {
+            ?>
+                <div class="form_radio_btn ms-1" onclick="clickToChapter('<?= $key ?>')">
+                    <input id="input-radio-<?= $key ?>" type="radio" name="input-radio" value="<?= $key ?>">
+                    <label for="input-radio-<?= $key ?>"><?= $key ?></label>
+                </div>
+            <?php
+            } ?>
 
         </div>
 
-        <div class="w-100"></div>
+        <div id="div-chapters-description">
+            <?php
+            foreach ($chapters_and_subchapters as $key => $chapter) { ?>
+                <div id="div-<?= $key ?>" class="d-flex flex-column d-none mt-1">
+                    <?php
+                    foreach ($chapter['subchapters'] as $key => $subchapter) { ?>
+                        <div class="d-flex flex-row justify-content-end">
+                            <button id="button-subchapter-<?= $key ?>" class="link text-secondary mb-1" onclick="clickToSubchapter('<?= $key ?>', this)">
+                                <?= $key ?>
+                            </button>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
 
     </div>
 
-    <div class="d-flex flex-row w-100" style="position:absolute;">
+    <div id="div-view" class="z-0" style="position:absolute; width: 64%; margin-left: 36%">
+
+        <div id="div-view-chapter" class="d-flex flex-column"></div>
+        <div id="div-view-subchapter" class="d-flex flex-column"></div>
+
+    </div>
+
+
+    <!-- <div class="d-flex flex-row w-100" style="position:absolute;">
 
         <div class="w-50 me-2"></div>
 
@@ -138,7 +140,7 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
             <div id="div-view-subchapter" class="d-flex flex-column"></div>
 
         </div>
-    </div>
+    </div> -->
 
     </div>
 
@@ -209,7 +211,7 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
         return flag;
     }
 
-    async function clickToSubchapter(subchapter_name) {
+    async function clickToSubchapter(subchapter_name, clicked_elem) {
 
         if (CURRENT_CHAPTER == null || !isCorrectChapter(CURRENT_CHAPTER))
             return;
@@ -223,6 +225,10 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
             return;
         }
 
+        document.querySelectorAll(".link").forEach(function(element) {
+            element.classList.remove("link-active");
+        });
+        clicked_elem.classList.add("link-active");
         document.getElementById("div-view-subchapter").innerHTML = ajaxResponse;
         scrollTop();
     }

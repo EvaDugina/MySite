@@ -7,7 +7,7 @@ body {
   margin: 0;
   background-color: white;
 }
-canvas {
+.canvas-paint {
   pointer-events: none; 
   mix-blend-mode: difference;
   position: fixed;

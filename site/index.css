@@ -87,7 +87,7 @@ button {
 
 .fixed-panel {
   position: fixed;
-  z-index: 1;
+  /* z-index: 2; */
   top: 0; /* Расположение сверху */
   left: 0; /* Расположение слева */
   width: 100%; /* Ширина на всю ширину экрана */
@@ -191,7 +191,11 @@ button {
   font-size: xx-large;
   -webkit-text-stroke: 1px var(--main-text-color); /* Толщина и цвет обводки */
   text-shadow: 1px 1px 2px var(--secondary-bg-color);
-  padding: 1.33em 0.75em 1em;
+  padding: 1.33em 0.5em 1em;
+}
+
+.title:hover {
+  /* text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; */
 }
 
 
@@ -211,38 +215,21 @@ button {
   background: inherit;
 	user-select: none;
   font-size: large;
+  color: var(--main-text-color);
   -webkit-text-stroke: 1px var(--main-text-color);
-  /* text-shadow: 1px 1px 2px var(--secondary-bg-color); */
   padding: 0.4em 0.75em 0.3em;
 }
 .form_radio_btn label:hover {
-	background-color: var(--secondary-bg-color);
   color: var(--main-text-color);
-  -webkit-text-stroke: 1px var(--main-bg-color);
-  text-shadow: 1px 1px 2px var(--secondary-bg-color);
-  box-shadow: 0em 0em 0em 0.1em var(--main-bg-color) inset;
-}
-.form_radio_btn label:after {
-  display: block;
-	position: absolute;
-	right: 0; /*изменить на right:0;, чтобы изменить направление подчёркивания */
-  width: 0;
-	height: 2px; /*задаём ширину линии*/
-	background-color: var(--main-bg-color); /*задаём цвет линии*/
-  mix-blend-mode: difference;
-	content: "";
-	transition: width 0.3s ease-out; /*задаём время анимации*/
+  -webkit-text-stroke: 1px var(--secondary-text-color);
+  text-shadow: 1px 1px 2px var(--main-text-color);
 }
 
-.form_radio_btn input[type=radio]:checked + label:after,
-.form_radio_btn input[type=radio] + label:hover:after {
-	width: 100%; /*устанавливаем значение 100% чтобы ссылка подчёркивалась полностью*/
-}
- 
-/* Disabled */
-.form_radio_btn input[type=radio]:disabled + label {
-	background: var(--main-bg-color);
-	color: #666;
+.form_radio_btn input[type=radio]:checked + label,
+.form_radio_btn input[type=radio] + label:hover {
+  color: var(--main-text-color);
+  -webkit-text-stroke: 1px var(--secondary-text-color);
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
 }
 
 
@@ -250,27 +237,24 @@ button {
   position: relative;
   text-decoration: none;
   outline: none !important;
+  color: var(--main-text-color);
   padding: 0.3em 0.75em 0.2em;
 }
 .link:hover {
-	background-color: var(--secondary-text-color);
-  color: var(--main-bg-color);
+  -webkit-text-stroke: 1px var(--secondary-text-color);
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
 }
-.link:after{
-	display: block;
-	position: absolute;
-	right: 0; /*изменить на right:0;, чтобы изменить направление подчёркивания */
-	height: 2px; /*задаём ширину линии*/
-	background-color: currentColor; /*задаём цвет линии*/
-	content: "";
-	transition: width 0.3s ease-out; /*задаём время анимации*/
+.link-active {
+  -webkit-text-stroke: 1px var(--secondary-text-color);
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
 }
 .link:not(:checked):after {
-  width: 0;/*задаём длинну линии до наведения курсора*/
+  -webkit-text-stroke: 1px var(--main-text-color);
 }
-.link:hover:after,
-.link:focus:after {
-	width: 100%; /*устанавливаем значение 100% чтобы ссылка подчёркивалась полностью*/
+.link:hover:after, .link:focus,
+.link:focus:after, .link:checked {
+  -webkit-text-stroke: 1px var(--secondary-text-color);
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
 }
 
 /*  */
