@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Неприкосновенна</title>
+
+    <!-- Иконка -->
+    <link rel="icon" href="./images/мона лиза.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="./images/мона лиза.jpg" type="image/x-icon">
+
+</head>
+
+<body>
+    <div class="div-photo z-2">
+        <img src="./images/Рамка Портрета_1.png" alt="лиза">
+        <button class="overlay-button z-3" onclick="">неприкосновенна</button>
+    </div>
+    <div class="div-photo z-1">
+        <img src="./images/Портрет_1.png" alt="лиза">
+    </div>
+</body>
+
+<style>
+    :root {
+        cursor: pointer;
+    }
+
+    body {
+        margin: 0; 
+        display: flex;
+        justify-content: center;
+        background-color: white;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+    .z-1 {
+        z-index: 1;
+    }
+
+    .z-2 {
+        z-index: 2;
+    }
+
+    .z-3 {
+        z-index: 3;
+    }
+
+    .overlay-button {
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: not-allowed;
+    }
+
+    .div-photo {
+        position: absolute;
+        width: 25%;
+        height: auto;
+        margin: 5% 0 0 0;
+        display: block;
+        cursor: not-allowed;
+    }
+</style>
+
+</html>
