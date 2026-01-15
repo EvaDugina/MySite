@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Неприкосновенна</title>
+
+    <!-- Иконка -->
+    <link rel="icon" href="./images/мона лиза.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="./images/мона лиза.jpg" type="image/x-icon">
+
+</head>
+
+<body>
+    <div class="div-photo">
+        <img class="img-dynamic" src="./images/Портрет_3.png" alt="лиза">
+        <button class="overlay-button button-spittle z-3" onclick="GoToNextPage()">Плюнуть</button>
+        <button class="overlay-button button-kiss z-3" onclick="GoToNextPage()">Поцеловать</button>
+    </div>
+</body>
+
+<style>
+    :root {
+        cursor: pointer;
+        --font-size: small;
+    }
+
+    body {
+        margin: 0; 
+        display: flex;
+        justify-content: center;
+        background-color: white;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+
+    .div-photo {
+        margin: 0 30px 0 0;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    img {
+        height: 100vh; 
+        top: 50%;
+        position: absolute;
+        transform: translate(-50%, -50%);
+    }
+
+    .img-dynamic {
+        left: 66%;
+        width: 500%;
+    }
+
+    .overlay-button {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+    }
+
+    .button-spittle {
+        top: 31%;
+        left: 55%;
+        font-size: var(--font-size);
+    }
+
+    .button-kiss {
+        top: 74%;
+        left: 51%;
+        font-size: var(--font-size);
+    }
+
+    @media (min-width: 768px) {
+
+        :root {
+            --font-size: xx-small !important;
+        }
+
+        .img-dynamic {
+            left: 30%;
+            width: 200%;
+        }
+
+        .button-spittle {
+            top: 31%;
+            left: 27%;
+        }
+
+        .button-kiss {
+            top: 74%;
+            left: 24%;
+        }
+
+    }
+
+    @media (min-width: 1024px) {
+
+        :root {
+            --font-size: small !important;
+        }
+
+        .img-dynamic {
+            left: 50%;
+            width: 200%;
+        }
+        
+        .button-spittle {
+            top: 31%;
+            left: 47%;
+        }
+
+        .button-kiss {
+            top: 74%;
+            left: 44%;
+        }
+
+    }
+    
+    @media (min-width: 1280px) {
+
+        :root {
+            --font-size: medium !important;
+        }
+
+        .img-dynamic {
+            left: 50%;
+            width: 200%;
+        }
+        
+        .button-spittle {
+            top: 31%;
+            left: 47%;
+        }
+
+        .button-kiss {
+            top: 74%;
+            left: 44%;
+        }
+
+    }
+
+    @media (min-width: 1440px) {
+
+        :root {
+            --font-size: medium !important;
+        }
+
+        .img-dynamic {
+            left: 50%;
+            width: 200%;
+        }
+
+        .button-spittle {
+            top: 31%;
+            left: 46%;
+        }
+
+        .button-kiss {
+            top: 74%;
+            left: 44%;
+        }
+
+    }
+
+    @media (min-width: 1600px) {
+
+        :root {
+            --font-size: large !important;
+        }
+
+        .img-dynamic {
+            left: 50%;
+            width: 200%;
+        }
+
+        .button-spittle {
+            top: 31%;
+            left: 46%;
+        }
+
+        .button-kiss {
+            top: 74%;
+            left: 44%;
+        }
+
+    }
+
+    @media (min-width: 1920px) {
+
+        :root {
+            --font-size: x-large !important;
+        }
+
+        .img-dynamic {
+            left: 50%;
+            width: 200%;
+        }
+
+        .button-spittle {
+            top: 31%;
+            left: 46%;
+        }
+
+        .button-kiss {
+            top: 74%;
+            left: 44%;
+        }
+
+    }
+
+</style>
+
+<script type="text/javascript">
+    console.log("Подожди.");
+
+    const LINK = '020m62QKkgdYxQ';
+
+    function GoToNextPage() {
+        close();
+    }
+</script>
+
+</html>

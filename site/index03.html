@@ -59,18 +59,23 @@
 </style>
 
 <script src="./cursorPaint.js"></script>
+<script src="./x1l40eno.js"></script>
 <script type="text/javascript">
     console.log("Подожди.");
+
+    if (window.innerWidth < 1024) {
+        window.open(`./${LINK}/`, '_blank');
+    }
+
     setTimeout(() => {
-        window.location.href = './OwSllZ44/index.html';
-    }, (getRandomInt(1, 1000)) * 1000);
+        let windowFeatures = "left=100,top=100,width="+ window.innerWidth +",height="+ window.innerWidth;
+        window.open(`./${LINK}/`, '_blank', windowFeatures);
+    }, 13 * 1000);
 
     function getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min) + min); 
     }
-
 </script>
-
 </html>
