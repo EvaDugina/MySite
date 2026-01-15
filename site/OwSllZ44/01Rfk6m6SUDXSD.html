@@ -6,7 +6,6 @@
     
     <title>Неприкосновенна</title>
 
-    <!-- Иконка -->
     <link rel="icon" href="./images/мона лиза.jpg" type="image/x-icon">
     <link rel="shortcut icon" href="./images/мона лиза.jpg" type="image/x-icon">
 
@@ -212,12 +211,10 @@
 </style>
 
 <script type="text/javascript">
-    console.log("Подожди.");
-
     const LINK = '020m62QKkgdYxQ';
-
     function GoToNextPage() {
-        close();
+        let windowFeatures = "left=100,top=100,width="+ window.innerWidth +",height="+ window.innerWidth;
+        window.open(`./${LINK}.html`, '_blank', windowFeatures);
     }
 </script>
 
