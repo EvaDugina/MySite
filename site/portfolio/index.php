@@ -72,8 +72,8 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
     <title>PALKHHHHHHHHHHHHH</title>
 
     <!-- Иконка -->
-    <link rel="icon" href="../src/icon.jpg" type="image/x-icon">
-    <link rel="shortcut icon" href="../src/icon.jpg" type="image/x-icon">
+    <link rel="icon" href="./images/icon.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="./images/icon.jpg" type="image/x-icon">
 
     <!-- Подключение внешнего файла -->
     <link rel="stylesheet" href="./index.css">
