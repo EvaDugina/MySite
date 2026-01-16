@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'Druzhok'; /* Имя, которое вы будете использовать для шрифта */
-  src: url('fonts/DRUZHOK.otf') format('opentype'); /* Укажите путь к вашему .otf файлу */
+  src: url('../src/fonts/DRUZHOK.otf') format('opentype'); /* Укажите путь к вашему .otf файлу */
   /* Добавьте другие форматы, если есть (например, WOFF, WOFF2) */
 }
 
 @font-face {
   font-family: 'Soyuz Grotesk'; /* Имя, которое вы будете использовать для шрифта */
-  src: url('fonts/Soyuz Grotesk Bold.otf') format('opentype'); /* Укажите путь к вашему .otf файлу */
+  src: url('../src/fonts/Soyuz Grotesk Bold.otf') format('opentype'); /* Укажите путь к вашему .otf файлу */
   /* Добавьте другие форматы, если есть (например, WOFF, WOFF2) */
 }
 

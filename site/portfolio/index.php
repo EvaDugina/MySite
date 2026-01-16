@@ -1,6 +1,6 @@
 <?php
-require_once("constants.php");
-require_once("utilities.php");
+require_once("./constants.php");
+require_once("./utilities.php");
 
 function isFolderHidden(string $folder_name): bool
 {
@@ -72,12 +72,12 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
     <title>PALKHHHHHHHHHHHHH</title>
 
     <!-- Иконка -->
-    <link rel="icon" href="src/icon.jpg" type="image/x-icon">
-    <link rel="shortcut icon" href="src/icon.jpg" type="image/x-icon">
+    <link rel="icon" href="../src/icon.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="../src/icon.jpg" type="image/x-icon">
 
     <!-- Подключение внешнего файла -->
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="js/cursorPaint.css">
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./js/cursorPaint.css">
 </head>
 
 <body class="overflow-y">
@@ -144,11 +144,10 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
 
     </div>
 
-    <!-- <script src="js/cursor-trail.js"></script> -->
 </body>
 
-<script src="src/jquery-3.7.1.min.js"></script>
-<script src="js/cursorPaint.js"></script>
+<script src="../src/jquery-3.7.1.min.js"></script>
+<script src="./js/cursorPaint.js"></script>
 <script type="text/javascript">
     const CHAPTERS_AND_SUBCHAPTERS = <?= json_encode($chapters_and_subchapters) ?>;
 
