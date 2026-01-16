@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Неприкосновенна</title>
+
+    <!-- Иконка -->
+    <link rel="icon" href="./images/мона лиза.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="./images/мона лиза.jpg" type="image/x-icon">
+
+</head>
+
+<body>
+    <div class="div-photo z-2">
+
+        <!-- <img class="img-photo" src="./images/Портрет_2.png" alt="лиза"> -->
+        <!-- <img class="img-frame" src="./images/Рамка Портрета_1.png" alt="лиза"> -->
+
+        <img class="img-frame" src="./images/Портрет_3.png" alt="лиза">
+
+        <button class="overlay-button z-3" onclick="GoToNextPage()" disabled>неприкосновенна</button>
+    </div>
+</body>
+
+<style>
+    :root {
+        cursor: default;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+
+    body {
+        margin: 0; 
+        display: flex;
+        justify-content: center;
+        background-color: white;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+
+    .div-photo {
+        position: absolute;
+        width: 60vw;
+        height: auto;
+        display: block;
+        cursor: not-allowed;
+        margin: 0;
+        align-self: center;
+    }
+
+    @media (min-width: 768px) {
+
+        .div-photo {
+            width: 60vw;
+        }
+
+        .overlay-button {
+            font-size: medium !important;
+        }
+
+    }
+
+    @media (min-width: 1024px) {
+
+        .div-photo {
+            width: 50vw;
+        }
+
+        .overlay-button {
+            font-size: smaller !important;
+        }
+
+    }
+    
+    @media (min-width: 1280px) {
+
+        .div-photo {
+            width: 35vw;
+        }
+
+        .overlay-button {
+            font-size: small !important;
+        }
+
+    }
+
+    @media (min-width: 1440px) {
+
+        .div-photo {
+            width: 30vw;
+        }
+
+        .overlay-button {
+            font-size: small !important;
+        }
+
+    }
+
+    @media (min-width: 1600px) {
+
+        .div-photo {
+            width: 32.5vw;
+        }
+
+        .overlay-button {
+            font-size: small !important;
+        }
+
+    }
+
+    @media (min-width: 1920px) {
+
+        .div-photo {
+            width: 27.5vw;
+        }
+
+        .overlay-button {
+            font-size: medium !important;
+        }
+
+    }
+
+    img:hover {
+        /* opacity: 0.9; */
+    }
+
+    .img-photo {
+        position: absolute;
+        top: 11.5%;
+        left: 15.5%;
+        width: 69.9%;
+        height: auto;
+        cursor: not-allowed;
+        opacity: 1;
+    }
+
+    .img-frame {
+        width: 100%;
+        height: auto;
+        cursor: not-allowed;
+        opacity: 1;
+    }
+
+    .overlay-button {
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        font-size: x-small;
+    }
+
+    .z-1 {
+        z-index: 1;
+    }
+
+    .z-2 {
+        z-index: 2;
+    }
+
+    .z-3 {
+        z-index: 3;
+    }
+
+</style>
+
+<script src="./nvsht7wb.js"></script>
+<script type="text/javascript">
+    function GoToNextPage() {
+        let windowFeatures = "left=100,top=100,width="+ window.innerWidth +",height="+ window.innerWidth;
+        window.open(`./${LINK}.html`, '_blank', windowFeatures);
+    }
+</script>
+
+</html>

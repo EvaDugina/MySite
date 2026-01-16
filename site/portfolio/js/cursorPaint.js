@@ -1,6 +1,6 @@
 function initOciliator(remove) {
 
-    var canvas = document.getElementById("canvasPaint");
+    const CANVAS = document.getElementById("canvasPaint");
 
     if (!remove) {
 
@@ -192,7 +192,7 @@ function initOciliator(remove) {
             if (!ctx.running) return;
 
             ctx.globalCompositeOperation = 'source-over';
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
 
             // ctx.fillStyle = 'white';
             // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -313,9 +313,9 @@ function initOciliator(remove) {
             buffer.ctx.fillStyle = 'rgba(8,5,16)';
             buffer.ctx.fillRect(0, 0, buffer.width, buffer.height);
 
-            buffer.ctx.drawImage(canvas,
-                Math.round(buffer.width / 2 - canvas.width / 2),
-                Math.round(buffer.height / 2 - canvas.height / 2)
+            buffer.ctx.drawImage(CANVAS,
+                Math.round(buffer.width / 2 - CANVAS.width / 2),
+                Math.round(buffer.height / 2 - CANVAS.height / 2)
             );
 
 
@@ -332,7 +332,7 @@ function initOciliator(remove) {
         })();
 
 
-        ctx = canvas.getContext('2d');
+        ctx = CANVAS.getContext('2d');
 
         ctx.running = true;
         ctx.frame = 1;
@@ -353,7 +353,6 @@ function initOciliator(remove) {
         window.addEventListener('focus', start);
         window.addEventListener('blur', stop);
 
-        const myElement = document.getElementById('div-view');
         const observer = new ResizeObserver(entries => {
             for (let entry of entries) {
                 // Check if the element's content box size has changed
@@ -363,7 +362,7 @@ function initOciliator(remove) {
             }
         });
 
-        observer.observe(myElement);
+        observer.observe(CANVAS);
 
         resize();
 

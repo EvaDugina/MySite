@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Жду</title>
+
+    <link rel="icon" href="./images/я.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="./images/я.jpg" type="image/x-icon">
+    
+</head>
+
+<body>
+    <div class="background">
+        <button class="overlay-button" onclick="window.location.href = './index01.html'">Открыть</button>
+    </div>
+</body>
+
+<style>
+
+    body {
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    .background {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        height: 100000px;
+        width: 100%;
+    }
+
+    .overlay-button {
+        position: absolute;
+        top: 100%;
+        left: 100%;
+        transform: translate(-100%, -100%);  /*Переносит центр объекта из левого верхнего угла в нижний правый*/
+        cursor: pointer;
+    }
+</style>
+
+</html>
