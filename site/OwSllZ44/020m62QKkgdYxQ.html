@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Неприкосновенна</title>
+    <title>Ненавижу</title>
 
     <link rel="icon" href="./images/мона лиза.jpg" type="image/x-icon">
     <link rel="shortcut icon" href="./images/мона лиза.jpg" type="image/x-icon">
@@ -12,9 +12,24 @@
 </head>
 
 <body>
+
+    <div class="div-settings z-4">
+        <label>
+            <input type="color" id="pen_color" value="#000000"><span class="me-1">Fill</span>
+        </label>
+        <label class="me-2">
+            <input type="color" id="back_color" value="#FFFFFF"><span class="me-1">Back</span>
+        </label>
+    </div>
+
     <div class="div-photo z-2">
         <img class="img-frame" src="./images/Портрет_3.png" alt="лиза">
     </div>
+
+
+    <canvas id="backgroundCanvas" class="z-1" style="position: absolute;"></canvas>
+    <canvas id="imageCanvas" class="z-3" style="position: absolute;"></canvas>
+
 </body>
 
 <style>
@@ -22,98 +37,167 @@
         cursor: default;
     }
 
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+
     body {
-        margin: 0; 
+        /* margin: 10px; */
+        margin: 0;
         display: flex;
         justify-content: center;
         background-color: white;
-        overflow-y: hidden;
+        /* overflow-y: hidden; */
         overflow-x: hidden;
     }
 
+    span {
+        mix-blend-mode: difference;
+        color: #898989;
+        font-size: medium;
+    }
+
+    .div-settings {
+        position: absolute;
+        margin: 20% 15%;
+        padding: 1%;
+    }
+
+    .me-1 {
+        margin-left: 10px;
+    }
+
+    .me-2 {
+        margin-left: 20px;
+    }
+
+    
     .div-photo {
         position: absolute;
-        width: 60vw;
+        width: 70vw;
         height: auto;
         margin: 20vh 0 0 0;
         display: block;
-        cursor: not-allowed;
     }
 
     @media (min-width: 768px) {
+
+        span {
+            font-size: medium !important;
+        }
+
+        .div-settings {
+            margin: 10% !important;
+        }
 
         .div-photo {
             position: absolute;
             width: 60vw;
             height: auto;
-            margin: 15vh 0 0 0;
+            margin: 20vh 0 0 0;
             display: block;
-            cursor: not-allowed;
         }
 
     }
 
     @media (min-width: 1024px) {
 
+        span {
+            font-size: medium !important;
+        }
+
+        .div-settings {
+            margin: 4% !important;
+        }
+
+
         .div-photo {
             position: absolute;
-            width: 50vw;
+            width: 40vw;
             height: auto;
-            margin: 5vh 0 0 0;
+            margin: 15vh 0 0 0;
             display: block;
-            cursor: not-allowed;
         }
 
     }
     
     @media (min-width: 1280px) {
 
+        span {
+            font-size: small !important;
+        }
+
+        .div-settings {
+            margin: 1% !important;
+        }
+
         .div-photo {
             position: absolute;
-            width: 37.5vw;
+            width: 32.5vw;
             height: auto;
-            margin: 5vh 0 0 0;
+            margin: 12.5vh 0 0 0;
             display: block;
-            cursor: not-allowed;
         }
 
     }
 
     @media (min-width: 1440px) {
 
+        span {
+            font-size: medium !important;
+        }
+
+        .div-settings {
+            margin: 2% !important;
+        }
+
         .div-photo {
             position: absolute;
-            width: 37.5vw;
+            width: 35vw;
             height: auto;
-            margin: 5vh 0 0 0;
+            margin: 15vh 0 0 0;
             display: block;
-            cursor: not-allowed;
         }
 
     }
 
     @media (min-width: 1600px) {
 
+        span {
+            font-size: medium !important;
+        }
+
+        .div-settings {
+            margin: 2% !important;
+        }
+
         .div-photo {
             position: absolute;
-            width: 37.5vw;
+            width: 30vw;
             height: auto;
-            margin: 4vh 0 0 0;
+            margin: 15vh 0 0 0;
             display: block;
-            cursor: not-allowed;
         }
 
     }
 
     @media (min-width: 1920px) {
 
+        span {
+            font-size: large !important;
+        }
+
+        .div-settings {
+            margin: 2% !important;
+        }
+
         .div-photo {
             position: absolute;
-            width: 32.5vw;
+            width: 25vw;
             height: auto;
-            margin: 2.5vh 0 0 0;
+            margin: 17.5vh 0 0 0;
             display: block;
-            cursor: not-allowed;
         }
 
     }
@@ -124,14 +208,12 @@
         left: 15.5%;
         width: 69.9%;
         height: auto;
-        cursor: not-allowed;
         opacity: 1;
     }
 
     .img-frame {
         width: 100%;
         height: auto;
-        cursor: not-allowed;
         opacity: 1;
     }
 
@@ -147,10 +229,181 @@
         z-index: 3;
     }
 
+    .z-4 {
+        z-index: 4;
+    }
+
 </style>
 
 <script type="text/javascript">
+    let padding = 0;
+    
+    const CANVAS = document.getElementById('imageCanvas');
+    CANVAS.width = window.innerWidth - padding * 2;
+    CANVAS.height = window.innerHeight - padding * 2;
 
+    const CONTEXT = CANVAS.getContext("2d");
+    CONTEXT.strokeStyle = "#000000";
+    CONTEXT.lineJoin = "round";
+    CONTEXT.lineWidth = 5;
+
+    const BG_CANVAS = document.getElementById('backgroundCanvas');
+    BG_CANVAS.width = window.innerWidth - padding * 2;
+    BG_CANVAS.height = window.innerHeight - padding * 2;
+
+    const BG_CONTEXT = BG_CANVAS.getContext('2d');
+
+    document.getElementById("pen_color").oninput = fill;
+    document.getElementById("back_color").oninput = setBackgroundColor;
+    setBackgroundColor();
+
+    var clickX = [];
+    var clickY = [];
+    var clickDrag = [];
+    var paint;
+
+    /**
+     * Add information where the user clicked at.
+     * @param {number} x
+     * @param {number} y
+     * @return {boolean} dragging
+     */
+    function addClick(x, y, dragging) {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+    }
+
+    /**
+     * Redraw the complete canvas.
+     */
+    function redraw() {
+        // Clears the canvas
+        CONTEXT.clearRect(0, 0, CONTEXT.canvas.width, CONTEXT.canvas.height);
+
+        for (var i = 0; i < clickX.length; i += 1) {
+            if (!clickDrag[i] && i == 0) {
+                CONTEXT.beginPath();
+                CONTEXT.moveTo(clickX[i], clickY[i]);
+                CONTEXT.stroke();
+            } else if (!clickDrag[i] && i > 0) {
+                CONTEXT.closePath();
+
+                CONTEXT.beginPath();
+                CONTEXT.moveTo(clickX[i], clickY[i]);
+                CONTEXT.stroke();
+            } else {
+                CONTEXT.lineTo(clickX[i], clickY[i]);
+                CONTEXT.stroke();
+            }
+        }
+    }
+
+    /**
+     * Draw the newly added point.
+     * @return {void}
+     */
+    function drawNew() {
+        var i = clickX.length - 1
+        if (!clickDrag[i]) {
+            if (clickX.length == 0) {
+                CONTEXT.beginPath();
+                CONTEXT.moveTo(clickX[i], clickY[i]);
+                CONTEXT.stroke();
+            } else {
+                CONTEXT.closePath();
+
+                CONTEXT.beginPath();
+                CONTEXT.moveTo(clickX[i], clickY[i]);
+                CONTEXT.stroke();
+            }
+        } else {
+            CONTEXT.lineTo(clickX[i], clickY[i]);
+            CONTEXT.stroke();
+        }
+    }
+
+    function mouseDownEventHandler(e) {
+        paint = true;
+        var x = e.pageX - CANVAS.offsetLeft;
+        var y = e.pageY - CANVAS.offsetTop;
+        if (paint) {
+            addClick(x, y, false);
+            drawNew();
+        }
+    }
+
+    function touchstartEventHandler(e) {
+        paint = true;
+        if (paint) {
+            addClick(e.touches[0].pageX - CANVAS.offsetLeft, e.touches[0].pageY - CANVAS.offsetTop, false);
+            drawNew();
+        }
+    }
+
+    function mouseUpEventHandler(e) {
+        CONTEXT.closePath();
+        paint = false;
+    }
+
+    function mouseMoveEventHandler(e) {
+        var x = e.pageX - CANVAS.offsetLeft;
+        var y = e.pageY - CANVAS.offsetTop;
+        if (paint) {
+            addClick(x, y, true);
+            drawNew();
+        }
+    }
+
+    function touchMoveEventHandler(e) {
+        if (paint) {
+            addClick(e.touches[0].pageX - CANVAS.offsetLeft, e.touches[0].pageY - CANVAS.offsetTop, true);
+            drawNew();
+        }
+    }
+
+    function setUpHandler(isMouseandNotTouch, detectEvent) {
+        removeRaceHandlers();
+        if (isMouseandNotTouch) {
+            CANVAS.addEventListener('mouseup', mouseUpEventHandler);
+            CANVAS.addEventListener('mousemove', mouseMoveEventHandler);
+            CANVAS.addEventListener('mousedown', mouseDownEventHandler);
+            mouseDownEventHandler(detectEvent);
+        } else {
+            CANVAS.addEventListener('touchstart', touchstartEventHandler);
+            CANVAS.addEventListener('touchmove', touchMoveEventHandler);
+            CANVAS.addEventListener('touchend', mouseUpEventHandler);
+            touchstartEventHandler(detectEvent);
+        }
+    }
+
+    function mouseWins(e) {
+        setUpHandler(true, e);
+    }
+
+    function touchWins(e) {
+        setUpHandler(false, e);
+    }
+
+    function removeRaceHandlers() {
+        CANVAS.removeEventListener('mousedown', mouseWins);
+        CANVAS.removeEventListener('touchstart', touchWins);
+    }
+
+    function fill() {
+        const color = pen_color.value;
+        CONTEXT.fillStyle = color;
+        CONTEXT.fill();
+    }
+
+    function setBackgroundColor() {
+        const color = back_color.value;
+        BG_CONTEXT.fillStyle = color;
+        BG_CONTEXT.fillRect(0, 0, BG_CANVAS.width, BG_CANVAS.height);
+    }
+
+    CANVAS.addEventListener('mousedown', mouseWins);
+    CANVAS.addEventListener('touchstart', touchWins);
 </script>
 
 </html>
