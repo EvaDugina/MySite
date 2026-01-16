@@ -29,6 +29,11 @@
         cursor: default;
     }
 
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+
     body {
         margin: 0; 
         display: flex;
@@ -42,20 +47,16 @@
         position: absolute;
         width: 60vw;
         height: auto;
-        margin: 20vh 0 0 0;
         display: block;
         cursor: not-allowed;
+        margin: 0;
+        align-self: center;
     }
 
     @media (min-width: 768px) {
 
         .div-photo {
-            position: absolute;
             width: 60vw;
-            height: auto;
-            margin: 15vh 0 0 0;
-            display: block;
-            cursor: not-allowed;
         }
 
         .overlay-button {
@@ -67,12 +68,7 @@
     @media (min-width: 1024px) {
 
         .div-photo {
-            position: absolute;
             width: 50vw;
-            height: auto;
-            margin: 5vh 0 0 0;
-            display: block;
-            cursor: not-allowed;
         }
 
         .overlay-button {
@@ -84,16 +80,11 @@
     @media (min-width: 1280px) {
 
         .div-photo {
-            position: absolute;
-            width: 37.5vw;
-            height: auto;
-            margin: 5vh 0 0 0;
-            display: block;
-            cursor: not-allowed;
+            width: 40vw;
         }
 
         .overlay-button {
-            font-size: smaller !important;
+            font-size: small !important;
         }
 
     }
@@ -101,12 +92,7 @@
     @media (min-width: 1440px) {
 
         .div-photo {
-            position: absolute;
             width: 37.5vw;
-            height: auto;
-            margin: 5vh 0 0 0;
-            display: block;
-            cursor: not-allowed;
         }
 
         .overlay-button {
@@ -118,12 +104,7 @@
     @media (min-width: 1600px) {
 
         .div-photo {
-            position: absolute;
             width: 35vw;
-            height: auto;
-            margin: 4vh 0 0 0;
-            display: block;
-            cursor: not-allowed;
         }
 
         .overlay-button {
@@ -135,12 +116,7 @@
     @media (min-width: 1920px) {
 
         .div-photo {
-            position: absolute;
             width: 32.5vw;
-            height: auto;
-            margin: 2.5vh 0 0 0;
-            display: block;
-            cursor: not-allowed;
         }
 
         .overlay-button {
@@ -176,7 +152,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         cursor: pointer;
-        font-size: x-small;
+        font-size: small;
     }
 
     .z-1 {
