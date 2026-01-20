@@ -1,0 +1,6 @@
+    #img-cursor {
+        width: 30px;
+        height: 30px;
+        position: fixed;
+        will-change: transform; /* Для оптимизации анимации */
+    }

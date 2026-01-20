@@ -11,11 +11,15 @@
 
 </head>
 
-<body>
+<body class="d-none">
     <div class="div-photo">
-        <img class="img-dynamic" src="./images/НЕПРИКОСНОВЕННА.png" alt="НЕПРИКОСНОВЕННА">
-        <button class="overlay-button button-spittle z-3" onclick="GoToNextPage()">Плюнуть</button>
-        <button class="overlay-button button-kiss z-3" onclick="GoToNextPage()">Поцеловать</button>
+        <div id="div-statistics" class="div-statistics z-3 d-none">
+            <div class="div-statistic">Плюнули: <span id="countSpittle" class="span-count">12</span></div>
+            <div class="div-statistic">Поцеловали: <span id="countKiss" class="span-count">1</span></div>
+        </div>
+        <img class="img-dynamic z-1" src="./images/НЕПРИКОСНОВЕННА.png" alt="НЕПРИКОСНОВЕННА">
+        <button id="btn-spittle" class="overlay-button button-spittle z-4" onclick="spittle()">Плюнуть</button>
+        <button id="btn-kiss" class="overlay-button button-kiss z-4" onclick="kiss()">Поцеловать</button>
     </div>
 </body>
 
@@ -23,6 +27,7 @@
     :root {
         cursor: pointer;
         --font-size: small;
+        --font-size-sm: x-small;
     }
 
     html, body {
@@ -40,9 +45,34 @@
     }
 
     .div-photo {
-        margin: 0 30px 0 0;
+        margin: 0;
         width: 100vw;
         height: 100vh;
+    }
+
+    .div-statistics {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        /* margin: 20% 15%; */
+        position: absolute;
+        background-color: blue;
+        color: white;
+        font-size: var(--font-size-sm);
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        cursor: not-allowed;
+    }
+
+    .div-statistic {
+        margin: 5px;
+        width: fit-content;
+        height: fit-content;
+    }
+
+    .span-count {
+        font-weight: 700;
     }
 
     img {
@@ -75,11 +105,22 @@
         font-size: var(--font-size);
     }
 
+    button:disabled {
+        opacity: 0.6; /* Makes it look semi-transparent */
+        cursor: not-allowed; /* Changes the mouse cursor */
+        background-color: #a0a0a0; /* Changes the background color */
+    }
+
     @media (min-width: 768px) {
 
         :root {
             --font-size: xx-small !important;
+            --font-size-sm: xx-small !important;
         }
+
+        /* .div-statistics {
+            margin: 10% !important;
+        } */
 
         .img-dynamic {
             left: 30%;
@@ -102,7 +143,12 @@
 
         :root {
             --font-size: small !important;
+            --font-size-sm: x-small !important;
         }
+
+        /* .div-statistics {
+            margin: 2% !important;
+        } */
 
         .img-dynamic {
             left: 50%;
@@ -125,7 +171,12 @@
 
         :root {
             --font-size: medium !important;
+            --font-size-sm: small !important;
         }
+
+        /* .div-statistics {
+            margin: 1% !important;
+        } */
 
         .img-dynamic {
             left: 50%;
@@ -148,7 +199,12 @@
 
         :root {
             --font-size: medium !important;
+            --font-size-sm: small !important;
         }
+
+        /* .div-statistics {
+            margin: 2% !important;
+        } */
 
         .img-dynamic {
             left: 50%;
@@ -171,7 +227,12 @@
 
         :root {
             --font-size: large !important;
+            --font-size-sm: medium !important;
         }
+
+        /* .div-statistics {
+            margin: 2% !important;
+        } */
 
         .img-dynamic {
             left: 50%;
@@ -194,7 +255,12 @@
 
         :root {
             --font-size: x-large !important;
+            --font-size-sm: large !important;
         }
+
+        /* .div-statistics {
+            margin: 2% !important;
+        } */
 
         .img-dynamic {
             left: 50%;
@@ -213,13 +279,165 @@
 
     }
 
+    .z-1 {
+        z-index: 1;
+    }
+
+    .z-2 {
+        z-index: 2;
+    }
+
+    .z-3 {
+        z-index: 3;
+    }
+
+    .z-4 {
+        z-index: 4;
+    }
+
+    .d-none {
+        display: none;
+    }
+
+    .top {
+        top: 0;
+    }
+
+    .bottom {
+        bottom: 0;
+    }
+
 </style>
 
+<script src="../src/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-    const LINK = '020m62QKkgdYxQ';
+
+    getStatistic();
+
+    async function getStatistic() {
+        let ajaxResponse = await ajaxGetStatistic();
+        if (ajaxResponse == null) {
+            return;
+        }
+
+        jsonResponse = JSON.parse(ajaxResponse);
+        $("#countSpittle").text(jsonResponse["spittle"])
+        $("#countKiss").text(jsonResponse["kiss"])
+    }
+
+    async function ajaxGetStatistic() {
+
+        var formData = new FormData();
+        formData.append('flag-getStatistic', true);
+
+        let response = null;
+        try {
+            response = await $.ajax({
+                type: "POST",
+                url: '01Rfk6m6SUDXSD.php#content',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'html'
+            });
+            // console.log(response.trim());
+            response = response.trim();
+        } catch (error) {
+            console.error('Ошибка запроса:', error);
+            return null;
+        }
+
+        return response;
+    }
+
+    $(document).ready(function() {
+        $("body").show();
+    });
+
+    // 
+    // 
+    // 
+
+    var SPITTLE = 0;
+    var KISS = 0;
+
+    function spittle(){
+        SPITTLE += 1;
+        $("#countSpittle").text(parseInt($("#countSpittle").text())+1)
+        if (isCorrect()) GoToNextPage();
+    }
+
+    function kiss() {
+        KISS += 1;
+        $("#countKiss").text(parseInt($("#countKiss").text())+1)
+        if (isCorrect()) GoToNextPage();
+    }
+
+    function isCorrect(){
+        return true;
+    }
+
+    const LINK = '02AVtgcxoToegF';
+
     function GoToNextPage() {
-        let windowFeatures = "left=100,top=100,width="+ window.innerWidth +",height="+ window.innerWidth;
-        window.open(`./${LINK}.html`, '_blank', windowFeatures);
+
+        $("#div-statistics").removeClass("d-none");
+        $("#btn-spittle").prop( "disabled", true );
+        $("#btn-kiss").prop( "disabled", true );
+
+        updateStatistic();
+
+        setTimeout(() => {
+            window.open(`./${LINK}.html`, '_blank');
+        }, 1.5 * 1000);
+        
+    }
+
+    async function updateStatistic() {
+        let ajaxResponse = await ajaxUpdateStatistic();
+        if (ajaxResponse == null) {
+            return;
+        }
+
+        console.log(ajaxResponse);
+    }
+
+    async function ajaxUpdateStatistic() {
+
+        var formData = new FormData();
+
+        let type = "";
+        if (KISS == 1){
+            type = "kiss";
+        } else if(SPITTLE = 1) {
+            type = "spittle";
+        } else {
+            return;
+        }
+
+        formData.append('flag-updateStatistic', true);
+        formData.append("type", type);
+
+        let response = null;
+        try {
+            response = await $.ajax({
+                type: "POST",
+                url: '01Rfk6m6SUDXSD.php#content',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'html'
+            });
+            // console.log(response.trim());
+            response = response.trim();
+        } catch (error) {
+            console.error('Ошибка запроса:', error);
+            return null;
+        }
+
+        return response;
     }
 </script>
 

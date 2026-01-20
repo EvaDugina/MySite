@@ -10,14 +10,27 @@
     <link rel="icon" href="./images/НЕПРИКОСНОВЕННА.jpg" type="image/x-icon">
     <link rel="shortcut icon" href="./images/НЕПРИКОСНОВЕННА.jpg" type="image/x-icon">
 
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/cursor.css">
+
 </head>
 
-<body>
-    <div class="div-photo z-2">
-
-        <img class="img-frame" src="./images/НЕПРИКОСНОВЕННА.png" alt="НЕПРИКОСНОВЕННА">
-
-        <button class="overlay-button z-3" onclick="GoToNextPage()" disabled>неприкосновенна</button>
+<body class="d-none">
+    <div class="w-100 h-100">
+        <img id="img-cursor" class="z-6" src="./images/icons8-3d-pointer-50_1.png" alt="icon">
+    </div>
+    <div id="div-photo">
+        <div id="div-flash-3" class="div-flash z-5 d-none">
+            <img id="img-flash-3" class="img-flash not-allowed-image" src="./images/04.jpg" alt="ВСПЫШКА">
+        </div> 
+        <div id="div-flash-2" class="div-flash z-4 d-none">
+            <img id="img-flash-2" class="img-flash not-allowed-image" src="./images/05.jpg" alt="ВСПЫШКА">
+        </div> 
+        <div id="div-flash-1" class="div-flash z-3 d-none">
+            <img id="img-flash-1" class="img-flash not-allowed-image" src="./images/01_2.jpg" alt="ВСПЫШКА">
+        </div>
+        <button id="btn-click" class="z-2" onclick="clickButton(event)" disabled>неприкосновенна</button>
+        <img id="img-portrait" class="not-allowed-image z-1" src="./images/НЕПРИКОСНОВЕННА.png" alt="НЕПРИКОСНОВЕННА">
     </div>
 </body>
 
@@ -26,37 +39,78 @@
         cursor: default;
     }
 
-    html, body {
-        height: 100%;
+    .div-flash {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
+        /* opacity: 0; */
+        pointer-events: none;
     }
 
-    body {
-        margin: 0; 
-        display: flex;
-        justify-content: center;
-        background-color: white;
-        overflow-y: hidden;
-        overflow-x: hidden;
+    .img-flash {
+        width: auto;
+        align-self: center;
+        position: absolute;
+        border-radius: 7.5px;
     }
 
-    .div-photo {
+    #img-flash-1 {
+        height: 112%;
+        top: -4.5%;
+        left: -52%;
+    }
+
+    #img-flash-2 {
+        height: 141%;
+        top: 50%;
+        left: 52%;
+        align-self: center;
+        transform: translate(-50%, -50%);
+    }
+
+    #img-flash-3 {
+        height: 228%;
+        top: -29%;
+        left: -64%;
+    }
+
+    #div-photo {
         position: absolute;
         width: 60vw;
         height: auto;
         display: block;
-        cursor: not-allowed;
         margin: 0;
         align-self: center;
     }
 
+    #img-portrait {
+        position: relative;
+        width: 100%;
+        height: auto;
+        cursor: default;
+        opacity: 1;
+        border-radius: 7.5px;
+        /* box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5); */
+    }
+
+    #btn-click {
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: default;
+        font-size: x-small;
+    }
+
     @media (min-width: 768px) {
 
-        .div-photo {
+        #div-photo {
             width: 60vw;
         }
 
-        .overlay-button {
+        #btn-click {
             font-size: medium !important;
         }
 
@@ -64,11 +118,11 @@
 
     @media (min-width: 1024px) {
 
-        .div-photo {
+        #div-photo {
             width: 50vw;
         }
 
-        .overlay-button {
+        #btn-click {
             font-size: smaller !important;
         }
 
@@ -76,11 +130,11 @@
     
     @media (min-width: 1280px) {
 
-        .div-photo {
+        #div-photo {
             width: 35vw;
         }
 
-        .overlay-button {
+        #btn-click {
             font-size: small !important;
         }
 
@@ -88,11 +142,11 @@
 
     @media (min-width: 1440px) {
 
-        .div-photo {
+        #div-photo {
             width: 30vw;
         }
 
-        .overlay-button {
+        #btn-click {
             font-size: small !important;
         }
 
@@ -100,11 +154,11 @@
 
     @media (min-width: 1600px) {
 
-        .div-photo {
+        #div-photo {
             width: 32.5vw;
         }
 
-        .overlay-button {
+        #btn-click {
             font-size: medium !important;
         }
 
@@ -112,65 +166,140 @@
 
     @media (min-width: 1920px) {
 
-        .div-photo {
+        #div-photo {
             width: 27.5vw;
         }
 
-        .overlay-button {
+        #btn-click {
             font-size: medium !important;
         }
 
     }
 
-    img:hover {
-        /* opacity: 0.9; */
+    /* Класс для резкой анимации вспышки */
+    .flash-animation {
+        animation: sharpFlash 0.15s cubic-bezier(0.4, 0, 0.6, 1);
     }
 
-    .img-photo {
-        position: absolute;
-        top: 11.5%;
-        left: 15.5%;
-        width: 69.9%;
-        height: auto;
-        cursor: not-allowed;
-        opacity: 1;
-    }
-
-    .img-frame {
-        width: 100%;
-        height: auto;
-        cursor: not-allowed;
-        opacity: 1;
-    }
-
-    .overlay-button {
-        position: absolute;
-        top: 75%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        cursor: pointer;
-        font-size: x-small;
-    }
-
-    .z-1 {
-        z-index: 1;
-    }
-
-    .z-2 {
-        z-index: 2;
-    }
-
-    .z-3 {
-        z-index: 3;
+    @keyframes sharpFlash {
+        0% {
+            opacity: 0;
+        }
+        20% {
+            opacity: 1;  /* Быстро появляется */
+        }
+        40% {
+            opacity: 0.8; /* Немного спадает */
+        }
+        60% {
+            opacity: 1;  /* Второй пик */
+        }
+        80% {
+            opacity: 0.4; /* Быстро угасает */
+        }
+        100% {
+            opacity: 0;  /* Полное исчезновение */
+        }
     }
 
 </style>
 
-<script src="./nvsht7wb.js"></script>
+<script src="../src/jquery-3.7.1.min.js"></script>
+<script src="./js/cursorController.js"></script>
+<script src="./index.js"></script>
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        $("body").show();
+    });
+
+    window.addEventListener('beforeunload', function(event) {
+        event.returnValue = 'Уверены, что хотите покинуть страницу?';
+        return event.returnValue;
+    });
+
+    // 
+    // 
+    // 
+
+    const ELEMENT_CURSOR = $("#img-cursor");
+
+    const Zone = {
+        NONE: 0,
+        PHOTO: 1,
+        BUTTON: 2
+    };
+
+    var CurrentZone = Zone.NONE;
+
+    function updateCurrentZone() {
+        if (isPosInElementBoundary($("#btn-click"), currentX, currentY)){
+            if (CurrentZone != Zone.BUTTON){
+                changeSrc(ELEMENT_CURSOR, './images/icons8-hand-cursor-48_1.png')
+                CurrentZone = Zone.BUTTON
+                $("#btn-click").attr("disabled", false)
+            }
+        } else if (isPosInElementBoundary($("#img-portrait"), currentX, currentY)) {
+            if (CurrentZone != Zone.PHOTO){
+                changeSrc(ELEMENT_CURSOR, './images/icons8-unavailable-48.png')
+                CurrentZone = Zone.PHOTO
+                $("#btn-click").attr("disabled", true)
+            }
+        } else {
+            if (CurrentZone != Zone.NONE){
+                changeSrc(ELEMENT_CURSOR, './images/icons8-3d-pointer-50_1.png')
+                CurrentZone = Zone.NONE
+                $("#btn-click").attr("disabled", true)
+            }
+        }
+    }
+
+    // 
+    // 
+    //
+
+    const LIMIT_CLICK = getRandomInt(40, 50);
+    var countClick = 0;
+
+    function clickButton(event) {
+        countClick += 1;
+        flash(2);
+        GoToNextPage();
+    }
+
+    function flash(count) {
+        if (count <= 0)
+            return;
+
+        const $flash = $('#div-flash-3');
+        // const $flash = $('#div-flash-' + count.toString());
+        
+        // Сбрасываем предыдущую анимацию
+        $flash.removeClass('flash-animation');
+        void $flash[0].offsetWidth; // Триггер перерисовки
+        
+        // Показываем и запускаем анимацию
+        $flash.show();
+        $flash.addClass('flash-animation');
+        
+        // Скрываем после завершения анимации
+        setTimeout(() => {
+            $flash.removeClass('flash-animation');
+            $flash.hide();
+            flash(count-1);
+        }, 150 * (count%2 + 1)); // Длительность анимации
+    
+    }
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); 
+    }
+
     function GoToNextPage() {
-        let windowFeatures = "left=100,top=100,width="+ window.innerWidth +",height="+ window.innerWidth;
-        window.open(`./${LINK}.html`, '_blank', windowFeatures);
+        if (countClick > LIMIT_CLICK)
+            window.open(`./${LINK}.html`, '_blank');
     }
 </script>
 
