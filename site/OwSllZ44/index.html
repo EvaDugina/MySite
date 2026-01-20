@@ -263,16 +263,15 @@
 
     function clickButton(event) {
         countClick += 1;
-        flash(2);
+        flash([1,3,2]);
         GoToNextPage();
     }
 
-    function flash(count) {
-        if (count <= 0)
+    function flash(ids) {
+        if (ids.length <= 0)
             return;
 
-        const $flash = $('#div-flash-3');
-        // const $flash = $('#div-flash-' + count.toString());
+        const $flash = $('#div-flash-' + ids[0].toString());
         
         // Сбрасываем предыдущую анимацию
         $flash.removeClass('flash-animation');
@@ -286,8 +285,9 @@
         setTimeout(() => {
             $flash.removeClass('flash-animation');
             $flash.hide();
-            flash(count-1);
-        }, 150 * (count%2 + 1)); // Длительность анимации
+            ids.shift();
+            flash(ids);
+        }, 150); // Длительность анимации
     
     }
 
