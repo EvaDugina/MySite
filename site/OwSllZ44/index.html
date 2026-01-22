@@ -170,7 +170,7 @@
         /*  
     
 
-    */
+        */
 
         #div-photo {
             position: absolute;
@@ -200,62 +200,38 @@
         }
 
         @media (min-width: 768px) {
-            :root {
-                --font-size: medium;
-            }
-
-            #div-photo {
-                width: 60vw;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            :root {
-                --font-size: small;
-            }
-
             #div-photo {
                 width: 50vw;
             }
         }
 
-        @media (min-width: 1280px) {
-            :root {
-                --font-size: small;
-            }
-
+        @media (min-width: 1024px) {
             #div-photo {
                 width: 35vw;
             }
         }
 
-        @media (min-width: 1440px) {
-            :root {
-                --font-size: small;
+        @media (min-width: 1280px) {
+            #div-photo {
+                width: 30vw;
             }
+        }
 
+        @media (min-width: 1440px) {
             #div-photo {
                 width: 30vw;
             }
         }
 
         @media (min-width: 1600px) {
-            :root {
-                --font-size: medium;
-            }
-
             #div-photo {
-                width: 32.5vw;
+                width: 25vw;
             }
         }
 
         @media (min-width: 1920px) {
-            :root {
-                --font-size: medium;
-            }
-
             #div-photo {
-                width: 27.5vw;
+                width: 25vw;
             }
         }
     </style>
@@ -281,12 +257,12 @@
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            maxSpeed: 0.1, // Максимальная скорость
-            // maxSpeed: 15   // Максимальная скорость
+            // maxSpeed: 0.1, // Максимальная скорость
+            maxSpeed: 15, // Максимальная скорость
         };
 
         // Задержка до включения курсора
-        const TIMEOUT = 2;
+        const TIMEOUT = 1;
 
         //
         //

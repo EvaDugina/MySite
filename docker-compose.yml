@@ -9,7 +9,7 @@ services:
     user: root
     # ДЛЯ ОТЛАДКИ:
     volumes:
-      # - ./site:${HOST_DIR}
+      - ./site:${HOST_DIR}
       - ./site/uploads:${HOST_DIR}/uploads
     environment:
       TZ: Europe/Moscow
@@ -40,8 +40,8 @@ services:
     environment:
       - TZ=Europe/Moscow
     # ДЛЯ ОТЛАДКИ:
-    # volumes:
-    # - ./site:${HOST_DIR}
+    volumes:
+      - ./site:${HOST_DIR}
     #   - ./for_docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     #   - ./for_docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:

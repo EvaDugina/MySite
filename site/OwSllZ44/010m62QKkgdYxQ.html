@@ -34,7 +34,7 @@
         </div>
 
         <div id="div-photo">
-            <button id="btn-click" class="z-4" onclick="clickButton()">
+            <button id="btn-click" class="z-4" onclick="clickButton()" disabled>
                 Портрет госпожи Лизы дель Джокондо
             </button>
             <img
@@ -54,7 +54,7 @@
         :root {
             cursor: text;
             --font-size: medium;
-            --font-size-sm: small;
+            --font-size-sm: xx-small;
         }
 
         span {
@@ -70,12 +70,12 @@
         /* 
     
     
-    */
+        */
 
         #div-settings {
             position: absolute;
             margin: 0;
-            padding: 1%;
+            padding: 1% 0;
             top: 0;
             background-color: blue;
             width: 100%;
@@ -85,7 +85,7 @@
 
         #div-photo {
             position: absolute;
-            width: 60vw;
+            width: 40vw;
             height: auto;
             display: block;
             margin: 0;
@@ -102,7 +102,8 @@
 
         #btn-click {
             position: absolute;
-            top: 75%;
+            width: 125%;
+            top: 105%;
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
@@ -112,45 +113,63 @@
         @media (min-width: 768px) {
             :root {
                 --font-size: medium;
-                --font-size-sm: small;
+                --font-size-sm: x-small;
             }
 
             #div-settings {
-                margin: 10% !important;
+                /* margin: 10% !important; */
             }
 
             #div-photo {
-                width: 60vw;
+                width: 35vw;
+            }
+
+            #btn-click {
+                width: 80%;
+                top: 105%;
+                font-size: var(--font-size-sm);
             }
         }
 
         @media (min-width: 1024px) {
             :root {
-                --font-size: small;
-                --font-size-sm: x-small;
+                --font-size: medium;
+                --font-size-sm: small;
             }
 
             #div-settings {
-                margin: 2% !important;
+                /* margin: 2% !important; */
             }
 
             #div-photo {
-                width: 50vw;
+                width: 30vw;
+            }
+
+            #btn-click {
+                width: 90%;
+                top: 105%;
+                font-size: var(--font-size-sm);
             }
         }
 
         @media (min-width: 1280px) {
             :root {
-                --font-size: small;
-                --font-size-sm: x-small;
+                --font-size: medium;
+                --font-size-sm: small;
             }
 
             #div-settings {
-                margin: 1% !important;
+                /* margin: 1% !important; */
             }
 
             #div-photo {
-                width: 35vw;
+                width: 25vw;
+            }
+
+            #btn-click {
+                width: 80%;
+                top: 105%;
+                font-size: var(--font-size-sm);
             }
         }
 
@@ -161,11 +180,17 @@
             }
 
             #div-settings {
-                margin: 2% !important;
+                /* margin: 2% !important; */
             }
 
             #div-photo {
-                width: 30vw;
+                width: 25vw;
+            }
+
+            #btn-click {
+                width: 80%;
+                top: 103%;
+                font-size: var(--font-size-sm);
             }
         }
 
@@ -176,11 +201,17 @@
             }
 
             #div-settings {
-                margin: 2% !important;
+                /* margin: 2% !important; */
             }
 
             #div-photo {
-                width: 32.5vw;
+                width: 20vw;
+            }
+
+            #btn-click {
+                width: 90%;
+                top: 103%;
+                font-size: var(--font-size-sm);
             }
         }
 
@@ -191,11 +222,17 @@
             }
 
             #div-settings {
-                margin: 0 !important;
+                /* margin: 0 !important; */
             }
 
             #div-photo {
-                width: 27.5vw;
+                width: 20vw;
+            }
+
+            #btn-click {
+                width: 80%;
+                top: 103%;
+                font-size: var(--font-size-sm);
             }
         }
     </style>
@@ -218,6 +255,16 @@
         // const BG_CANVAS = document.getElementById('backgroundCanvas');
         const PEN_COLOR = document.getElementById("pen_color");
         // const BACK_COLOR = document.getElementById("back_color")
+
+        var IS_CANVAS_BLANK = true;
+        var intervalId = setInterval(() => {
+            if (!IS_CANVAS_BLANK) {
+                clearInterval(intervalId);
+                return;
+            }
+            IS_CANVAS_BLANK = isCanvasBlank();
+            if (!IS_CANVAS_BLANK) $("#btn-click").attr("disabled", false);
+        }, 250);
 
         //
         //
