@@ -49,6 +49,15 @@ body {
 }
 
 
+.me-1 {
+    margin-left: 10px;
+}
+
+.me-2 {
+    margin-left: 20px;
+}
+
+
 .d-none {
     display: none;
 }

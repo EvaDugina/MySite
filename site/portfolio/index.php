@@ -146,7 +146,7 @@ if (isset($_GET['chapter']) && key_exists(mb_strtoupper($_GET['chapter']), $chap
 
 </body>
 
-<script src="../src/jquery-3.7.1.min.js"></script>
+<script src="/src/jquery-3.7.1.min.js"></script>
 <script src="./js/cursorPaint.js"></script>
 <script type="text/javascript">
     const CHAPTERS_AND_SUBCHAPTERS = <?= json_encode($chapters_and_subchapters) ?>;

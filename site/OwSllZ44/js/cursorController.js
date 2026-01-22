@@ -1,23 +1,11 @@
-let targetX = 0;
-let targetY = 0;
-let currentX = 0;
-let currentY = 0;
-let velocityX = 0;
-let velocityY = 0;
+var targetX = 0;
+var targetY = 0;
+var currentX = 0;
+var currentY = 0;
+var velocityX = 0;
+var velocityY = 0;
 
-// Настройки физики движения
-const settings = {
-    stiffness: 0.4,    // Жесткость пружины (скорость реакции)
-    damping: 0.97,      // Затухание (плавность остановки)
-    mass: 0.1,           // Масса объекта
-    maxSpeed: 0.25    // Максимальная скорость
-    // maxSpeed: 15   // Максимальная скорость
-};
-
-// Задержка до включения
-const TIMEOUT = 2;
-
-let animationId = null;
+var animationId = null;
 
 // Функция для плавного обновления позиции
 function updatePosition() {
@@ -103,14 +91,14 @@ setTimeout(() => {
 
 }, TIMEOUT * 1000);
 
-function isPosInElementBoundary(element, posX, posY) {
+function isPosInElementBoundary(element) {
     let radius = 0;
     const rect = element[0].getBoundingClientRect();
     return (
-        posX + radius >= rect.left &&
-        posX - radius <= rect.right &&
-        posY + radius >= rect.top &&
-        posY - radius <= rect.bottom
+        currentX + radius >= rect.left &&
+        currentX - radius <= rect.right &&
+        currentY + radius >= rect.top &&
+        currentY - radius <= rect.bottom
     );
 }
 

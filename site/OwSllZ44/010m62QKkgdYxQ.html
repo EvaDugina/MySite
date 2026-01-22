@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Ненавижу</title>
+
+        <link
+            rel="icon"
+            href="./images/НЕПРИКОСНОВЕННА.jpg"
+            type="image/x-icon"
+        />
+        <link
+            rel="shortcut icon"
+            href="./images/НЕПРИКОСНОВЕННА.jpg"
+            type="image/x-icon"
+        />
+
+        <link rel="stylesheet" href="./css/style.css" />
+    </head>
+
+    <body>
+        <div id="div-settings" class="z-4">
+            <label>
+                <input type="color" id="pen_color" value="#000000" /><span
+                    class="me-1"
+                    >Fill</span
+                >
+            </label>
+            <!-- <label class="me-2">
+            <input type="color" id="back_color" value="#FFFFFF"><span class="me-1">Back</span>
+        </label> -->
+        </div>
+
+        <div id="div-photo">
+            <button id="btn-click" class="z-4" onclick="clickButton()">
+                Портрет госпожи Лизы дель Джокондо
+            </button>
+            <img
+                id="img-portrait"
+                class="not-allowed-image z-1"
+                src="./images/Я БУДУ ПОМНИТЬ ТЕБЯ.png"
+                alt="Я БУДУ ПОМНИТЬ ТЕБЯ"
+                crossorigin="anonymous"
+            />
+        </div>
+
+        <!-- <canvas id="backgroundCanvas" class="z-1"></canvas> -->
+        <canvas id="imageCanvas" class="z-3"></canvas>
+    </body>
+
+    <style>
+        :root {
+            cursor: text;
+            --font-size: medium;
+            --font-size-sm: small;
+        }
+
+        span {
+            /* mix-blend-mode: difference; */
+            color: white;
+            font-size: var(--font-size);
+        }
+
+        canvas {
+            position: absolute;
+        }
+
+        /* 
+    
+    
+    */
+
+        #div-settings {
+            position: absolute;
+            margin: 0;
+            padding: 1%;
+            top: 0;
+            background-color: blue;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #div-photo {
+            position: absolute;
+            width: 60vw;
+            height: auto;
+            display: block;
+            margin: 0;
+            align-self: center;
+        }
+
+        #img-portrait {
+            position: relative;
+            width: 100%;
+            height: auto;
+            opacity: 1;
+            border-radius: 7.5px;
+        }
+
+        #btn-click {
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+        }
+
+        @media (min-width: 768px) {
+            :root {
+                --font-size: medium;
+                --font-size-sm: small;
+            }
+
+            #div-settings {
+                margin: 10% !important;
+            }
+
+            #div-photo {
+                width: 60vw;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            :root {
+                --font-size: small;
+                --font-size-sm: x-small;
+            }
+
+            #div-settings {
+                margin: 2% !important;
+            }
+
+            #div-photo {
+                width: 50vw;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            :root {
+                --font-size: small;
+                --font-size-sm: x-small;
+            }
+
+            #div-settings {
+                margin: 1% !important;
+            }
+
+            #div-photo {
+                width: 35vw;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            :root {
+                --font-size: medium;
+                --font-size-sm: small;
+            }
+
+            #div-settings {
+                margin: 2% !important;
+            }
+
+            #div-photo {
+                width: 30vw;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            :root {
+                --font-size: medium;
+                --font-size-sm: small;
+            }
+
+            #div-settings {
+                margin: 2% !important;
+            }
+
+            #div-photo {
+                width: 32.5vw;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            :root {
+                --font-size: large;
+                --font-size-sm: small;
+            }
+
+            #div-settings {
+                margin: 0 !important;
+            }
+
+            #div-photo {
+                width: 27.5vw;
+            }
+        }
+    </style>
+
+    <script src="/src/jquery-3.7.1.min.js"></script>
+    <script src="/src/html2canvas.min.js"></script>
+    <script src="/js/screenshot.js"></script>
+    <script type="text/javascript">
+        $("body").hide();
+        $(document).ready(function () {
+            $("body").show();
+        });
+
+        //
+        //
+        //
+
+        const PADDING_CANVAS = 0;
+        const CANVAS = document.getElementById("imageCanvas");
+        // const BG_CANVAS = document.getElementById('backgroundCanvas');
+        const PEN_COLOR = document.getElementById("pen_color");
+        // const BACK_COLOR = document.getElementById("back_color")
+
+        //
+        //
+        //
+
+        const NAME_SCRENSHOT = "Портрет госпожи Лизы дель Джокондо";
+
+        // window.addEventListener("beforeunload", function (event) {
+        //     event.preventDefault();
+        //     e.returnValue = "Файл будет скачан перед закрытием";
+
+        //     $("#div-settings").css("display", "none");
+        //     captureScreenshot();
+        // });
+
+        async function clickButton() {
+            $("#div-settings").css("display", "none");
+            await captureScreenshot();
+            $("#div-settings").css("display", "flex");
+        }
+    </script>
+    <script src="./js/cursorPaint.js"></script>
+</html>

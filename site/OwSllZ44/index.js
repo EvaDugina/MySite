@@ -1,1 +1,0 @@
-const LINK = '02AVtgcxoToegF';

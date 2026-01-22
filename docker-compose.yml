@@ -1,7 +1,6 @@
-version: '3.9'
+version: "3.9"
 
 services:
-
   php:
     container_name: mysite-php
     build:
@@ -10,12 +9,17 @@ services:
     user: root
     # ДЛЯ ОТЛАДКИ:
     volumes:
-      - ./site:${HOST_DIR}
+      # - ./site:${HOST_DIR}
+      - ./site/uploads:${HOST_DIR}/uploads
     environment:
       TZ: Europe/Moscow
+      # ДЛЯ ОТЛАДКИ (XDEBUG):
+      # XDEBUG_MODE: debug
+      # XDEBUG_CONFIG: "client_host=host.docker.internal"
+      # PHP_IDE_CONFIG: "serverName=localhost"
     # ДЛЯ ОТЛАДКИ (XDEBUG):
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
     healthcheck:
       test: >
         sh -c "sleep 1s"

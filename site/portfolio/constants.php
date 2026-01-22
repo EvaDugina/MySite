@@ -1,2 +1,2 @@
 <?php
-$FOLDER_SRC = "./chapters";
+$FOLDER_SRC = "/chapters";
