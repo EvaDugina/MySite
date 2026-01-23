@@ -9,8 +9,8 @@ services:
     user: root
     volumes:
       - ./site/uploads:${HOST_DIR}/uploads
-    # ДЛЯ ОТЛАДКИ:
-    # - ./site:${HOST_DIR}
+      # ДЛЯ РАЗРАБОТКИ:
+      - ./site:${HOST_DIR}
     environment:
       TZ: Europe/Moscow
       # ДЛЯ ОТЛАДКИ (XDEBUG):
@@ -39,9 +39,9 @@ services:
       - "8080:80"
     environment:
       - TZ=Europe/Moscow
-    # ДЛЯ ОТЛАДКИ:
-    # volumes:
-    #   - ./site:${HOST_DIR}
+    # ДЛЯ РАЗРАБОТКИ:
+    volumes:
+      - ./site:${HOST_DIR}
     #   - ./for_docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     #   - ./for_docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:

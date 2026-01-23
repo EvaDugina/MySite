@@ -30,12 +30,20 @@
             alt="icon"
         />
         <div id="div-photo">
+            <div id="div-flash-4" class="div-flash z-3 d-none">
+                <img
+                    id="img-flash-4"
+                    class="img-flash not-allowed-image"
+                    src="./images/УКРАЛИ.jpg"
+                    alt="УКРАЛИ"
+                />
+            </div>
             <div id="div-flash-3" class="div-flash z-3 d-none">
                 <img
                     id="img-flash-3"
                     class="img-flash not-allowed-image"
-                    src="./images/05.jpg"
-                    alt="ВСПЫШКА"
+                    src="./images/ОПЛОДОТВОРЕНИЕ.jpg"
+                    alt="ОПЛОДОТВОРЕНИЕ"
                 />
             </div>
             <div id="div-flash-2" class="div-flash z-3 d-none">
@@ -57,9 +65,7 @@
             <div id="div-flash-0" class="div-flash z-3 d-none">
                 <div id="div-flash-0-back" class="div-flash"></div>
             </div>
-            <button id="btn-click" class="z-2" onclick="clickButton()" disabled>
-                неприкосновенна
-            </button>
+            <button id="btn-click" class="z-4" disabled>неприкосновенна</button>
             <img
                 id="img-portrait"
                 class="not-allowed-image z-1"
@@ -71,14 +77,18 @@
 
     <style>
         :root {
-            cursor: default;
-            --font-size: x-small;
+            cursor: none;
         }
 
-        /* 
-    
-    
-    */
+        button.hovered {
+            background-color: #d1d1d1;
+            border-radius: 2px;
+            color: black;
+        }
+
+        /*
+
+                */
 
         .div-flash {
             position: absolute;
@@ -88,6 +98,7 @@
             height: 100%;
             pointer-events: none;
             border-radius: 7.5px;
+            mix-blend-mode: normal;
         }
 
         .img-flash {
@@ -98,7 +109,7 @@
         }
 
         #div-flash-0 {
-            mix-blend-mode: exclusion;
+            mix-blend-mode: exclusion !important;
             /* mix-blend-mode: plus-lighter; */
         }
 
@@ -107,18 +118,6 @@
             width: 99.5%;
             height: 98.5%;
             margin: 0.2%;
-        }
-
-        #div-flash-1 {
-            mix-blend-mode: normal;
-        }
-
-        #div-flash-2 {
-            mix-blend-mode: normal;
-        }
-
-        #div-flash-3 {
-            mix-blend-mode: normal;
         }
 
         #img-flash-1 {
@@ -134,6 +133,12 @@
         }
 
         #img-flash-3 {
+            height: 116%;
+            top: -5%;
+            left: -91.5%;
+        }
+
+        #img-flash-4 {
             height: 141%;
             top: 50%;
             left: 52%;
@@ -167,10 +172,10 @@
             }
         }
 
-        /*  
-    
+        /*
 
-        */
+
+                */
 
         #div-photo {
             position: absolute;
@@ -196,7 +201,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: none;
-            font-size: var(--font-size);
+            font-size: var(--font-size-sm);
         }
 
         @media (min-width: 768px) {
@@ -257,16 +262,12 @@
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            // maxSpeed: 0.1, // Максимальная скорость
-            maxSpeed: 15, // Максимальная скорость
+            maxSpeed: 0.1, // Максимальная скорость
+            // maxSpeed: 10, // Максимальная скорость
         };
 
         // Задержка до включения курсора
-        const TIMEOUT = 1;
-
-        //
-        //
-        //
+        const TIMEOUT = 2;
 
         const ELEMENT_CURSOR = $("#img-cursor");
 
@@ -277,6 +278,21 @@
         };
 
         var CurrentZone = Zone.NONE;
+
+        const BODY = document.getElementsByTagName("body")[0];
+        BODY.addEventListener("mousedown", handleClick);
+
+        function handleClick(e) {
+            if (e.which === 1) {
+                // 1 - левая кнопка
+                if (CurrentZone == Zone.BUTTON) {
+                    clickButton();
+                } else {
+                    number = getRandomInt(1, 3);
+                    flash([number, 0, number, 0, number, number, number]);
+                }
+            }
+        }
 
         function updateCurrentZone() {
             if (isPosInElementBoundary($("#btn-click"))) {
@@ -313,30 +329,35 @@
         //
         //
 
-        // const element = document.getElementById('img-portrait');
-        // element.addEventListener('mousedown', function(e) {
-        //     if (e.which === 1) { // 1 - левая кнопка
-        //         if (CurrentZone == Zone.PHOTO)
-        //             number = getRandomInt(1, 4)
-        //             flash([number, 0, number, 0, number, number, number]);
-        //     }
-        // });
-
-        const LIMIT_CLICK = getRandomInt(40, 50);
+        // const LIMIT_CLICK = getRandomInt(1, 100);
+        const LIMIT_CLICK = 2;
         var countClick = 0;
 
-        function clickButton() {
+        async function clickButton() {
             countClick += 1;
+            $("#btn-click").addClass("hovered");
+
             if (countClick > LIMIT_CLICK) {
-                const LINK = "010m62QKkgdYxQ";
-                window.open(`./${LINK}.html`, "_blank");
+                $("#btn-click").css("pointer-events", "none");
+                BODY.removeEventListener("mousedown", handleClick);
+                removeEventListeners();
+
+                // const LINK = "01index";
+                // setTimeout(() => {
+                //     window.open(`./${LINK}.html`, "_blank");
+                // }, 2000);
+                return;
             } else {
-                let number = getRandomInt(1, 4);
-                flash([number, 0, number, 0, number, number, number]);
+                await flash(generateFlashArray(3));
+                $("#btn-click").removeClass("hovered");
             }
         }
 
-        function flash(ids) {
+        function generateFlashArray(number) {
+            return [number, 0, number, 0, number, number, number];
+        }
+
+        async function flash(ids) {
             if (ids.length <= 0) return;
 
             const $flash = $("#div-flash-" + ids[0].toString());
@@ -352,12 +373,19 @@
             $flash.addClass("flash-animation");
 
             // Скрываем после завершения анимации
-            setTimeout(() => {
-                $flash.removeClass("flash-animation");
-                $flash.hide();
-                ids.shift();
-                flash(ids);
-            }, 150); // Длительность анимации
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    $flash.removeClass("flash-animation");
+                    $flash.hide();
+                    ids.shift();
+                    resolve();
+                }, 150);
+            });
+
+            // Рекурсивно продолжаем для оставшихся ID
+            if (ids.length > 0) {
+                await flash(ids);
+            }
         }
 
         function getRandomColor() {

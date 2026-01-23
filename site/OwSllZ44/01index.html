@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Украли</title>
+
+        <!-- Иконка -->
+        <link
+            rel="icon"
+            href="./images/НЕПРИКОСНОВЕННА.jpg"
+            type="image/x-icon"
+        />
+        <link
+            rel="shortcut icon"
+            href="./images/НЕПРИКОСНОВЕННА.jpg"
+            type="image/x-icon"
+        />
+
+        <link rel="stylesheet" href="./css/style.css" />
+        <link rel="stylesheet" href="./css/cursor.css" />
+    </head>
+
+    <body>
+        <img
+            id="img-cursor"
+            class="z-6"
+            src="./images/icons8-3d-pointer-50_1.png"
+            alt="icon"
+        />
+        <div id="div-photo">
+            <button id="btn-click" class="z-4" onclick="clickButton()" disabled>
+                Портрет госпожи Лизы дель Джокондо
+            </button>
+            <img
+                id="img-portrait"
+                class="not-allowed-image z-1"
+                src="./images/РАМКА.png"
+                alt="ЗДЕСЬ БЫЛА ЛИЗА"
+            />
+        </div>
+    </body>
+
+    <style>
+        :root {
+            cursor: none;
+        }
+
+        /* 
+    
+    
+        */
+
+        #div-photo {
+            position: absolute;
+            width: 60vw;
+            height: auto;
+            display: block;
+            margin: 0;
+            align-self: center;
+        }
+
+        #img-portrait {
+            position: relative;
+            width: 100%;
+            height: auto;
+            cursor: none;
+            opacity: 1;
+            border-radius: 7.5px;
+        }
+
+        #btn-click {
+            position: absolute;
+            width: 125%;
+            top: 105%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+        }
+
+        @media (min-width: 768px) {
+            #div-photo {
+                width: 50vw;
+            }
+
+            #btn-click {
+                width: 80%;
+                top: 105%;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            #div-photo {
+                width: 35vw;
+            }
+
+            #btn-click {
+                width: 90%;
+                top: 105%;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            #div-photo {
+                width: 30vw;
+            }
+
+            #btn-click {
+                width: 80%;
+                top: 105%;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            #div-photo {
+                width: 30vw;
+            }
+
+            #btn-click {
+                width: 80%;
+                top: 103%;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            #div-photo {
+                width: 25vw;
+            }
+
+            #btn-click {
+                width: 90%;
+                top: 103%;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            #div-photo {
+                width: 25vw;
+            }
+
+            #btn-click {
+                width: 70%;
+                top: 103%;
+            }
+        }
+    </style>
+
+    <script src="/src/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript">
+        $("body").hide();
+        $(document).ready(function () {
+            $("body").show();
+        });
+
+        // Настройки физики движения
+        const settings = {
+            stiffness: 0.4, // Жесткость пружины (скорость реакции)
+            damping: 0.97, // Затухание (плавность остановки)
+            mass: 0.1, // Масса объекта
+            // maxSpeed: 0.1, // Максимальная скорость
+            maxSpeed: 50, // Максимальная скорость
+        };
+
+        // Задержка до включения курсора
+        const TIMEOUT = 0;
+
+        const ELEMENT_CURSOR = $("#img-cursor");
+
+        const Zone = {
+            NONE: 0,
+            PHOTO: 1,
+            BUTTON: 2,
+        };
+
+        var CurrentZone = Zone.NONE;
+
+        const element = document.getElementsByTagName("body")[0];
+        element.addEventListener("mousedown", function (e) {
+            if (e.which === 1) {
+                // 1 - левая кнопка
+                if (CurrentZone == Zone.BUTTON) {
+                    clickButton();
+                } else {
+                    number = getRandomInt(1, 3);
+                    flash([number, 0, number, 0, number, number, number]);
+                }
+            }
+        });
+
+        function updateCurrentZone() {
+            if (isPosInElementBoundary($("#btn-click"))) {
+                if (CurrentZone != Zone.BUTTON) {
+                    changeSrc(
+                        ELEMENT_CURSOR,
+                        "./images/icons8-hand-cursor-48_1.png",
+                    );
+                    CurrentZone = Zone.BUTTON;
+                    $("#btn-click").attr("disabled", false);
+                }
+            } else if (isPosInElementBoundary($("#img-portrait"))) {
+                if (CurrentZone != Zone.PHOTO) {
+                    changeSrc(
+                        ELEMENT_CURSOR,
+                        "./images/icons8-unavailable-48.png",
+                    );
+                    CurrentZone = Zone.PHOTO;
+                    $("#btn-click").attr("disabled", true);
+                }
+            } else {
+                if (CurrentZone != Zone.NONE) {
+                    changeSrc(
+                        ELEMENT_CURSOR,
+                        "./images/icons8-3d-pointer-50_1.png",
+                    );
+                    CurrentZone = Zone.NONE;
+                    $("#btn-click").attr("disabled", true);
+                }
+            }
+        }
+    </script>
+    <script src="./js/cursorController.js"></script>
+</html>
