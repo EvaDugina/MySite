@@ -54,7 +54,7 @@
 
         #div-photo {
             position: absolute;
-            width: 60vw;
+            width: 40vw;
             height: auto;
             display: block;
             margin: 0;
@@ -76,13 +76,13 @@
             top: 105%;
             left: 50%;
             transform: translate(-50%, -50%);
-            cursor: pointer;
+            cursor: none;
             font-size: var(--font-size-sm);
         }
 
         @media (min-width: 768px) {
             #div-photo {
-                width: 50vw;
+                width: 35vw;
             }
 
             #btn-click {
@@ -93,7 +93,7 @@
 
         @media (min-width: 1024px) {
             #div-photo {
-                width: 35vw;
+                width: 30vw;
             }
 
             #btn-click {
@@ -104,7 +104,7 @@
 
         @media (min-width: 1280px) {
             #div-photo {
-                width: 30vw;
+                width: 25vw;
             }
 
             #btn-click {
@@ -115,7 +115,7 @@
 
         @media (min-width: 1440px) {
             #div-photo {
-                width: 30vw;
+                width: 25vw;
             }
 
             #btn-click {
@@ -126,7 +126,7 @@
 
         @media (min-width: 1600px) {
             #div-photo {
-                width: 25vw;
+                width: 20vw;
             }
 
             #btn-click {
@@ -137,7 +137,7 @@
 
         @media (min-width: 1920px) {
             #div-photo {
-                width: 25vw;
+                width: 20vw;
             }
 
             #btn-click {
@@ -162,12 +162,8 @@
             // maxSpeed: 0.1, // Максимальная скорость
             maxSpeed: 50, // Максимальная скорость
         };
-
-        // Задержка до включения курсора
         const TIMEOUT = 0;
-
         const ELEMENT_CURSOR = $("#img-cursor");
-
         const Zone = {
             NONE: 0,
             PHOTO: 1,
