@@ -1,14 +1,14 @@
-const LINK = "02AVtgcxoToegF";
+const LINK = "020m62QKkgdYxQ";
 function qwerty() {
     window.open(`./${LINK}.html`, "_blank");
 }
 
-const LINK_ZHESTOKOST = "02AVtgcxoToegF";
+const LINK_ZHESTOKOST = "01AVtgcxoToegF";
 function toUnizit() {
-    window.open(`./${LINK_ZHESTOKOST}.html`, "_blank");
+    window.location.href = `./${LINK_ZHESTOKOST}.html`
 }
 
-const LINK_UNIZHENIE = "02AVtgcxoToegF";
+const LINK_UNIZHENIE = "01AVtgcxoToegF";
 function toUnizitsya() {
-    window.open(`./${LINK_UNIZHENIE}.html`, "_blank");
+    window.location.href = `./${LINK_UNIZHENIE}.html`
 }

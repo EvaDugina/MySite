@@ -36,14 +36,14 @@
             />
             <button
                 id="btn-spittle"
-                class="btn-click button-spittle z-4"
+                class="btn-click btn-spittle z-4"
                 onclick="spittle()"
             >
                 Плюнуть
             </button>
             <button
                 id="btn-kiss"
-                class="btn-click button-kiss z-4"
+                class="btn-click btn-kiss z-4"
                 onclick="kiss()"
             >
                 Поцеловать
@@ -66,13 +66,13 @@
             transform: translate(-50%, -50%);
         }
 
-        #button-spittle {
+        #btn-spittle {
             top: 31%;
             left: 55%;
             font-size: var(--font-size);
         }
 
-        #button-kiss {
+        #btn-kiss {
             top: 74%;
             left: 51%;
             font-size: var(--font-size);
@@ -85,12 +85,12 @@
                 width: 200%;
             }
 
-            #button-spittle {
+            #btn-spittle {
                 top: 31%;
                 left: 27%;
             }
 
-            #button-kiss {
+            #btn-kiss {
                 top: 74%;
                 left: 24%;
             }
@@ -103,12 +103,12 @@
                 width: 200%;
             }
 
-            #button-spittle {
+            #btn-spittle {
                 top: 31%;
                 left: 47%;
             }
 
-            #button-kiss {
+            #btn-kiss {
                 top: 74%;
                 left: 44%;
             }
@@ -121,12 +121,12 @@
                 width: 200%;
             }
 
-            #button-spittle {
+            #btn-spittle {
                 top: 31%;
                 left: 47%;
             }
 
-            #button-kiss {
+            #btn-kiss {
                 top: 74%;
                 left: 44%;
             }
@@ -139,12 +139,12 @@
                 width: 200%;
             }
 
-            #button-spittle {
+            #btn-spittle {
                 top: 31%;
                 left: 46%;
             }
 
-            #button-kiss {
+            #btn-kiss {
                 top: 74%;
                 left: 44%;
             }
@@ -157,12 +157,12 @@
                 width: 200%;
             }
 
-            #button-spittle {
+            #btn-spittle {
                 top: 31%;
                 left: 46%;
             }
 
-            #button-kiss {
+            #btn-kiss {
                 top: 74%;
                 left: 44%;
             }
@@ -175,12 +175,12 @@
                 width: 200%;
             }
 
-            #button-spittle {
+            #btn-spittle {
                 top: 31%;
                 left: 46%;
             }
 
-            #button-kiss {
+            #btn-kiss {
                 top: 74%;
                 left: 44%;
             }
@@ -203,10 +203,10 @@
             timeout: 0, // Задержка перед началом
             startX: 0.5, // Начальная позиция от width по X
             startY: 0.5, // Начальная позиция от рушпре по Y
-            stiffness: 0.4, // Жесткость пружины (скорость реакции)
-            damping: 0.97, // Затухание (плавность остановки)
+            stiffness: 1, // Жесткость пружины (скорость реакции)
+            damping: 0.1, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            maxSpeed: 10, // Максимальная скорость
+            maxSpeed: 50, // Максимальная скорость
         };
         
         const Zone = {
@@ -219,20 +219,73 @@
         
         const BUTTON_SPITTLE = $('#btn-spittle')
         const BUTTON_KISS = $('#btn-kiss')
-        var ElementZones = {
-            [Zone.NONE]: null,
-            [Zone.PHOTO]: $("#img-portrait"),
-            [Zone.BUTTON_SPITTLE]: BUTTON_SPITTLE,
-            [Zone.BUTTON_KISS]: BUTTON_KISS,
+
+        const ZONES_SETTINGS = {
+            [Zone.NONE]: {
+                "element": null, 
+                "imgCursor": "./images/default.png",
+                "handleOn": null,
+                "handleOff": null,
+            },
+            [Zone.PHOTO]: {
+                "element": $("#img-portrait"), 
+                "imgCursor": "./images/default.png",
+                "handleOn": null,
+                "handleOff": null,
+            },
+            [Zone.BUTTON_SPITTLE]: {
+                "element": BUTTON_SPITTLE, 
+                "imgCursor": "./images/pointer.png",
+                "handleOn": cursorOnButtonSpittle,
+                "handleOff": cursorOffButtonSpittle,
+            },
+            [Zone.BUTTON_KISS]: {
+                "element": BUTTON_KISS, 
+                "imgCursor": "./images/pointer.png",
+                "handleOn": cursorOnButtonKiss,
+                "handleOff": cursorOffButtonKiss,
+            }
         };
+
+        function cursorOnButtonSpittle() {
+            BUTTON_SPITTLE.addClass("hovered");
+            BUTTON_SPITTLE.css("pointer-events", "all");
+        }
+
+        function cursorOffButtonSpittle() {
+            BUTTON_SPITTLE.removeClass("hovered");
+            BUTTON_SPITTLE.css("pointer-events", "none");
+        }
+
+        function cursorOnButtonKiss() {
+            BUTTON_KISS.addClass("hovered");
+            BUTTON_KISS.css("pointer-events", "all");
+        }
+
+        function cursorOffButtonKiss() {
+            BUTTON_KISS.removeClass("hovered");
+            BUTTON_KISS.css("pointer-events", "none");
+        }
 
         // 
         // CURSOR CLICK CONTROLL
         // 
 
-        const DURATION = 600;
+        const DURATION = 700;
+
         var SPITTLE = 0;
         var KISS = 0;
+
+        async function handleClick(e) {
+            if (e.which === 1) {
+                // 1 - левая кнопка
+                if (isCursorZone(Zone.BUTTON_SPITTLE)) {
+                    spittle()
+                } else if (isCursorZone(Zone.BUTTON_KISS)) {
+                    kiss()
+                }
+            }
+        }
 
         function spittle() {
             SPITTLE += 1;
@@ -264,15 +317,6 @@
             return KISS > 0 && SPITTLE > 0;
         }
 
-        //
-        //
-        //
-
-        const LINK = "030m62QKkgdYxQ";
-
-        function GoToNextPage() {
-            window.location.href = `./${LINK}.html`;
-        }
     </script>
-    <script src="./js/cursorMoveController.js"></script>
+    <script src="./js/cursorController.js"></script>
 </html>

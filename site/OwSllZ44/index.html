@@ -200,8 +200,8 @@
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            maxSpeed: 0.5, // Максимальная скорость
-            // maxSpeed: 2.5, // Максимальная скорость (для отладки)
+            // maxSpeed: 0.1, // Максимальная скорость
+            maxSpeed: 2.5, // Максимальная скорость (для отладки)
         };
         
         const Zone = {
@@ -256,18 +256,10 @@
         var countClick = 0;
         var IS_CLICKED = false;
 
-        // Инициализация начальной позиции
-        window.addEventListener("mousedown", handleClick);
-
-        function disableCursor() {
-            window.removeEventListener("mousedown", handleClick);
-        }
-
         async function handleClick(e) {
             if (e.which === 1) {
                 // 1 - левая кнопка
                 if (isCursorZone(Zone.BUTTON) || isCursorZone(Zone.POINT)) {
-                    stopCursor()
                     await clickButton();
                 } else {
                     number = getRandomInt(1, 2);
@@ -287,8 +279,6 @@
 
             if (isCursorZone(Zone.POINT)) {
 
-                startCursor()
-
                 BUTTON.css("pointer-events", "none");
                 BUTTON.attr("disabled", true);
                 disableCursor()
@@ -307,7 +297,6 @@
                     qwerty()
                 }, 2000);
             } else {
-                startCursor()
 
                 setTimeout(() => {
                     BUTTON.removeClass("active");
@@ -331,7 +320,7 @@
         }
 
     </script>
-    <script src="./js/cursorMoveController.js"></script>
+    <script src="./js/cursorController.js"></script>
     <script src="./js/flash.js"></script>
     <script src="./js/random.js"></script>
 </html>

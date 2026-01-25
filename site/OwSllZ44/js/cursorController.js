@@ -32,6 +32,13 @@ window.onresize = function () {
 };
 
 // Инициализация начальной позиции
+window.addEventListener("mousedown", handleClick);
+
+function disableCursor() {
+    window.removeEventListener("mousedown", handleClick);
+}
+
+// Инициализация начальной позиции
 window.onload = function () {
     currentX = targetX = window.innerWidth * SETTINGS.startX - SETTINGS.elementCursor.width() / 2
     currentY = targetY = window.innerHeight * SETTINGS.startY - SETTINGS.elementCursor.height() / 2
@@ -168,11 +175,6 @@ function updateCurrentZone() {
 
         }
     }
-
-    if (CurrentZone == Zone.POINT)
-        console.log("POINT!")
-    else
-        console.log(CurrentZone)
 
     // Если курсор не в активной зоне, выходим из нее
     if (!foundZone) {
