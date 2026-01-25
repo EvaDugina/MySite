@@ -8,12 +8,12 @@
 
         <link
             rel="icon"
-            href="./images/НЕПРИКОСНОВЕННА.jpg"
+            href="./images/ОПЛОДОТВОРЕНИЕ_LOD2.jpg"
             type="image/x-icon"
         />
         <link
             rel="shortcut icon"
-            href="./images/НЕПРИКОСНОВЕННА.jpg"
+            href="./images/ОПЛОДОТВОРЕНИЕ_LOD2.jpg"
             type="image/x-icon"
         />
 
@@ -77,13 +77,6 @@
     </body>
 
     <style>
-        :root {
-            cursor: none;
-        }
-
-        /*
-
-        */
 
         #div-flash-0 {
             mix-blend-mode: exclusion;
@@ -129,12 +122,13 @@
         */
 
         #div-photo {
-            width: 40vw;
+            width: 40%;
         }
 
         #btn-click {
             top: 75%;
             left: 50%;
+            font-size: var(--font-size-sm);
         }  
 
         #div-point {
@@ -153,127 +147,111 @@
 
         @media (min-width: 768px) {
             #div-photo {
-                width: 35vw;
+                width: 35%;
             }
         }
 
         @media (min-width: 1024px) {
             #div-photo {
-                width: 30vw;
+                width: 30%;
             }
         }
 
         @media (min-width: 1280px) {
             #div-photo {
-                width: 25vw;
+                width: 25%;
             }
         }
 
         @media (min-width: 1440px) {
             #div-photo {
-                width: 25vw;
+                width: 25%;
             }
         }
 
         @media (min-width: 1600px) {
             #div-photo {
-                width: 20vw;
+                width: 20%;
             }
         }
 
         @media (min-width: 1920px) {
             #div-photo {
-                width: 20vw;
+                width: 20%;
             }
         }
     </style>
 
     <script src="/src/jquery-3.7.1.min.js"></script>
     <script src="./js/optimization.js"></script>
+    <script src="./js/links/index.js"></script>
     <script type="text/javascript">
-
-        window.addEventListener("beforeunload", function (event) {
-            event.returnValue = "Уверены, что хотите покинуть страницу?";
-            return event.returnValue;
-        });
 
         // 
         // CURSOR MOVE CONTROLL
         // 
 
-        const ELEMENT_BUTTON = $('#btn-click')
-
         // Настройки cursorController
         const SETTINGS = {
-            elementCursor: $("#img-cursor"), // 
+            elementCursor: $("#img-cursor"), // Объект курсора
             timeout: 2, // Задержка перед началом
+            startX: 0.9, // Начальная позиция от width по X
+            startY: 0.25, // Начальная позиция от рушпре по Y
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            // maxSpeed: 0.25, // Максимальная скорость
-            maxSpeed: 2.5, // Максимальная скорость
+            maxSpeed: 0.5, // Максимальная скорость
+            // maxSpeed: 2.5, // Максимальная скорость (для отладки)
         };
-
+        
         const Zone = {
             NONE: 0,
             PHOTO: 1,
             BUTTON: 2,
             POINT: 3
         };
-        var CurrentZone = Zone.NONE;
-
-        var ElementZones = {
-            [Zone.NONE]: null,
-            [Zone.PHOTO]: $("#img-portrait"),
-            [Zone.BUTTON]: ELEMENT_BUTTON,
-            [Zone.POINT]: $('#div-point')
+        
+        const BUTTON = $('#btn-click')
+        const ZONES_SETTINGS = {
+            [Zone.NONE]: {
+                "element": null, 
+                "imgCursor": "./images/default.png",
+                "handleOn": null,
+                "handleOff": null,
+            },
+            [Zone.PHOTO]: {
+                "element": $("#img-portrait"), 
+                "imgCursor": "./images/default.png",
+                "handleOn": null,
+                "handleOff": null,
+            },
+            [Zone.BUTTON]: {
+                "element": BUTTON, 
+                "imgCursor": "./images/pointer.png",
+                "handleOn": cursorOnButton,
+                "handleOff": cursorOffButton,
+            },
+            [Zone.POINT]: {
+                "element": $('#div-point'), 
+                "imgCursor": null,
+                "handleOn": null,
+                "handleOff": null,
+            }
         };
 
-        function updateCurrentZone() {
-            if (isCursorInZone(Zone.BUTTON)) {
-                if (CurrentZone != Zone.BUTTON) {
-                    CurrentZone = Zone.BUTTON;
-                    changeSrc(
-                        SETTINGS.elementCursor,
-                        "./images/pointer.png",
-                    );
-                    ELEMENT_BUTTON.addClass("hovered");
-                    ELEMENT_BUTTON.css("pointer-events", "all");
-                }
-                return;
-            } else {
-                if (CurrentZone == Zone.BUTTON) {
-                    ELEMENT_BUTTON.removeClass("hovered");
-                    ELEMENT_BUTTON.css("pointer-events", "none");
-                }
-            }
-            
-            // if (isCursorInZone(Zone.PHOTO)) {
-            //     if (CurrentZone != Zone.PHOTO) {
-            //         CurrentZone = Zone.PHOTO;
-            //         changeSrc(
-            //             SETTINGS.elementCursor,
-            //             "./images/unavailable.png",
-            //         );
-            //     }
-            //     return;
-            // }
+        function cursorOnButton() {
+            BUTTON.addClass("hovered");
+            BUTTON.css("pointer-events", "all");
+        }
 
-             if (CurrentZone != Zone.NONE) {
-                CurrentZone = Zone.NONE;
-                changeSrc(
-                    SETTINGS.elementCursor,
-                    "./images/default.png",
-                );
-                return;
-            }
+        function cursorOffButton() {
+            BUTTON.removeClass("hovered");
+            BUTTON.css("pointer-events", "none");
         }
 
         // 
         // CURSOR CLICK CONTROLL
         // 
-
-        // const LIMIT_CLICK = 1;
 
         var countClick = 0;
         var IS_CLICKED = false;
@@ -288,7 +266,8 @@
         async function handleClick(e) {
             if (e.which === 1) {
                 // 1 - левая кнопка
-                if (CurrentZone == Zone.BUTTON) {
+                if (isCursorZone(Zone.BUTTON) || isCursorZone(Zone.POINT)) {
+                    stopCursor()
                     await clickButton();
                 } else {
                     number = getRandomInt(1, 2);
@@ -304,31 +283,34 @@
             IS_CLICKED = true
             countClick += 1;
 
-            ELEMENT_BUTTON.addClass("active");
+            BUTTON.addClass("active");
 
-            if (isCursorInZone(Zone.POINT)) {
+            if (isCursorZone(Zone.POINT)) {
 
-                ELEMENT_BUTTON.css("pointer-events", "none");
-                ELEMENT_BUTTON.attr("disabled", true);
+                startCursor()
+
+                BUTTON.css("pointer-events", "none");
+                BUTTON.attr("disabled", true);
                 disableCursor()
                 stopCursor();
 
-                ELEMENT_BUTTON.addClass("d-none");
+                BUTTON.addClass("d-none");
                 await flash(generateFlashArray(3));
                 await flash(generateFlashArray(3));
-                ELEMENT_BUTTON.removeClass("d-none");
+                BUTTON.removeClass("d-none");
 
-                ELEMENT_BUTTON.removeClass("hovered");
-                ELEMENT_BUTTON.removeClass("active");
-                ELEMENT_BUTTON.attr("disabled", true);
+                BUTTON.removeClass("hovered");
+                BUTTON.removeClass("active");
+                BUTTON.attr("disabled", true);
 
-                // const LINK = "01index";
-                // setTimeout(() => {
-                //     window.open(`./${LINK}.html`, "_blank");
-                // }, 2000);
-            } else {
                 setTimeout(() => {
-                    ELEMENT_BUTTON.removeClass("active");
+                    qwerty()
+                }, 2000);
+            } else {
+                startCursor()
+
+                setTimeout(() => {
+                    BUTTON.removeClass("active");
                 }, 500);
                 
             }

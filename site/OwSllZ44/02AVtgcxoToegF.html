@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>Неприкосновенна</title>
+        <title>Открыта</title>
 
         <link
             rel="icon"
@@ -16,25 +16,34 @@
             href="./images/НЕПРИКОСНОВЕННА.jpg"
             type="image/x-icon"
         />
+
+        <link rel="stylesheet" href="./css/style.css" />
+        <link rel="stylesheet" href="./css/cursor.css" />
     </head>
 
     <body class="d-none">
-        <div class="div-photo">
-            <img
-                class="img-dynamic z-1"
+        <img
+            id="img-cursor"
+            class="img-cursor z-6"
+            src="./images/default.png"
+            alt="icon"
+        />
+        <div id="div-photo" class="div-photo">
+            <img id="img-portrait"
+                class="img-portrait z-1"
                 src="./images/НЕПРИКОСНОВЕННА.png"
                 alt="НЕПРИКОСНОВЕННА"
             />
             <button
                 id="btn-spittle"
-                class="overlay-button button-spittle z-4"
+                class="btn-click button-spittle z-4"
                 onclick="spittle()"
             >
                 Плюнуть
             </button>
             <button
                 id="btn-kiss"
-                class="overlay-button button-kiss z-4"
+                class="btn-click button-kiss z-4"
                 onclick="kiss()"
             >
                 Поцеловать
@@ -43,354 +52,215 @@
     </body>
 
     <style>
-        :root {
-            cursor: pointer;
-            --font-size: small;
-            --font-size-sm: x-small;
-        }
-
-        html,
-        body {
-            height: 100%;
+        #div-photo {
             width: 100%;
+            height: 100%;
         }
 
-        body {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            background-color: white;
-            overflow-y: hidden;
-            overflow-x: hidden;
-        }
-
-        .div-photo {
-            margin: 0;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .div-statistics {
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            /* margin: 20% 15%; */
+        #img-portrait {
             position: absolute;
-            background-color: blue;
-            color: white;
-            font-size: var(--font-size-sm);
-            justify-content: center;
-            display: flex;
-            align-items: center;
-            cursor: not-allowed;
-        }
-
-        .div-statistic {
-            margin: 5px;
-            width: fit-content;
-            height: fit-content;
-        }
-
-        .span-count {
-            font-weight: 700;
-        }
-
-        img {
-            height: 100vh;
-            top: 50%;
-            position: absolute;
-            transform: translate(-50%, -50%);
-        }
-
-        .img-dynamic {
-            left: 66%;
             width: 500%;
-        }
-
-        .overlay-button {
-            position: absolute;
+            height: 100%;
+            top: 50%;
+            left: 66%;
             transform: translate(-50%, -50%);
-            cursor: pointer;
         }
 
-        .button-spittle {
+        #button-spittle {
             top: 31%;
             left: 55%;
             font-size: var(--font-size);
         }
 
-        .button-kiss {
+        #button-kiss {
             top: 74%;
             left: 51%;
             font-size: var(--font-size);
         }
 
-        button:disabled {
-            opacity: 0.6; /* Makes it look semi-transparent */
-            cursor: not-allowed; /* Changes the mouse cursor */
-            background-color: #a0a0a0; /* Changes the background color */
-        }
-
-        #timer {
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            position: absolute;
-            justify-content: center;
-            /* display: flex; */
-            align-items: center;
-            font-size: xx-large;
-            font-weight: bolder;
-            color: white;
-        }
-
         @media (min-width: 768px) {
-            :root {
-                --font-size: xx-small !important;
-                --font-size-sm: xx-small !important;
-            }
 
-            /* .div-statistics {
-            margin: 10% !important;
-        } */
-
-            .img-dynamic {
+            #img-portrait {
                 left: 30%;
                 width: 200%;
             }
 
-            .button-spittle {
+            #button-spittle {
                 top: 31%;
                 left: 27%;
             }
 
-            .button-kiss {
+            #button-kiss {
                 top: 74%;
                 left: 24%;
             }
         }
 
         @media (min-width: 1024px) {
-            :root {
-                --font-size: small !important;
-                --font-size-sm: x-small !important;
-            }
 
-            /* .div-statistics {
-            margin: 2% !important;
-        } */
-
-            .img-dynamic {
+            #img-portrait {
                 left: 50%;
                 width: 200%;
             }
 
-            .button-spittle {
+            #button-spittle {
                 top: 31%;
                 left: 47%;
             }
 
-            .button-kiss {
+            #button-kiss {
                 top: 74%;
                 left: 44%;
             }
         }
 
         @media (min-width: 1280px) {
-            :root {
-                --font-size: medium !important;
-                --font-size-sm: small !important;
-            }
 
-            /* .div-statistics {
-            margin: 1% !important;
-        } */
-
-            .img-dynamic {
+            #img-portrait {
                 left: 50%;
                 width: 200%;
             }
 
-            .button-spittle {
+            #button-spittle {
                 top: 31%;
                 left: 47%;
             }
 
-            .button-kiss {
+            #button-kiss {
                 top: 74%;
                 left: 44%;
             }
         }
 
         @media (min-width: 1440px) {
-            :root {
-                --font-size: medium !important;
-                --font-size-sm: small !important;
-            }
 
-            /* .div-statistics {
-            margin: 2% !important;
-        } */
-
-            .img-dynamic {
+            #img-portrait {
                 left: 50%;
                 width: 200%;
             }
 
-            .button-spittle {
+            #button-spittle {
                 top: 31%;
                 left: 46%;
             }
 
-            .button-kiss {
+            #button-kiss {
                 top: 74%;
                 left: 44%;
             }
         }
 
         @media (min-width: 1600px) {
-            :root {
-                --font-size: large !important;
-                --font-size-sm: medium !important;
-            }
 
-            /* .div-statistics {
-            margin: 2% !important;
-        } */
-
-            .img-dynamic {
+            #img-portrait {
                 left: 50%;
                 width: 200%;
             }
 
-            .button-spittle {
+            #button-spittle {
                 top: 31%;
                 left: 46%;
             }
 
-            .button-kiss {
+            #button-kiss {
                 top: 74%;
                 left: 44%;
             }
         }
 
         @media (min-width: 1920px) {
-            :root {
-                --font-size: x-large !important;
-                --font-size-sm: large !important;
-            }
 
-            /* .div-statistics {
-            margin: 2% !important;
-        } */
-
-            .img-dynamic {
+            #img-portrait {
                 left: 50%;
                 width: 200%;
             }
 
-            .button-spittle {
+            #button-spittle {
                 top: 31%;
                 left: 46%;
             }
 
-            .button-kiss {
+            #button-kiss {
                 top: 74%;
                 left: 44%;
             }
         }
 
-        .z-1 {
-            z-index: 1;
-        }
-
-        .z-2 {
-            z-index: 2;
-        }
-
-        .z-3 {
-            z-index: 3;
-        }
-
-        .z-4 {
-            z-index: 4;
-        }
-
-        .d-none {
-            display: none;
-        }
-
-        .top {
-            top: 0;
-        }
-
-        .bottom {
-            bottom: 0;
-        }
     </style>
 
     <script src="/src/jquery-3.7.1.min.js"></script>
+    <script src="./js/optimization.js"></script>
+    <script src="./js/links/02AVtgcxoToegF.js"></script>
     <script type="text/javascript">
-        // await getStatistic();
 
-        async function getStatistic() {
-            let ajaxResponse = await ajaxGetStatistic();
-            if (ajaxResponse == null) {
-                return;
-            }
+        // 
+        // CURSOR MOVE CONTROLL
+        // 
 
-            console.log(ajaxResponse);
-        }
+        // Настройки cursorController
+        const SETTINGS = {
+            elementCursor: $("#img-cursor"), // Объект курсора
+            timeout: 0, // Задержка перед началом
+            startX: 0.5, // Начальная позиция от width по X
+            startY: 0.5, // Начальная позиция от рушпре по Y
+            stiffness: 0.4, // Жесткость пружины (скорость реакции)
+            damping: 0.97, // Затухание (плавность остановки)
+            mass: 0.1, // Масса объекта
+            maxSpeed: 10, // Максимальная скорость
+        };
+        
+        const Zone = {
+            NONE: 0,
+            PHOTO: 1,
+            BUTTON_SPITTLE: 2,
+            BUTTON_KISS: 3
+        };
+        var CurrentZone = Zone.NONE;
+        
+        const BUTTON_SPITTLE = $('#btn-spittle')
+        const BUTTON_KISS = $('#btn-kiss')
+        var ElementZones = {
+            [Zone.NONE]: null,
+            [Zone.PHOTO]: $("#img-portrait"),
+            [Zone.BUTTON_SPITTLE]: BUTTON_SPITTLE,
+            [Zone.BUTTON_KISS]: BUTTON_KISS,
+        };
 
-        async function ajaxGetStatistic() {
-            var formData = new FormData();
-            formData.append("flag-getStatistic", true);
+        // 
+        // CURSOR CLICK CONTROLL
+        // 
 
-            let response = null;
-            try {
-                response = await $.ajax({
-                    type: "POST",
-                    url: "01Rfk6m6SUDXSD.php#content",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: formData,
-                    dataType: "html",
-                });
-                // console.log(response.trim());
-                response = response.trim();
-            } catch (error) {
-                console.error("Ошибка запроса:", error);
-                return null;
-            }
-
-            return response;
-        }
-
-        $(document).ready(function () {
-            $("body").show();
-        });
-
-        //
-        //
-        //
-
+        const DURATION = 600;
         var SPITTLE = 0;
         var KISS = 0;
 
         function spittle() {
             SPITTLE += 1;
             $("#btn-spittle").prop("disabled", true);
-            if (isCorrect()) GoToNextPage();
+
+            setTimeout(() => {
+                if (isBoth()) 
+                    qwerty();
+                else 
+                    toUnizit();
+            }, DURATION);
+
         }
 
         function kiss() {
             KISS += 1;
             $("#btn-kiss").prop("disabled", true);
-            if (isCorrect()) GoToNextPage();
+            
+            setTimeout(() => {
+                if (isBoth()) 
+                    qwerty();
+                else 
+                    toUnizitsya();
+            }, DURATION);
+
         }
 
-        function isCorrect() {
+        function isBoth() {
             return KISS > 0 && SPITTLE > 0;
         }
 
@@ -404,4 +274,5 @@
             window.location.href = `./${LINK}.html`;
         }
     </script>
+    <script src="./js/cursorMoveController.js"></script>
 </html>

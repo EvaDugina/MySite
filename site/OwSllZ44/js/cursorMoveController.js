@@ -5,6 +5,8 @@ var currentY = 0
 var velocityX = 0
 var velocityY = 0
 
+var CurrentZone = Zone.NONE;
+
 var IS_STOPPED = false;
 var animationId = null
 var RectZones;
@@ -17,19 +19,8 @@ function isStoped() {
     return IS_STOPPED
 }
 
-function isCursorInZone(zoneType) {
-    if (zoneType == Zone.NONE)
-        return true
-
-    let radius = 0
-    let rect = RectZones.get(zoneType)
-
-    return (
-        currentX + radius >= rect.left &&
-        currentX - radius <= rect.right &&
-        currentY + radius >= rect.top &&
-        currentY - radius <= rect.bottom
-    )
+function isCursorZone(zoneType) {
+    return CurrentZone == zoneType
 }
 
 // 
@@ -42,8 +33,8 @@ window.onresize = function () {
 
 // Инициализация начальной позиции
 window.onload = function () {
-    currentX = targetX = window.innerWidth * 0.9 - SETTINGS.elementCursor.width() / 2
-    currentY = targetY = window.innerHeight * 0.25 - SETTINGS.elementCursor.height() / 2
+    currentX = targetX = window.innerWidth * SETTINGS.startX - SETTINGS.elementCursor.width() / 2
+    currentY = targetY = window.innerHeight * SETTINGS.startY - SETTINGS.elementCursor.height() / 2
 
     // Устанавливаем начальную позицию
     SETTINGS.elementCursor.css({
@@ -56,8 +47,8 @@ window.onload = function () {
 
     RectZones = new Map();
     Object.entries(Zone).forEach(([key, value]) => {
-        if (ElementZones[value] != null)
-            RectZones.set(value, ElementZones[value][0].getBoundingClientRect());
+        if (ZONES_SETTINGS[value]["element"] != null)
+            RectZones.set(value, ZONES_SETTINGS[value]["element"][0].getBoundingClientRect());
     });
 
     // Запускаем анимацию
@@ -66,12 +57,7 @@ window.onload = function () {
     }
 
     setTimeout(() => {
-        // Обработчик движения мыши
-        window.addEventListener("mousemove", handleMosemove)
-
-        // Останавливаем анимацию при потере фокуса
-        window.addEventListener("blur", handleBlur)
-
+        startCursor()
     }, SETTINGS.timeout * 1000)
 
 }
@@ -92,6 +78,12 @@ function handleBlur() {
         cancelAnimationFrame(animationId)
         animationId = null
     }
+}
+
+function startCursor() {
+    window.addEventListener("mousemove", handleMosemove)
+    window.addEventListener("blur", handleBlur)
+    IS_STOPPED = false
 }
 
 function stopCursor() {
@@ -146,7 +138,88 @@ function updatePosition() {
     animationId = requestAnimationFrame(updatePosition)
 }
 
+function updateCurrentZone() {
+    let foundZone = false;
+
+    // Получаем все зоны и переворачиваем порядок для обратной проверки
+    const zoneEntries = Object.entries(Zone);
+
+    // Идем в обратном порядке (от последней зоны к первой)
+    for (let i = zoneEntries.length - 1; i >= 0; i--) {
+
+        const [key, value] = zoneEntries[i];
+        if (isCursorInZone(value)) {
+            foundZone = true;
+
+            // Вход в новую зону
+            if (CurrentZone !== value) {
+
+                // Выход из предыдущей зоны
+                handleOffCurrentZone()
+
+                // Вход в новую зону
+                CurrentZone = value;
+                changeSrc(SETTINGS.elementCursor, ZONES_SETTINGS[CurrentZone]["imgCursor"]);
+                handleOnCurrentZone()
+
+            }
+
+            break
+
+        }
+    }
+
+    if (CurrentZone == Zone.POINT)
+        console.log("POINT!")
+    else
+        console.log(CurrentZone)
+
+    // Если курсор не в активной зоне, выходим из нее
+    if (!foundZone) {
+        handleOffCurrentZone()
+
+        CurrentZone = Zone.NONE;
+        changeSrc(SETTINGS.elementCursor, ZONES_SETTINGS[CurrentZone]["imgCursor"]);
+        handleOnCurrentZone()
+    }
+}
+
+function isCursorInZone(zoneType) {
+    if (zoneType == Zone.NONE)
+        return true
+
+    // if (CurrentZone == Zone.POINT && zoneType == Zone.POINT)
+    //     console.log("isCursorInZone(POINT)")
+
+    let radius = 0
+    let rect = RectZones.get(zoneType)
+
+    return (
+        currentX + radius >= rect.left &&
+        currentX - radius <= rect.right &&
+        currentY + radius >= rect.top &&
+        currentY - radius <= rect.bottom
+    )
+}
+
+function handleOnCurrentZone() {
+    if (ZONES_SETTINGS[CurrentZone]["handleOn"] == null)
+        return
+    ZONES_SETTINGS[CurrentZone]["handleOn"]();
+}
+
+function handleOffCurrentZone() {
+    if (ZONES_SETTINGS[CurrentZone]["handleOff"] == null)
+        return
+    ZONES_SETTINGS[CurrentZone]["handleOff"]();
+}
+
 function changeSrc(elementImage, newSrc) {
+
+    if (ZONES_SETTINGS[CurrentZone]["imgCursor"] == null
+        || ZONES_SETTINGS[CurrentZone]["imgCursor"] == SETTINGS.elementCursor.attr('src'))
+        return
+
     let speedAnimation = 10
     // Fade the image out
     elementImage.fadeOut(speedAnimation, function () {

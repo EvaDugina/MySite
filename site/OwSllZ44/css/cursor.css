@@ -1,6 +1,15 @@
-    #img-cursor {
-        width: 30px;
-        height: 30px;
-        position: fixed;
-        will-change: transform; /* Для оптимизации анимации */
-    }
+:root {
+    cursor: none;
+}
+
+button {
+    cursor: none;
+    pointer-events: none;
+}
+
+#img-cursor {
+    width: 30px;
+    height: 30px;
+    position: fixed;
+    will-change: transform; /* Для оптимизации анимации */
+}

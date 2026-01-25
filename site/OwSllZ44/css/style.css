@@ -191,8 +191,5 @@ button.active {
 .btn-click {
     position: absolute;
     transform: translate(-50%, -50%);
-    cursor: none;
-    font-size: var(--font-size-sm);
-    pointer-events: none;
 }
 
