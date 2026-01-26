@@ -25,7 +25,7 @@
     <body>
         <img
             id="img-cursor"
-            class="img-cursor z-6"
+            class="img-cursor not-allowed z-6"
             src="./images/default.png"
             alt="icon"
         />
@@ -57,7 +57,7 @@
             <div id="div-flash-1" class="div-flash z-3 d-none">
                 <img
                     id="img-flash-1"
-                    class="img-flash not-allowed-image"
+                    class="img-flash"
                     src="./images/01_2.jpg"
                     alt="ВСПЫШКА"
                 />
@@ -66,7 +66,7 @@
                 <div id="div-flash-0-back" class="div-flash"></div>
             </div>
             <div id="div-point" class="div-point z-3"></div>
-            <button id="btn-click" class="btn-click z-4">неприкосновенна</button>
+            <button id="btn-click" class="btn-click not-allowed z-4">неприкосновенна</button>
             <img
                 id="img-portrait"
                 class="img-portrait not-allowed-image z-1"
@@ -80,7 +80,6 @@
 
         #div-flash-0 {
             mix-blend-mode: exclusion;
-            /* mix-blend-mode: plus-lighter; */
         }
 
         #div-flash-0-back {
@@ -105,7 +104,7 @@
         #img-flash-3 {
             height: 116%;
             top: -5%;
-            left: -89.5%;
+            left: -88%;
         }
 
         #img-flash-4 {
@@ -135,8 +134,8 @@
             position: absolute;
             top: 75%;
             left: 55%;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             display: block;
             margin: 0;
             align-self: center;
@@ -200,8 +199,8 @@
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            // maxSpeed: 0.1, // Максимальная скорость
-            maxSpeed: 2.5, // Максимальная скорость (для отладки)
+            maxSpeed: 0.1, // Максимальная скорость
+            // maxSpeed: 1, // Максимальная скорость (для отладки)
         };
         
         const Zone = {
@@ -258,53 +257,56 @@
 
         async function handleClick(e) {
             if (e.which === 1) {
-                // 1 - левая кнопка
-                if (isCursorZone(Zone.BUTTON) || isCursorZone(Zone.POINT)) {
+
+                if (!isCursorZone(Zone.POINT) && !isCursorZone(Zone.BUTTON))
+                    return
+
+                if (IS_CLICKED)
+                    return
+
+                IS_CLICKED = true
+                countClick += 1;
+                
+                if (isCursorZone(Zone.POINT)) {
+                    await clickPoint();
+                } else if (isCursorZone(Zone.BUTTON)) {
                     await clickButton();
-                } else {
-                    number = getRandomInt(1, 2);
-                    flash([number, 0, number, 0, number, number, number]);
                 }
+
+                IS_CLICKED = false;
             }
         }
 
-        async function clickButton() {
-            if (IS_CLICKED)
-                return
+        async function clickPoint() {
+            BUTTON.css("pointer-events", "none");
+            BUTTON.attr("disabled", true);
+            disableCursor()
+            stopCursor();
 
-            IS_CLICKED = true
-            countClick += 1;
+            BUTTON.addClass("d-none");
+            await flash(generateFlashArray(3));
+            await flash(generateFlashArray(3));
+            BUTTON.removeClass("d-none");
+
+            BUTTON.removeClass("hovered");
+            BUTTON.removeClass("active");
+            BUTTON.attr("disabled", true);
+
+            setTimeout(() => {
+                qwerty()
+            }, 2000);
+        }
+
+        async function clickButton() {
 
             BUTTON.addClass("active");
+            number = getRandomInt(1, 2);
+            flash([number, 0, number, 0, number, number, number]);
 
-            if (isCursorZone(Zone.POINT)) {
-
-                BUTTON.css("pointer-events", "none");
-                BUTTON.attr("disabled", true);
-                disableCursor()
-                stopCursor();
-
-                BUTTON.addClass("d-none");
-                await flash(generateFlashArray(3));
-                await flash(generateFlashArray(3));
-                BUTTON.removeClass("d-none");
-
-                BUTTON.removeClass("hovered");
+            setTimeout(() => {
                 BUTTON.removeClass("active");
-                BUTTON.attr("disabled", true);
+            }, 500);
 
-                setTimeout(() => {
-                    qwerty()
-                }, 2000);
-            } else {
-
-                setTimeout(() => {
-                    BUTTON.removeClass("active");
-                }, 500);
-                
-            }
-
-            IS_CLICKED = false;
         }
 
         // 

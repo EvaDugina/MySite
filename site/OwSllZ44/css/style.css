@@ -150,7 +150,7 @@ button.active {
     pointer-events: none !important;
 }
 
-.not-allowed-image {
+.not-allowed {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Chrome, Safari, Opera */
   -khtml-user-select: none; /* Konqueror HTML */
