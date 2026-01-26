@@ -33,7 +33,7 @@
             <div id="div-flash-4" class="div-flash z-3 d-none">
                 <img
                     id="img-flash-4"
-                    class="img-flash not-allowed-image"
+                    class="img-flash not-allowed"
                     src="./images/УКРАЛИ.jpg"
                     alt="УКРАЛИ"
                 />
@@ -41,7 +41,7 @@
             <div id="div-flash-3" class="div-flash z-3 d-none">
                 <img
                     id="img-flash-3"
-                    class="img-flash not-allowed-image"
+                    class="img-flash not-allowed"
                     src="./images/ОПЛОДОТВОРЕНИЕ.jpg"
                     alt="ОПЛОДОТВОРЕНИЕ"
                 />
@@ -49,7 +49,7 @@
             <div id="div-flash-2" class="div-flash z-3 d-none">
                 <img
                     id="img-flash-2"
-                    class="img-flash not-allowed-image"
+                    class="img-flash not-allowed"
                     src="./images/04.jpg"
                     alt="ВСПЫШКА"
                 />
@@ -66,18 +66,29 @@
                 <div id="div-flash-0-back" class="div-flash"></div>
             </div>
             <div id="div-point" class="div-point z-3"></div>
-            <button id="btn-click" class="btn-click not-allowed z-4">неприкосновенна</button>
+            <button id="btn-click" class="btn-click not-allowed z-4">
+                неприкосновенна
+            </button>
             <img
                 id="img-portrait"
-                class="img-portrait not-allowed-image z-1"
+                class="img-portrait not-allowed z-1"
                 src="./images/НЕПРИКОСНОВЕННА.png"
                 alt="НЕПРИКОСНОВЕННА"
             />
+            <video
+                id="video"
+                class="img-portrait z-1 d-none"
+                poster="./images/НЕПРИКОСНОВЕННА.png"
+                preload="auto"
+                loop
+            >
+                <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
+                <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
+            </video>
         </div>
     </body>
 
     <style>
-
         #div-flash-0 {
             mix-blend-mode: exclusion;
         }
@@ -124,11 +135,14 @@
             width: 40%;
         }
 
+        #video {
+        }
+
         #btn-click {
             top: 75%;
             left: 50%;
             font-size: var(--font-size-sm);
-        }  
+        }
 
         #div-point {
             position: absolute;
@@ -185,10 +199,9 @@
     <script src="./js/optimization.js"></script>
     <script src="./js/links/index.js"></script>
     <script type="text/javascript">
-
-        // 
+        //
         // CURSOR MOVE CONTROLL
-        // 
+        //
 
         // Настройки cursorController
         const SETTINGS = {
@@ -199,74 +212,75 @@
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            maxSpeed: 0.1, // Максимальная скорость
-            // maxSpeed: 1, // Максимальная скорость (для отладки)
+            // maxSpeed: 0.1, // Максимальная скорость
+            maxSpeed: 2.5, // Максимальная скорость (для отладки)
         };
-        
+
         const Zone = {
             NONE: 0,
             PHOTO: 1,
             BUTTON: 2,
-            POINT: 3
+            POINT: 3,
         };
-        
-        const BUTTON = $('#btn-click')
+
+        const $IMG_PORTRAIT = $("#img-portrait");
+        const $VIDEO = $("#video");
+        const $BUTTON = $("#btn-click");
+
         const ZONES_SETTINGS = {
             [Zone.NONE]: {
-                "element": null, 
-                "imgCursor": "./images/default.png",
-                "handleOn": null,
-                "handleOff": null,
+                element: null,
+                imgCursor: "./images/default.png",
+                handleOn: null,
+                handleOff: null,
             },
             [Zone.PHOTO]: {
-                "element": $("#img-portrait"), 
-                "imgCursor": "./images/default.png",
-                "handleOn": null,
-                "handleOff": null,
+                element: $IMG_PORTRAIT,
+                imgCursor: "./images/default.png",
+                handleOn: null,
+                handleOff: null,
             },
             [Zone.BUTTON]: {
-                "element": BUTTON, 
-                "imgCursor": "./images/pointer.png",
-                "handleOn": cursorOnButton,
-                "handleOff": cursorOffButton,
+                element: $BUTTON,
+                imgCursor: "./images/pointer.png",
+                handleOn: cursorOnButton,
+                handleOff: cursorOffButton,
             },
             [Zone.POINT]: {
-                "element": $('#div-point'), 
-                "imgCursor": null,
-                "handleOn": null,
-                "handleOff": null,
-            }
+                element: $("#div-point"),
+                imgCursor: null,
+                handleOn: null,
+                handleOff: null,
+            },
         };
 
         function cursorOnButton() {
-            BUTTON.addClass("hovered");
-            BUTTON.css("pointer-events", "all");
+            $BUTTON.addClass("hovered");
+            $BUTTON.css("pointer-events", "all");
         }
 
         function cursorOffButton() {
-            BUTTON.removeClass("hovered");
-            BUTTON.css("pointer-events", "none");
+            $BUTTON.removeClass("hovered");
+            $BUTTON.css("pointer-events", "none");
         }
 
-        // 
+        //
         // CURSOR CLICK CONTROLL
-        // 
+        //
 
         var countClick = 0;
         var IS_CLICKED = false;
 
         async function handleClick(e) {
             if (e.which === 1) {
-
                 if (!isCursorZone(Zone.POINT) && !isCursorZone(Zone.BUTTON))
-                    return
+                    return;
 
-                if (IS_CLICKED)
-                    return
+                if (IS_CLICKED) return;
 
-                IS_CLICKED = true
+                IS_CLICKED = true;
                 countClick += 1;
-                
+
                 if (isCursorZone(Zone.POINT)) {
                     await clickPoint();
                 } else if (isCursorZone(Zone.BUTTON)) {
@@ -278,49 +292,133 @@
         }
 
         async function clickPoint() {
-            BUTTON.css("pointer-events", "none");
-            BUTTON.attr("disabled", true);
-            disableCursor()
+            $BUTTON.css("pointer-events", "none");
+            $BUTTON.attr("disabled", true);
+            disableCursor();
             stopCursor();
 
-            BUTTON.addClass("d-none");
-            await flash(generateFlashArray(3));
-            await flash(generateFlashArray(3));
-            BUTTON.removeClass("d-none");
+            switchSources();
 
-            BUTTON.removeClass("hovered");
-            BUTTON.removeClass("active");
-            BUTTON.attr("disabled", true);
+            $BUTTON.addClass("d-none");
+            await flash(generateFlashArray(3));
+            await flash(generateFlashArray(3));
+            $BUTTON.removeClass("d-none");
+
+            $BUTTON.removeClass("hovered");
+            $BUTTON.removeClass("active");
+            $BUTTON.attr("disabled", true);
 
             setTimeout(() => {
-                qwerty()
-            }, 2000);
+                playVideo();
+            }, 400);
+
+            // setTimeout(() => {
+            //     qwerty();
+            // }, 2000);
         }
 
         async function clickButton() {
-
-            BUTTON.addClass("active");
+            $BUTTON.addClass("active");
             number = getRandomInt(1, 2);
             flash([number, 0, number, 0, number, number, number]);
 
             setTimeout(() => {
-                BUTTON.removeClass("active");
+                $BUTTON.removeClass("active");
             }, 500);
-
         }
 
-        // 
+        async function switchSources() {
+            $VIDEO.removeClass("d-none");
+            $IMG_PORTRAIT.addClass("d-none");
+        }
+
+        //
         // FLASH CONTROLL
-        // 
+        //
 
         const FLASH_SETTINGS = {
-            duration: 150
-        }
+            duration: 150,
+        };
 
         function generateFlashArray(number) {
             return [number, 0, number, 0, number, number, number];
         }
 
+        //
+        // VIDEO CONTROLL
+        //
+
+        const VIDEO = $VIDEO[0];
+
+        // Функция для безопасного запуска
+        function playVideo() {
+            VIDEO.play()
+                .then(() => {
+                    console.log("✅ Видео воспроизводится");
+                })
+                .catch((error) => {
+                    console.error(
+                        "❌ Ошибка воспроизведения:",
+                        error.name,
+                        error.message,
+                    );
+
+                    // Если автовоспроизведение заблокировано, пробуем с muted
+                    if (error.name === "NotAllowedError") {
+                        console.log("Пробую запустить с muted...");
+                        VIDEO.muted = true;
+                        VIDEO.play().catch((e) => {
+                            console.error("Даже с muted не получилось:", e);
+                        });
+                    }
+                });
+        }
+
+        // Функция для паузы
+        function pauseVideo() {
+            VIDEO.pause();
+            console.log("⏸️ Видео на паузе");
+        }
+
+        // Функция для остановки
+        function stopVideo() {
+            VIDEO.pause();
+            VIDEO.currentTime = 0;
+            console.log("⏹️ Видео остановлено");
+        }
+
+        // Функция для перемотки
+        function seekVideo(seconds) {
+            VIDEO.currentTime = seconds;
+            console.log(`⏩ Перемотка на ${seconds} секунд`);
+        }
+
+        // Функция для загрузки нового видео
+        function loadVideo(src) {
+            // Очищаем существующие источники
+            $VIDEO.find("source").remove();
+
+            // Добавляем новый источник
+            $VIDEO.append(`<source src="${src}" type="video/webm">`);
+
+            // Перезагружаем видео элемент
+            video.load();
+
+            console.log(`📁 Загружено новое видео: ${src}`);
+        }
+
+        // Проверка состояния видео
+        function getVideoState() {
+            return {
+                paused: video.paused,
+                currentTime: video.currentTime,
+                duration: video.duration,
+                ended: video.ended,
+                volume: video.volume,
+                muted: video.muted,
+                readyState: video.readyState,
+            };
+        }
     </script>
     <script src="./js/cursorController.js"></script>
     <script src="./js/flash.js"></script>
