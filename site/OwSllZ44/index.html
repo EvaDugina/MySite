@@ -25,67 +25,75 @@
     <body>
         <img
             id="img-cursor"
-            class="img-cursor not-allowed z-6"
-            src="./images/default.png"
+            class="cursor not-allowed z-999"
+            src="./images/cursors/default.png"
             alt="icon"
         />
-        <div id="div-photo" class="div-photo">
-            <div id="div-flash-4" class="div-flash z-3 d-none">
+        <div id="div-inviolable" class="background z-6 d-none"></div>
+        <div id="div-photo" class="portrait-container">
+            <button id="btn-click" class="not-allowed z-5">
+                неприкосновенна
+            </button>
+
+            <div id="div-point" class="point z-4"></div>
+
+            <div id="div-flash-4" class="flash-container z-3 d-none">
                 <img
                     id="img-flash-4"
-                    class="img-flash not-allowed"
+                    class="flash not-allowed"
                     src="./images/УКРАЛИ.jpg"
                     alt="УКРАЛИ"
                 />
             </div>
-            <div id="div-flash-3" class="div-flash z-3 d-none">
+            <div id="div-flash-3" class="flash-container z-3 d-none">
                 <img
                     id="img-flash-3"
-                    class="img-flash not-allowed"
+                    class="flash not-allowed"
                     src="./images/ОПЛОДОТВОРЕНИЕ.jpg"
                     alt="ОПЛОДОТВОРЕНИЕ"
                 />
             </div>
-            <div id="div-flash-2" class="div-flash z-3 d-none">
+            <div id="div-flash-2" class="flash-container z-3 d-none">
                 <img
                     id="img-flash-2"
-                    class="img-flash not-allowed"
+                    class="flash not-allowed"
                     src="./images/04.jpg"
                     alt="ВСПЫШКА"
                 />
             </div>
-            <div id="div-flash-1" class="div-flash z-3 d-none">
+            <div id="div-flash-1" class="flash-container z-3 d-none">
                 <img
                     id="img-flash-1"
-                    class="img-flash"
+                    class="flash not-allowed"
                     src="./images/01_2.jpg"
                     alt="ВСПЫШКА"
                 />
             </div>
-            <div id="div-flash-0" class="div-flash z-3 d-none">
-                <div id="div-flash-0-back" class="div-flash"></div>
+            <div id="div-flash-0" class="flash-container z-3 d-none">
+                <div id="div-flash-0-back" class="flash-container"></div>
             </div>
-            <div id="div-point" class="div-point z-3"></div>
-            <button id="btn-click" class="btn-click not-allowed z-4">
-                неприкосновенна
-            </button>
-            <img
-                id="img-portrait"
-                class="img-portrait not-allowed z-1"
-                src="./images/НЕПРИКОСНОВЕННА.png"
-                alt="НЕПРИКОСНОВЕННА"
-            />
+
             <video
-                id="video"
-                class="img-portrait z-1 d-none"
+                id="video-portrait"
+                class="portrait not-allowed z-2 d-none"
                 poster="./images/НЕПРИКОСНОВЕННА.png"
                 preload="auto"
+                muted
                 loop
             >
                 <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
                 <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
             </video>
+
+            <img
+                id="img-portrait"
+                class="portrait not-allowed z-1"
+                src="./images/НЕПРИКОСНОВЕННА.png"
+                alt="НЕПРИКОСНОВЕННА"
+            />
         </div>
+
+        <div id="div-back" class="background bg-blue z-3"></div>
     </body>
 
     <style>
@@ -135,10 +143,14 @@
             width: 40%;
         }
 
-        #video {
+        #video-portrait {
+            position: absolute;
+            transition: opacity 0.8s ease-in-out;
         }
 
         #btn-click {
+            position: absolute;
+            transform: translate(-50%, -50%);
             top: 75%;
             left: 50%;
             font-size: var(--font-size-sm);
@@ -146,8 +158,8 @@
 
         #div-point {
             position: absolute;
-            top: 75%;
-            left: 55%;
+            top: 75.4%;
+            left: 54.5%;
             width: 8px;
             height: 8px;
             display: block;
@@ -156,6 +168,10 @@
             background-color: red;
             opacity: 0;
             transform: translate(-50%, -50%);
+        }
+
+        #div-back {
+            opacity: 1;
         }
 
         @media (min-width: 768px) {
@@ -203,6 +219,13 @@
         // CURSOR MOVE CONTROLL
         //
 
+        const $IMG_PORTRAIT = $("#img-portrait");
+        const $VIDEO = $("#video-portrait");
+        const $BUTTON = $("#btn-click");
+        const $POINT = $("#div-point");
+        const $INVOIOLABLE = $("#div-inviolable");
+        const $BACKGROUND = $("#div-back");
+
         // Настройки cursorController
         const SETTINGS = {
             elementCursor: $("#img-cursor"), // Объект курсора
@@ -212,8 +235,8 @@
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            // maxSpeed: 0.1, // Максимальная скорость
-            maxSpeed: 2.5, // Максимальная скорость (для отладки)
+            maxSpeed: 0.1, // Максимальная скорость
+            // maxSpeed: 1, // Максимальная скорость (для отладки)
         };
 
         const Zone = {
@@ -221,83 +244,98 @@
             PHOTO: 1,
             BUTTON: 2,
             POINT: 3,
+            INVOIOLABLE: 4,
         };
-
-        const $IMG_PORTRAIT = $("#img-portrait");
-        const $VIDEO = $("#video");
-        const $BUTTON = $("#btn-click");
 
         const ZONES_SETTINGS = {
             [Zone.NONE]: {
                 element: null,
-                imgCursor: "./images/default.png",
+                imgCursor: "./images/cursors/pointer.png",
+                imgCursorClicked: "./images/cursors/pointer.png",
                 handleOn: null,
                 handleOff: null,
             },
             [Zone.PHOTO]: {
                 element: $IMG_PORTRAIT,
-                imgCursor: "./images/default.png",
-                handleOn: null,
+                imgCursor: "./images/cursors/pointer.png",
+                imgCursorClicked: "./images/cursors/pointer.png",
+                handleOn: cursorOnPhoto,
                 handleOff: null,
             },
             [Zone.BUTTON]: {
                 element: $BUTTON,
-                imgCursor: "./images/pointer.png",
+                imgCursor: "./images/cursors/pointer.png",
+                imgCursorClicked: "./images/cursors/pointer-clicked.png",
                 handleOn: cursorOnButton,
-                handleOff: cursorOffButton,
+                handleOff: null,
             },
             [Zone.POINT]: {
-                element: $("#div-point"),
+                element: $POINT,
+                imgCursor: "./images/cursors/pointer.png",
+                imgCursorClicked: "./images/cursors/pointer-clicked.png",
+                handleOn: null,
+                handleOff: null,
+            },
+            [Zone.INVOIOLABLE]: {
+                element: $INVOIOLABLE,
                 imgCursor: null,
+                imgCursorClicked: null,
                 handleOn: null,
                 handleOff: null,
             },
         };
 
-        function cursorOnButton() {
-            $BUTTON.addClass("hovered");
-            $BUTTON.css("pointer-events", "all");
+        function cursorOnPhoto() {
+            if (!$BACKGROUND.hasClass("bg-blue"))
+                $BACKGROUND.addClass("bg-blue");
         }
 
-        function cursorOffButton() {
-            $BUTTON.removeClass("hovered");
-            $BUTTON.css("pointer-events", "none");
+        function cursorOnButton() {
+            if ($BACKGROUND.hasClass("bg-blue"))
+                $BACKGROUND.removeClass("bg-blue");
+            // $BUTTON.addClass("hovered");
         }
 
         //
         // CURSOR CLICK CONTROLL
         //
 
-        var countClick = 0;
-        var IS_CLICKED = false;
+        async function handleDoubleLeftClick() {
+            // if (isCursorZone(Zone.NONE)) {
+            //     if ($BACKGROUND.hasClass("bg-blue")) {
+            //         $BACKGROUND.removeClass("bg-blue");
+            //     } else {
+            //         $BACKGROUND.addClass("bg-blue");
+            //     }
+            // }
+        }
 
-        async function handleClick(e) {
-            if (e.which === 1) {
-                if (!isCursorZone(Zone.POINT) && !isCursorZone(Zone.BUTTON))
-                    return;
+        async function handleLeftClick() {
+            changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
 
-                if (IS_CLICKED) return;
+            if (isCursorZone(Zone.POINT)) {
+                disableCursor();
+                stopCursor();
 
-                IS_CLICKED = true;
-                countClick += 1;
+                await clickPoint();
 
-                if (isCursorZone(Zone.POINT)) {
-                    await clickPoint();
-                } else if (isCursorZone(Zone.BUTTON)) {
-                    await clickButton();
-                }
-
-                IS_CLICKED = false;
+                return;
+            } else if (isCursorZone(Zone.BUTTON)) {
+                clickButton();
             }
+
+            setTimeout(() => {
+                changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"]);
+            }, 200);
+
+            return;
         }
 
         async function clickPoint() {
             $BUTTON.css("pointer-events", "none");
             $BUTTON.attr("disabled", true);
-            disableCursor();
-            stopCursor();
 
-            switchSources();
+            showVideo();
 
             $BUTTON.addClass("d-none");
             await flash(generateFlashArray(3));
@@ -308,28 +346,29 @@
             $BUTTON.removeClass("active");
             $BUTTON.attr("disabled", true);
 
+            playVideo();
+
             setTimeout(() => {
-                playVideo();
-            }, 400);
+                changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"]);
+            }, 3.75 * 1000);
+
+            setTimeout(() => {
+                $BUTTON.attr("disabled", false);
+                $INVOIOLABLE.removeClass("d-none");
+                changeCursorSrc(null);
+            }, 27 * 1000);
 
             // setTimeout(() => {
             //     qwerty();
-            // }, 2000);
+            //     window.location.reload();
+            // }, 30 * 1000);
         }
 
         async function clickButton() {
-            $BUTTON.addClass("active");
+            // $BUTTON.addClass("active");
             number = getRandomInt(1, 2);
-            flash([number, 0, number, 0, number, number, number]);
-
-            setTimeout(() => {
-                $BUTTON.removeClass("active");
-            }, 500);
-        }
-
-        async function switchSources() {
-            $VIDEO.removeClass("d-none");
-            $IMG_PORTRAIT.addClass("d-none");
+            await flash([number, 0, number, 0, number, number, number]);
+            // $BUTTON.removeClass("active");
         }
 
         //
@@ -350,74 +389,49 @@
 
         const VIDEO = $VIDEO[0];
 
+        async function showVideo() {
+            // 1. Подготавливаем видео (загружаем, но не показываем)
+            VIDEO.load();
+
+            // 2. Ждем, когда видео сможет воспроизводиться
+            await new Promise((resolve) => {
+                if (VIDEO.readyState >= 2) {
+                    resolve();
+                } else {
+                    $VIDEO.on("canplay", resolve);
+                }
+            });
+
+            // 3. Плавно показываем видео
+            $VIDEO.css("opacity", 0).removeClass("d-none");
+
+            // 5. После завершения анимации скрываем изображение полностью
+            setTimeout(() => {
+                $VIDEO.css("opacity", 1);
+            }, 800); // Должно совпадать с длительностью transition (0.8s)
+        }
+
         // Функция для безопасного запуска
         function playVideo() {
+            VIDEO.currentTime = 0;
             VIDEO.play()
                 .then(() => {
-                    console.log("✅ Видео воспроизводится");
+                    // console.log("Видео воспроизводится");
                 })
                 .catch((error) => {
                     console.error(
-                        "❌ Ошибка воспроизведения:",
+                        "Ошибка воспроизведения:",
                         error.name,
                         error.message,
                     );
-
-                    // Если автовоспроизведение заблокировано, пробуем с muted
-                    if (error.name === "NotAllowedError") {
-                        console.log("Пробую запустить с muted...");
-                        VIDEO.muted = true;
-                        VIDEO.play().catch((e) => {
-                            console.error("Даже с muted не получилось:", e);
-                        });
-                    }
                 });
-        }
-
-        // Функция для паузы
-        function pauseVideo() {
-            VIDEO.pause();
-            console.log("⏸️ Видео на паузе");
         }
 
         // Функция для остановки
         function stopVideo() {
             VIDEO.pause();
             VIDEO.currentTime = 0;
-            console.log("⏹️ Видео остановлено");
-        }
-
-        // Функция для перемотки
-        function seekVideo(seconds) {
-            VIDEO.currentTime = seconds;
-            console.log(`⏩ Перемотка на ${seconds} секунд`);
-        }
-
-        // Функция для загрузки нового видео
-        function loadVideo(src) {
-            // Очищаем существующие источники
-            $VIDEO.find("source").remove();
-
-            // Добавляем новый источник
-            $VIDEO.append(`<source src="${src}" type="video/webm">`);
-
-            // Перезагружаем видео элемент
-            video.load();
-
-            console.log(`📁 Загружено новое видео: ${src}`);
-        }
-
-        // Проверка состояния видео
-        function getVideoState() {
-            return {
-                paused: video.paused,
-                currentTime: video.currentTime,
-                duration: video.duration,
-                ended: video.ended,
-                volume: video.volume,
-                muted: video.muted,
-                readyState: video.readyState,
-            };
+            // console.log("⏹️ Видео остановлено");
         }
     </script>
     <script src="./js/cursorController.js"></script>

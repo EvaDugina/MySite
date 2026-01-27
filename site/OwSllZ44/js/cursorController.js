@@ -5,15 +5,20 @@ var currentY = 0
 var velocityX = 0
 var velocityY = 0
 
-var CurrentZone = Zone.NONE;
+var CurrentZone = Zone.NONE
 
-var IS_STOPPED = false;
+var IS_STOPPED = false
+var IS_CLICKED = false
+
+var dbClickCount = 0
+var dbClickTimeout
+
 var animationId = null
-var RectZones;
+var RectZones
 
-// 
-// 
-// 
+//
+// PUBLIC FUNCTIONS
+//
 
 function isStoped() {
     return IS_STOPPED
@@ -23,51 +28,120 @@ function isCursorZone(zoneType) {
     return CurrentZone == zoneType
 }
 
-// 
-// 
-// 
-
-window.onresize = function () {
-    window.location.reload();
-};
-
-// Инициализация начальной позиции
-window.addEventListener("mousedown", handleClick);
-
-function disableCursor() {
-    window.removeEventListener("mousedown", handleClick);
+function stopCursor() {
+    IS_STOPPED = true
+    window.removeEventListener("mousemove", handleMosemove)
+    window.removeEventListener("blur", handleBlur)
 }
 
-// Инициализация начальной позиции
+function restartCursor() {
+    IS_STOPPED = false
+    initRectZones()
+    start(true)
+    handleBlur()
+    updateCurrentZone()
+}
+
+//
+// WINDOW.ON
+//
+
 window.onload = function () {
-    currentX = targetX = window.innerWidth * SETTINGS.startX - SETTINGS.elementCursor.width() / 2
-    currentY = targetY = window.innerHeight * SETTINGS.startY - SETTINGS.elementCursor.height() / 2
+    initPosition()
+    initRectZones()
+    start()
+}
+
+window.onresize = function () {
+    window.location.reload()
+}
+
+//
+// CLICK CONTROLL
+//
+
+window.addEventListener("mousedown", onClick)
+
+function disableCursor() {
+    window.removeEventListener("mousedown", onClick)
+}
+
+async function onClick(event) {
+    if (event.which === 1) {
+        if (IS_CLICKED) return
+        IS_CLICKED = true
+
+        dbClickCount += 1
+
+        if (dbClickCount === 1) {
+            // Первый клик - ждем второй
+            dbClickTimeout = setTimeout(() => {
+                // Если не было второго клика за 300мс
+                dbClickCount = 0
+            }, 300)
+            await handleLeftClick()
+        } else if (dbClickCount === 2) {
+            // Второй клик - это двойной клик
+            clearTimeout(dbClickTimeout)
+            handleDoubleLeftClick()
+            dbClickCount = 0
+        }
+
+        IS_CLICKED = false
+    }
+}
+
+//
+// INIT FUNCTIONS
+//
+
+// Инициализация начальной позиции
+function initPosition() {
+    currentX = targetX =
+        window.innerWidth * SETTINGS.startX - SETTINGS.elementCursor.width() / 2
+    currentY = targetY =
+        window.innerHeight * SETTINGS.startY -
+        SETTINGS.elementCursor.height() / 2
+
+    changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"], 0)
 
     // Устанавливаем начальную позицию
     SETTINGS.elementCursor.css({
-        position: "fixed",
         left: currentX + "px",
         top: currentY + "px",
-        pointerEvents: "none", // Чтобы не мешал взаимодействию с другими элементами
-        zIndex: 9999,
     })
+}
 
-    RectZones = new Map();
+// Инициализация Rect Zones
+function initRectZones() {
+    RectZones = new Map()
     Object.entries(Zone).forEach(([key, value]) => {
         if (ZONES_SETTINGS[value]["element"] != null)
-            RectZones.set(value, ZONES_SETTINGS[value]["element"][0].getBoundingClientRect());
-    });
+            RectZones.set(
+                value,
+                ZONES_SETTINGS[value]["element"][0].getBoundingClientRect(),
+            )
+    })
+}
 
+function start(isRestart = false) {
     // Запускаем анимацию
     if (!animationId) {
         animationId = requestAnimationFrame(updatePosition)
     }
 
-    setTimeout(() => {
-        startCursor()
-    }, SETTINGS.timeout * 1000)
+    let timeout = SETTINGS.timeout
+    if (isRestart) timeout = 0
 
+    setTimeout(() => {
+        window.addEventListener("mousemove", handleMosemove)
+        window.addEventListener("blur", handleBlur)
+    }, timeout * 1000)
 }
+
+//
+//
+//
 
 function handleMosemove(e) {
     // Обновляем целевую позицию (центрируем элемент на курсоре)
@@ -82,33 +156,18 @@ function handleMosemove(e) {
 
 function handleBlur() {
     if (animationId) {
-        cancelAnimationFrame(animationId)
+        // cancelAnimationFrame(animationId)
         animationId = null
     }
 }
 
-function startCursor() {
-    window.addEventListener("mousemove", handleMosemove)
-    window.addEventListener("blur", handleBlur)
-    IS_STOPPED = false
-}
-
-function stopCursor() {
-    IS_STOPPED = true
-    window.removeEventListener("mousemove", handleMosemove)
-    window.removeEventListener("blur", handleBlur)
-}
-
-// 
-// 
-// 
-
+//
+//
+//
 
 // Функция для плавного обновления позиции
 function updatePosition() {
-
-    if (IS_STOPPED)
-        return
+    if (IS_STOPPED) return
 
     // Рассчитываем силу (разница между текущей и целевой позицией)
     const forceX = (targetX - currentX) * SETTINGS.stiffness
@@ -146,33 +205,29 @@ function updatePosition() {
 }
 
 function updateCurrentZone() {
-    let foundZone = false;
+    let foundZone = false
 
     // Получаем все зоны и переворачиваем порядок для обратной проверки
-    const zoneEntries = Object.entries(Zone);
+    const zoneEntries = Object.entries(Zone)
 
     // Идем в обратном порядке (от последней зоны к первой)
     for (let i = zoneEntries.length - 1; i >= 0; i--) {
-
-        const [key, value] = zoneEntries[i];
+        const [key, value] = zoneEntries[i]
         if (isCursorInZone(value)) {
-            foundZone = true;
+            foundZone = true
 
             // Вход в новую зону
             if (CurrentZone !== value) {
-
                 // Выход из предыдущей зоны
                 handleOffCurrentZone()
 
                 // Вход в новую зону
-                CurrentZone = value;
-                changeSrc(SETTINGS.elementCursor, ZONES_SETTINGS[CurrentZone]["imgCursor"]);
+                CurrentZone = value
+                changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
                 handleOnCurrentZone()
-
             }
 
             break
-
         }
     }
 
@@ -180,15 +235,14 @@ function updateCurrentZone() {
     if (!foundZone) {
         handleOffCurrentZone()
 
-        CurrentZone = Zone.NONE;
-        changeSrc(SETTINGS.elementCursor, ZONES_SETTINGS[CurrentZone]["imgCursor"]);
+        CurrentZone = Zone.NONE
+        changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
         handleOnCurrentZone()
     }
 }
 
 function isCursorInZone(zoneType) {
-    if (zoneType == Zone.NONE)
-        return true
+    if (zoneType == Zone.NONE) return true
 
     // if (CurrentZone == Zone.POINT && zoneType == Zone.POINT)
     //     console.log("isCursorInZone(POINT)")
@@ -205,34 +259,33 @@ function isCursorInZone(zoneType) {
 }
 
 function handleOnCurrentZone() {
-    if (ZONES_SETTINGS[CurrentZone]["handleOn"] == null)
-        return
-    ZONES_SETTINGS[CurrentZone]["handleOn"]();
+    if (ZONES_SETTINGS[CurrentZone]["handleOn"] == null) return
+    ZONES_SETTINGS[CurrentZone]["handleOn"]()
 }
 
 function handleOffCurrentZone() {
-    if (ZONES_SETTINGS[CurrentZone]["handleOff"] == null)
-        return
-    ZONES_SETTINGS[CurrentZone]["handleOff"]();
+    if (ZONES_SETTINGS[CurrentZone]["handleOff"] == null) return
+    ZONES_SETTINGS[CurrentZone]["handleOff"]()
 }
 
-function changeSrc(elementImage, newSrc) {
+//
+//
+//
 
-    if (ZONES_SETTINGS[CurrentZone]["imgCursor"] == null
-        || ZONES_SETTINGS[CurrentZone]["imgCursor"] == SETTINGS.elementCursor.attr('src'))
-        return
+function changeCursorSrc(newSrc, durationAnimation = 5) {
+    if (newSrc == SETTINGS.elementCursor.attr("src")) return
+    else if (newSrc == null) newSrc = "./images/cursors/none.png"
 
-    let speedAnimation = 10
     // Fade the image out
-    elementImage.fadeOut(speedAnimation, function () {
+    SETTINGS.elementCursor.fadeOut(durationAnimation, function () {
         // Change the src attribute after the fade out is complete
-        elementImage.attr("src", newSrc)
+        SETTINGS.elementCursor.attr("src", newSrc)
 
         // Wait for the new image to load before fading it in
         // Use .one('load', ...) to ensure the callback runs only once
-        elementImage
+        SETTINGS.elementCursor
             .one("load", function () {
-                $(this).fadeIn(speedAnimation)
+                $(this).fadeIn(durationAnimation)
             })
             .each(function () {
                 // Handle cached images that might not trigger the load event

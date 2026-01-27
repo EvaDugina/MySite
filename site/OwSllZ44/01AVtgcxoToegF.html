@@ -25,11 +25,12 @@
         <img
             id="img-cursor"
             class="img-cursor not-allowed z-6"
-            src="./images/default.png"
+            src="./images/cursors/default.png"
             alt="icon"
         />
         <div id="div-photo" class="div-photo">
-            <img id="img-portrait"
+            <img
+                id="img-portrait"
                 class="img-portrait z-1"
                 src="./images/НЕПРИКОСНОВЕННА.png"
                 alt="НЕПРИКОСНОВЕННА"
@@ -79,7 +80,6 @@
         }
 
         @media (min-width: 768px) {
-
             #img-portrait {
                 left: 30%;
                 width: 200%;
@@ -97,7 +97,6 @@
         }
 
         @media (min-width: 1024px) {
-
             #img-portrait {
                 left: 50%;
                 width: 200%;
@@ -115,7 +114,6 @@
         }
 
         @media (min-width: 1280px) {
-
             #img-portrait {
                 left: 50%;
                 width: 200%;
@@ -133,7 +131,6 @@
         }
 
         @media (min-width: 1440px) {
-
             #img-portrait {
                 left: 50%;
                 width: 200%;
@@ -151,7 +148,6 @@
         }
 
         @media (min-width: 1600px) {
-
             #img-portrait {
                 left: 50%;
                 width: 200%;
@@ -169,7 +165,6 @@
         }
 
         @media (min-width: 1920px) {
-
             #img-portrait {
                 left: 50%;
                 width: 200%;
@@ -185,17 +180,15 @@
                 left: 44%;
             }
         }
-
     </style>
 
     <script src="/src/jquery-3.7.1.min.js"></script>
     <script src="./js/optimization.js"></script>
     <script src="./js/links/02AVtgcxoToegF.js"></script>
     <script type="text/javascript">
-
-        // 
+        //
         // CURSOR MOVE CONTROLL
-        // 
+        //
 
         // Настройки cursorController
         const SETTINGS = {
@@ -208,43 +201,43 @@
             mass: 0.1, // Масса объекта
             maxSpeed: 50, // Максимальная скорость
         };
-        
+
         const Zone = {
             NONE: 0,
             PHOTO: 1,
             BUTTON_SPITTLE: 2,
-            BUTTON_KISS: 3
+            BUTTON_KISS: 3,
         };
         var CurrentZone = Zone.NONE;
-        
-        const BUTTON_SPITTLE = $('#btn-spittle')
-        const BUTTON_KISS = $('#btn-kiss')
+
+        const BUTTON_SPITTLE = $("#btn-spittle");
+        const BUTTON_KISS = $("#btn-kiss");
 
         const ZONES_SETTINGS = {
             [Zone.NONE]: {
-                "element": null, 
-                "imgCursor": "./images/default.png",
-                "handleOn": null,
-                "handleOff": null,
+                element: null,
+                imgCursor: "./images/cursors/default.png",
+                handleOn: null,
+                handleOff: null,
             },
             [Zone.PHOTO]: {
-                "element": $("#img-portrait"), 
-                "imgCursor": "./images/default.png",
-                "handleOn": null,
-                "handleOff": null,
+                element: $("#img-portrait"),
+                imgCursor: "./images/cursors/default.png",
+                handleOn: null,
+                handleOff: null,
             },
             [Zone.BUTTON_SPITTLE]: {
-                "element": BUTTON_SPITTLE, 
-                "imgCursor": "./images/pointer.png",
-                "handleOn": cursorOnButtonSpittle,
-                "handleOff": cursorOffButtonSpittle,
+                element: BUTTON_SPITTLE,
+                imgCursor: "./images/cursors/pointer.png",
+                handleOn: cursorOnButtonSpittle,
+                handleOff: cursorOffButtonSpittle,
             },
             [Zone.BUTTON_KISS]: {
-                "element": BUTTON_KISS, 
-                "imgCursor": "./images/pointer.png",
-                "handleOn": cursorOnButtonKiss,
-                "handleOff": cursorOffButtonKiss,
-            }
+                element: BUTTON_KISS,
+                imgCursor: "./images/cursors/pointer.png",
+                handleOn: cursorOnButtonKiss,
+                handleOff: cursorOffButtonKiss,
+            },
         };
 
         function cursorOnButtonSpittle() {
@@ -267,9 +260,9 @@
             BUTTON_KISS.css("pointer-events", "none");
         }
 
-        // 
+        //
         // CURSOR CLICK CONTROLL
-        // 
+        //
 
         const DURATION = 700;
 
@@ -280,9 +273,9 @@
             if (e.which === 1) {
                 // 1 - левая кнопка
                 if (isCursorZone(Zone.BUTTON_SPITTLE)) {
-                    spittle()
+                    spittle();
                 } else if (isCursorZone(Zone.BUTTON_KISS)) {
-                    kiss()
+                    kiss();
                 }
             }
         }
@@ -292,31 +285,24 @@
             $("#btn-spittle").prop("disabled", true);
 
             setTimeout(() => {
-                if (isBoth()) 
-                    qwerty();
-                else 
-                    toUnizit();
+                if (isBoth()) qwerty();
+                else toUnizit();
             }, DURATION);
-
         }
 
         function kiss() {
             KISS += 1;
             $("#btn-kiss").prop("disabled", true);
-            
-            setTimeout(() => {
-                if (isBoth()) 
-                    qwerty();
-                else 
-                    toUnizitsya();
-            }, DURATION);
 
+            setTimeout(() => {
+                if (isBoth()) qwerty();
+                else toUnizitsya();
+            }, DURATION);
         }
 
         function isBoth() {
             return KISS > 0 && SPITTLE > 0;
         }
-
     </script>
     <script src="./js/cursorController.js"></script>
 </html>

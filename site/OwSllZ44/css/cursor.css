@@ -1,15 +1,17 @@
 :root {
-    cursor: none;
+  cursor: none;
 }
 
 button {
-    cursor: none;
-    pointer-events: none;
+  cursor: none;
+  pointer-events: none;
 }
 
 #img-cursor {
-    width: 30px;
-    height: 30px;
-    position: fixed;
-    will-change: transform; /* Для оптимизации анимации */
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  pointer-events: "none";
+  will-change: transform; /* Для оптимизации анимации */
+  z-index: 999;
 }

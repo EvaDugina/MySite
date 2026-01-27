@@ -1,43 +1,43 @@
-.div-flash {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    border-radius: 7.5px;
-    mix-blend-mode: normal;
+.flash-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: 7.5px;
+  mix-blend-mode: normal;
 }
 
-.img-flash {
-    width: auto;
-    align-self: center;
-    position: absolute;
-    border-radius: 7.5px;
+.flash {
+  width: auto;
+  align-self: center;
+  position: absolute;
+  border-radius: 7.5px;
 }
 
 /* Класс для резкой анимации вспышки */
 .flash-animation {
-    animation: sharpFlash 0.15s cubic-bezier(0.4, 0, 0.6, 1);
+  animation: sharpFlash 0.15s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
 @keyframes sharpFlash {
-    0% {
-        opacity: 0;
-    }
-    20% {
-        opacity: 1; /* Быстро появляется */
-    }
-    40% {
-        opacity: 0.8; /* Немного спадает */
-    }
-    60% {
-        opacity: 1; /* Второй пик */
-    }
-    80% {
-        opacity: 0.4; /* Быстро угасает */
-    }
-    100% {
-        opacity: 0; /* Полное исчезновение */
-    }
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1; /* Быстро появляется */
+  }
+  40% {
+    opacity: 0.8; /* Немного спадает */
+  }
+  60% {
+    opacity: 1; /* Второй пик */
+  }
+  80% {
+    opacity: 0.4; /* Быстро угасает */
+  }
+  100% {
+    opacity: 0; /* Полное исчезновение */
+  }
 }

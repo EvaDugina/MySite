@@ -2,6 +2,9 @@
   --font-size: medium;
   --font-size-sm: x-small;
   --font-size-xsm: xx-small;
+  --color-xlight-grey: rgb(240, 240, 240);
+  --color-xlight-grey-a: rgba(240, 240, 240, 0.3);
+  --color-light-grey: #d1d1d1;
 }
 
 @media (min-width: 768px) {
@@ -73,22 +76,24 @@ body {
 }
 
 button {
-    /* background-color: rgb(240, 240, 240); */
-    border-radius: 2px;
-    border-width: thin;
+  background-color: var(--color-xlight-grey);
+  border-radius: 2px;
+  border-width: thin;
 }
 
 button:disabled {
-    opacity: 0.7;
+  opacity: 0.7;
+  background-color: var(--color-xlight-grey-a) !important;
 }
 
 button.hovered {
-    background-color: #d1d1d1;
+  background-color: var(--color-light-grey);
 }
 
 button.active {
-    border-width: medium !important;
-    border-color: black !important;
+  border-width: medium !important;
+  border-color: black !important;
+  background-color: var(--color-light-grey);
 }
 
 /* 
@@ -125,11 +130,23 @@ button.active {
 }
 
 .z-5 {
-  z-index:5;
+  z-index: 5;
 }
 
 .z-6 {
   z-index: 6;
+}
+
+.z-7 {
+  z-index: 7;
+}
+
+.z-999 {
+  z-index: 999;
+}
+
+.bg-blue {
+  background-color: blue;
 }
 
 .me-1 {
@@ -145,9 +162,9 @@ button.active {
 }
 
 .hidden-but-measurable {
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .not-allowed {
@@ -167,29 +184,30 @@ button.active {
 
 */
 
-.img-cursor {
+.cursor {
   transform: translate(-16.67%, -4.76%);
 }
 
-.div-photo {
-    position: absolute;
-    height: auto;
-    display: block;
-    margin: 0;
-    align-self: center;
+.portrait-container {
+  position: relative;
+  height: auto;
+  margin: 0;
+  display: block;
+  align-self: center;
 }
 
-.img-portrait {
-    position: relative;
-    width: 100%;
-    height: auto;
-    cursor: none;
-    opacity: 1;
-    border-radius: 7.5px;
+.portrait {
+  position: relative;
+  width: 100%;
+  height: auto;
+  cursor: none;
+  opacity: 1;
+  border-radius: 7.5px;
 }
 
-.btn-click {
-    position: absolute;
-    transform: translate(-50%, -50%);
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
-
