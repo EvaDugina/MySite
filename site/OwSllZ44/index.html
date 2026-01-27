@@ -79,7 +79,6 @@
                 poster="./images/НЕПРИКОСНОВЕННА.png"
                 preload="auto"
                 muted
-                loop
             >
                 <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
                 <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
@@ -236,7 +235,7 @@
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
             maxSpeed: 0.1, // Максимальная скорость
-            // maxSpeed: 1, // Максимальная скорость (для отладки)
+            // maxSpeed: 2, // Максимальная скорость (для отладки)
         };
 
         const Zone = {
@@ -288,12 +287,13 @@
         function cursorOnPhoto() {
             if (!$BACKGROUND.hasClass("bg-blue"))
                 $BACKGROUND.addClass("bg-blue");
+            $BUTTON.removeClass("hovered");
         }
 
         function cursorOnButton() {
             if ($BACKGROUND.hasClass("bg-blue"))
                 $BACKGROUND.removeClass("bg-blue");
-            // $BUTTON.addClass("hovered");
+            $BUTTON.addClass("hovered");
         }
 
         //
@@ -332,15 +332,24 @@
         }
 
         async function clickPoint() {
+            if ($BACKGROUND.hasClass("bg-blue"))
+                $BACKGROUND.removeClass("bg-blue");
+
             $BUTTON.css("pointer-events", "none");
             $BUTTON.attr("disabled", true);
 
             showVideo();
 
-            $BUTTON.addClass("d-none");
-            await flash(generateFlashArray(3));
-            await flash(generateFlashArray(3));
-            $BUTTON.removeClass("d-none");
+            // $BUTTON.addClass("d-none");
+            // await flash(generateFlashArray(3));
+            // await flash(generateFlashArray(3));
+            // $BUTTON.removeClass("d-none");
+
+            let number = 2;
+            flash([
+                ...generateFlashArray(number),
+                ...generateFlashArray(number),
+            ]);
 
             $BUTTON.removeClass("hovered");
             $BUTTON.removeClass("active");
@@ -356,7 +365,35 @@
                 $BUTTON.attr("disabled", false);
                 $INVOIOLABLE.removeClass("d-none");
                 changeCursorSrc(null);
-            }, 27 * 1000);
+            }, 22 * 1000);
+
+            setTimeout(() => {
+                number = 2;
+                flash([
+                    ...generateFlashArray(number),
+                    ...generateFlashArray(number),
+                    ...generateFlashArray(number),
+                ]);
+            }, 25 * 1000);
+
+            // setTimeout(async () => {
+            //     number = 2;
+            //     flash([
+            //         ...generateFlashArray(number),
+            //         ...generateFlashArray(number),
+            //         ...generateFlashArray(number),
+            //     ]);
+            //     // playVideo();
+            // }, 24 * 1000);
+
+            // setTimeout(() => {
+            //     number = 2;
+            //     flash([
+            //         ...generateFlashArray(number),
+            //         ...generateFlashArray(number),
+            //         ...generateFlashArray(number),
+            //     ]);
+            // }, 47 * 1000);
 
             // setTimeout(() => {
             //     qwerty();
@@ -365,10 +402,12 @@
         }
 
         async function clickButton() {
-            // $BUTTON.addClass("active");
-            number = getRandomInt(1, 2);
-            await flash([number, 0, number, 0, number, number, number]);
-            // $BUTTON.removeClass("active");
+            $BUTTON.addClass("active");
+            // number = getRandomInt(1, 2);
+            // await flash([number, 0, number, 0, number, number, number]);
+            setTimeout(() => {
+                $BUTTON.removeClass("active");
+            }, 300);
         }
 
         //

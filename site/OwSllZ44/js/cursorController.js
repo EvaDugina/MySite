@@ -109,6 +109,7 @@ function initPosition() {
     SETTINGS.elementCursor.css({
         left: currentX + "px",
         top: currentY + "px",
+        display: "block",
     })
 }
 

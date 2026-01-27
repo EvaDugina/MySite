@@ -7,8 +7,9 @@ button {
   pointer-events: none;
 }
 
-#img-cursor {
+.cursor {
   position: fixed;
+  display: none;
   width: 30px;
   height: 30px;
   pointer-events: "none";

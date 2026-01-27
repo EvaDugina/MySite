@@ -4,7 +4,7 @@
   --font-size-xsm: xx-small;
   --color-xlight-grey: rgb(240, 240, 240);
   --color-xlight-grey-a: rgba(240, 240, 240, 0.3);
-  --color-light-grey: #d1d1d1;
+  --color-light-grey: rgb(220, 220, 220);
 }
 
 @media (min-width: 768px) {
