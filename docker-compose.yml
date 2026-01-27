@@ -1,8 +1,18 @@
 version: "3.9"
 
+# Шаблон с ограничениями
+x-default-limits: &default-limits
+  cpus: "0.2" # 10% от 2 CPU = 0.2 ядра
+  mem_limit: 4g # 4 ГБ RAM
+  memswap_limit: 4g # Отключаем swap
+  cpu_shares: 102 # 10% от 1024
+  cpuset: "0-1" # Можно использовать первые 2 ядра
+
 services:
   php:
     container_name: mysite-php
+    # ДЛЯ НАГРУЗОЧНОГО ТЕСТИРОВАНИЯ:
+    # <<: *default-limits # Вставляем все ограничения из шаблона
     build:
       context: .
       dockerfile: Dockerfile.php
@@ -31,6 +41,8 @@ services:
 
   nginx:
     container_name: mysite-nginx
+    # ДЛЯ НАГРУЗОЧНОГО ТЕСТИРОВАНИЯ:
+    # <<: *default-limits # Вставляем все ограничения из шаблона
     build:
       context: .
       dockerfile: Dockerfile.nginx
