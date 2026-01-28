@@ -69,6 +69,7 @@ body {
 }
 
 body {
+  position: relative;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -139,6 +140,10 @@ button.active {
 
 .z-7 {
   z-index: 7;
+}
+
+.z-998 {
+  z-index: 998;
 }
 
 .z-999 {

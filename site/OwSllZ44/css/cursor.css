@@ -8,11 +8,8 @@ button {
 }
 
 .cursor {
-  position: fixed;
-  display: none;
   width: 30px;
   height: 30px;
   pointer-events: "none";
   will-change: transform; /* Для оптимизации анимации */
-  z-index: 999;
 }

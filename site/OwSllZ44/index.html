@@ -26,7 +26,7 @@
         <img
             id="img-cursor"
             class="cursor not-allowed z-999"
-            src="./images/cursors/default.png"
+            src="./images/cursors/none.png"
             alt="icon"
         />
         <div id="div-inviolable" class="background z-6 d-none"></div>
@@ -211,19 +211,19 @@
     </style>
 
     <script src="/src/jquery-3.7.1.min.js"></script>
-    <script src="./js/optimization.js"></script>
-    <script src="./js/links/index.js"></script>
+    <script src="./js/preload.js"></script>
+    <!-- <script src="./js/links/index.js"></script> -->
+    <script src="./js/cursorHandler.js"></script>
     <script type="text/javascript">
-        //
-        // CURSOR MOVE CONTROLL
-        //
-
         const $IMG_PORTRAIT = $("#img-portrait");
-        const $VIDEO = $("#video-portrait");
         const $BUTTON = $("#btn-click");
         const $POINT = $("#div-point");
         const $INVOIOLABLE = $("#div-inviolable");
         const $BACKGROUND = $("#div-back");
+
+        //
+        // CURSOR MOVE CONTROLL
+        //
 
         // Настройки cursorController
         const SETTINGS = {
@@ -231,6 +231,7 @@
             timeout: 2, // Задержка перед началом
             startX: 0.9, // Начальная позиция от width по X
             startY: 0.25, // Начальная позиция от рушпре по Y
+            handleDoubleLeftClick: null,
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.97, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
@@ -249,29 +250,29 @@
         const ZONES_SETTINGS = {
             [Zone.NONE]: {
                 element: null,
-                imgCursor: "./images/cursors/pointer.png",
-                imgCursorClicked: "./images/cursors/pointer.png",
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER,
                 handleOn: null,
                 handleOff: null,
             },
             [Zone.PHOTO]: {
                 element: $IMG_PORTRAIT,
-                imgCursor: "./images/cursors/pointer.png",
-                imgCursorClicked: "./images/cursors/pointer.png",
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER,
                 handleOn: cursorOnPhoto,
                 handleOff: null,
             },
             [Zone.BUTTON]: {
                 element: $BUTTON,
-                imgCursor: "./images/cursors/pointer.png",
-                imgCursorClicked: "./images/cursors/pointer-clicked.png",
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
                 handleOn: cursorOnButton,
                 handleOff: null,
             },
             [Zone.POINT]: {
                 element: $POINT,
-                imgCursor: "./images/cursors/pointer.png",
-                imgCursorClicked: "./images/cursors/pointer-clicked.png",
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
                 handleOn: null,
                 handleOff: null,
             },
@@ -300,17 +301,7 @@
         // CURSOR CLICK CONTROLL
         //
 
-        async function handleDoubleLeftClick() {
-            // if (isCursorZone(Zone.NONE)) {
-            //     if ($BACKGROUND.hasClass("bg-blue")) {
-            //         $BACKGROUND.removeClass("bg-blue");
-            //     } else {
-            //         $BACKGROUND.addClass("bg-blue");
-            //     }
-            // }
-        }
-
-        async function handleLeftClick() {
+        async function handleLeftClick(event) {
             changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
 
             if (isCursorZone(Zone.POINT)) {
@@ -332,9 +323,6 @@
         }
 
         async function clickPoint() {
-            if ($BACKGROUND.hasClass("bg-blue"))
-                $BACKGROUND.removeClass("bg-blue");
-
             $BUTTON.css("pointer-events", "none");
             $BUTTON.attr("disabled", true);
 
@@ -426,54 +414,12 @@
         // VIDEO CONTROLL
         //
 
-        const VIDEO = $VIDEO[0];
-
-        async function showVideo() {
-            // 1. Подготавливаем видео (загружаем, но не показываем)
-            VIDEO.load();
-
-            // 2. Ждем, когда видео сможет воспроизводиться
-            await new Promise((resolve) => {
-                if (VIDEO.readyState >= 2) {
-                    resolve();
-                } else {
-                    $VIDEO.on("canplay", resolve);
-                }
-            });
-
-            // 3. Плавно показываем видео
-            $VIDEO.css("opacity", 0).removeClass("d-none");
-
-            // 5. После завершения анимации скрываем изображение полностью
-            setTimeout(() => {
-                $VIDEO.css("opacity", 1);
-            }, 800); // Должно совпадать с длительностью transition (0.8s)
-        }
-
-        // Функция для безопасного запуска
-        function playVideo() {
-            VIDEO.currentTime = 0;
-            VIDEO.play()
-                .then(() => {
-                    // console.log("Видео воспроизводится");
-                })
-                .catch((error) => {
-                    console.error(
-                        "Ошибка воспроизведения:",
-                        error.name,
-                        error.message,
-                    );
-                });
-        }
-
-        // Функция для остановки
-        function stopVideo() {
-            VIDEO.pause();
-            VIDEO.currentTime = 0;
-            // console.log("⏹️ Видео остановлено");
-        }
+        const VIDEO_SETTINGS = {
+            $element: $("#video-portrait"),
+        };
     </script>
     <script src="./js/cursorController.js"></script>
+    <script src="./js/videoController.js"></script>
     <script src="./js/flash.js"></script>
     <script src="./js/random.js"></script>
 </html>

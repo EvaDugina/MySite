@@ -79,11 +79,12 @@ async function onClick(event) {
                 // Если не было второго клика за 300мс
                 dbClickCount = 0
             }, 300)
-            await handleLeftClick()
+            await handleLeftClick(event)
         } else if (dbClickCount === 2) {
             // Второй клик - это двойной клик
             clearTimeout(dbClickTimeout)
-            handleDoubleLeftClick()
+            if (SETTINGS.handleDbLeftClick != null)
+                SETTINGS.handleDbLeftClick(event)
             dbClickCount = 0
         }
 
@@ -103,14 +104,14 @@ function initPosition() {
         window.innerHeight * SETTINGS.startY -
         SETTINGS.elementCursor.height() / 2
 
-    changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"], 0)
-
     // Устанавливаем начальную позицию
     SETTINGS.elementCursor.css({
+        position: "fixed",
         left: currentX + "px",
         top: currentY + "px",
-        display: "block",
     })
+
+    changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
 }
 
 // Инициализация Rect Zones
@@ -273,18 +274,22 @@ function handleOffCurrentZone() {
 //
 //
 
-function changeCursorSrc(newSrc, durationAnimation = 5) {
-    if (newSrc == SETTINGS.elementCursor.attr("src")) return
-    else if (newSrc == null) newSrc = "./images/cursors/none.png"
+function changeCursorSrc(newSrc, cursorElement = null) {
+    if (cursorElement == null) cursorElement = SETTINGS.elementCursor
+
+    if (newSrc == cursorElement.attr("src")) return
+    else if (newSrc == null) newSrc = CURSOR_IMAGES.NONE
+
+    let durationAnimation = 0
 
     // Fade the image out
-    SETTINGS.elementCursor.fadeOut(durationAnimation, function () {
+    cursorElement.fadeOut(durationAnimation, function () {
         // Change the src attribute after the fade out is complete
-        SETTINGS.elementCursor.attr("src", newSrc)
+        cursorElement.attr("src", newSrc)
 
         // Wait for the new image to load before fading it in
         // Use .one('load', ...) to ensure the callback runs only once
-        SETTINGS.elementCursor
+        cursorElement
             .one("load", function () {
                 $(this).fadeIn(durationAnimation)
             })
