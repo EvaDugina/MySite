@@ -1,35 +1,16 @@
 version: "3.9"
 
-# Шаблон с ограничениями
-x-default-limits: &default-limits
-  cpus: "0.2" # 10% от 2 CPU = 0.2 ядра
-  mem_limit: 4g # 4 ГБ RAM
-  memswap_limit: 4g # Отключаем swap
-  cpu_shares: 102 # 10% от 1024
-  cpuset: "0-1" # Можно использовать первые 2 ядра
-
 services:
   php:
     container_name: mysite-php
-    # ДЛЯ НАГРУЗОЧНОГО ТЕСТИРОВАНИЯ:
-    # <<: *default-limits # Вставляем все ограничения из шаблона
     build:
       context: .
       dockerfile: Dockerfile.php
     user: root
     volumes:
       - ./site/uploads:${HOST_DIR}/uploads
-      # ДЛЯ РАЗРАБОТКИ:
-      # - ./site:${HOST_DIR}
     environment:
       TZ: Europe/Moscow
-      # ДЛЯ ОТЛАДКИ (XDEBUG):
-      # XDEBUG_MODE: debug
-      # XDEBUG_CONFIG: "client_host=host.docker.internal"
-      # PHP_IDE_CONFIG: "serverName=localhost"
-    # ДЛЯ ОТЛАДКИ (XDEBUG):
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
     healthcheck:
       test: >
         sh -c "sleep 1s"
@@ -41,8 +22,6 @@ services:
 
   nginx:
     container_name: mysite-nginx
-    # ДЛЯ НАГРУЗОЧНОГО ТЕСТИРОВАНИЯ:
-    # <<: *default-limits # Вставляем все ограничения из шаблона
     build:
       context: .
       dockerfile: Dockerfile.nginx
@@ -51,11 +30,6 @@ services:
       - "8080:80"
     environment:
       - TZ=Europe/Moscow
-    # ДЛЯ РАЗРАБОТКИ:
-    # volumes:
-    #   - ./site:${HOST_DIR}
-    #   - ./for_docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    #   - ./for_docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - app-network
     depends_on:
