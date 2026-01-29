@@ -63,17 +63,22 @@ window.onresize = function () {
 //
 
 window.addEventListener("mousedown", onMouseDown)
+window.addEventListener("touchstart", onMouseDown)
 window.addEventListener("mouseup", onMouseUp)
+window.addEventListener("touchend", onMouseUp)
 
 function disableCursor() {
     window.removeEventListener("mousedown", onMouseDown)
+    window.removeEventListener("touchstart", onMouseDown)
     window.removeEventListener("mouseup", onMouseUp)
+    window.removeEventListener("touchend", onMouseUp)
 }
 
 async function onMouseDown(event) {
     if (event.which === 1) {
         if (IS_CLICKED) return
         IS_CLICKED = true
+        changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"])
 
         dbClickCount += 1
         clickStartTime = Date.now()
@@ -286,7 +291,7 @@ function handleOffCurrentZone() {
 //
 //
 
-function changeCursorSrc(newSrc, cursorElement = null) {
+async function changeCursorSrc(newSrc, cursorElement = null) {
     if (cursorElement == null) cursorElement = SETTINGS.elementCursor
 
     if (newSrc == cursorElement.attr("src")) return

@@ -1,5 +1,5 @@
 :root {
-  --font-size: medium;
+  --font-size: small;
   --font-size-sm: x-small;
   --font-size-xsm: xx-small;
   --color-xlight-grey: rgb(240, 240, 240);
@@ -10,8 +10,8 @@
 @media (min-width: 768px) {
   :root {
     --font-size: medium;
-    --font-size-sm: x-small;
-    --font-size-xsm: xx-small;
+    --font-size-sm: small;
+    --font-size-xsm: x-small;
   }
 }
 

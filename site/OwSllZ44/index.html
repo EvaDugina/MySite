@@ -139,7 +139,7 @@
         */
 
         #div-photo {
-            width: 40%;
+            width: 75%;
         }
 
         #video-portrait {
@@ -175,19 +175,19 @@
 
         @media (min-width: 768px) {
             #div-photo {
-                width: 35%;
+                width: 50%;
             }
         }
 
         @media (min-width: 1024px) {
             #div-photo {
-                width: 30%;
+                width: 40%;
             }
         }
 
         @media (min-width: 1280px) {
             #div-photo {
-                width: 25%;
+                width: 30%;
             }
         }
 
@@ -199,7 +199,7 @@
 
         @media (min-width: 1600px) {
             #div-photo {
-                width: 20%;
+                width: 25%;
             }
         }
 
@@ -212,8 +212,9 @@
 
     <script src="/src/jquery-3.7.1.min.js"></script>
     <script src="./js/preload.js"></script>
-    <!-- <script src="./js/links/index.js"></script> -->
+    <script src="./js/deviceController.js"></script>
     <script src="./js/cursorHandler.js"></script>
+    <!-- <script src="./js/links/index.js"></script> -->
     <script type="text/javascript">
         const $IMG_PORTRAIT = $("#img-portrait");
         const $BUTTON = $("#btn-click");
@@ -238,7 +239,7 @@
             damping: 0.1, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
             maxSpeed: 0.5, // Максимальная скорость
-            // maxSpeed: 1, // Максимальная скорость (для отладки)
+            // maxSpeed: 10, // Максимальная скорость (для отладки)
         };
 
         const Zone = {
@@ -302,16 +303,26 @@
         // CURSOR CLICK CONTROLL
         //
 
+        const LIMIT_CLICK = 3;
+        var countClick = 0;
         var intervalId = null;
         var IS_VULNERABLE = false;
 
         async function handleLeftClickDown(event) {
-            changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
-
             if (isCursorZone(Zone.POINT)) {
                 if (!IS_VULNERABLE) {
-                    clearInterval(intervalId);
-                    intervalId = setInterval(handleLeftClickDownDuration, 100);
+                    if (isSensoreDevice()) {
+                        countClick += 1;
+                        if (countClick > LIMIT_CLICK) {
+                            qwerty();
+                        }
+                    } else {
+                        clearInterval(intervalId);
+                        intervalId = setInterval(
+                            handleLeftClickDownDuration,
+                            100,
+                        );
+                    }
                 }
                 startFlashes();
                 return;
@@ -333,11 +344,15 @@
                 clickDuration > 500 &&
                 !IS_VULNERABLE
             ) {
-                IS_VULNERABLE = true;
-                clearInterval(intervalId);
-                stopCursor();
-                await clickPoint();
+                qwerty();
             }
+        }
+
+        async function qwerty() {
+            IS_VULNERABLE = true;
+            clearInterval(intervalId);
+            stopCursor();
+            await clickPoint();
         }
 
         async function clickPoint() {
