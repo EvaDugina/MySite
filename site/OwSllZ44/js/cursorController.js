@@ -16,6 +16,8 @@ var dbClickTimeout
 var animationId = null
 var RectZones
 
+var clickStartTime = 0
+
 //
 // PUBLIC FUNCTIONS
 //
@@ -60,18 +62,21 @@ window.onresize = function () {
 // CLICK CONTROLL
 //
 
-window.addEventListener("mousedown", onClick)
+window.addEventListener("mousedown", onMouseDown)
+window.addEventListener("mouseup", onMouseUp)
 
 function disableCursor() {
-    window.removeEventListener("mousedown", onClick)
+    window.removeEventListener("mousedown", onMouseDown)
+    window.removeEventListener("mouseup", onMouseUp)
 }
 
-async function onClick(event) {
+async function onMouseDown(event) {
     if (event.which === 1) {
         if (IS_CLICKED) return
         IS_CLICKED = true
 
         dbClickCount += 1
+        clickStartTime = Date.now()
 
         if (dbClickCount === 1) {
             // Первый клик - ждем второй
@@ -79,7 +84,8 @@ async function onClick(event) {
                 // Если не было второго клика за 300мс
                 dbClickCount = 0
             }, 300)
-            await handleLeftClick(event)
+            if (SETTINGS.handleLeftClickDown != null)
+                await SETTINGS.handleLeftClickDown(event)
         } else if (dbClickCount === 2) {
             // Второй клик - это двойной клик
             clearTimeout(dbClickTimeout)
@@ -90,6 +96,12 @@ async function onClick(event) {
 
         IS_CLICKED = false
     }
+}
+
+async function onMouseUp(event) {
+    if (SETTINGS.handleLeftClickUp != null)
+        await SETTINGS.handleLeftClickUp(event)
+    changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
 }
 
 //

@@ -159,8 +159,8 @@
             position: absolute;
             top: 75.4%;
             left: 54.5%;
-            width: 8px;
-            height: 8px;
+            width: 3px;
+            height: 3px;
             display: block;
             margin: 0;
             align-self: center;
@@ -228,15 +228,17 @@
         // Настройки cursorController
         const SETTINGS = {
             elementCursor: $("#img-cursor"), // Объект курсора
-            timeout: 2, // Задержка перед началом
+            timeout: 0, // Задержка перед началом
             startX: 0.9, // Начальная позиция от width по X
             startY: 0.25, // Начальная позиция от рушпре по Y
+            handleLeftClickDown: handleLeftClickDown,
+            handleLeftClickUp: handleLeftClickUp,
             handleDoubleLeftClick: null,
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
-            damping: 0.97, // Затухание (плавность остановки)
+            damping: 0.1, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            maxSpeed: 0.1, // Максимальная скорость
-            // maxSpeed: 2, // Максимальная скорость (для отладки)
+            maxSpeed: 0.5, // Максимальная скорость
+            // maxSpeed: 1, // Максимальная скорость (для отладки)
         };
 
         const Zone = {
@@ -251,30 +253,30 @@
             [Zone.NONE]: {
                 element: null,
                 imgCursor: CURSOR_IMAGES.POINTER,
-                imgCursorClicked: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
                 handleOn: null,
                 handleOff: null,
             },
             [Zone.PHOTO]: {
                 element: $IMG_PORTRAIT,
                 imgCursor: CURSOR_IMAGES.POINTER,
-                imgCursorClicked: CURSOR_IMAGES.POINTER,
-                handleOn: cursorOnPhoto,
+                imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
+                handleOn: null,
                 handleOff: null,
             },
             [Zone.BUTTON]: {
                 element: $BUTTON,
                 imgCursor: CURSOR_IMAGES.POINTER,
                 imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
-                handleOn: cursorOnButton,
+                handleOn: null,
                 handleOff: null,
             },
             [Zone.POINT]: {
                 element: $POINT,
                 imgCursor: CURSOR_IMAGES.POINTER,
                 imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
-                handleOn: null,
-                handleOff: null,
+                handleOn: cursorOnPoint,
+                handleOff: cursorOffPoint,
             },
             [Zone.INVOIOLABLE]: {
                 element: $INVOIOLABLE,
@@ -285,64 +287,84 @@
             },
         };
 
-        function cursorOnPhoto() {
-            if (!$BACKGROUND.hasClass("bg-blue"))
-                $BACKGROUND.addClass("bg-blue");
-            $BUTTON.removeClass("hovered");
+        function cursorOnPoint() {
+            $BACKGROUND.removeClass("bg-blue");
+            $BUTTON.addClass("hovered");
         }
 
-        function cursorOnButton() {
-            if ($BACKGROUND.hasClass("bg-blue"))
-                $BACKGROUND.removeClass("bg-blue");
-            $BUTTON.addClass("hovered");
+        function cursorOffPoint() {
+            clearInterval(intervalId);
+            $BACKGROUND.addClass("bg-blue");
+            $BUTTON.removeClass("hovered");
         }
 
         //
         // CURSOR CLICK CONTROLL
         //
 
-        async function handleLeftClick(event) {
+        var intervalId = null;
+        var IS_VULNERABLE = false;
+
+        async function handleLeftClickDown(event) {
             changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
 
             if (isCursorZone(Zone.POINT)) {
-                disableCursor();
-                stopCursor();
-
-                await clickPoint();
-
+                if (!IS_VULNERABLE) {
+                    clearInterval(intervalId);
+                    intervalId = setInterval(handleLeftClickDownDuration, 100);
+                }
+                startFlashes();
                 return;
             } else if (isCursorZone(Zone.BUTTON)) {
                 clickButton();
             }
 
-            setTimeout(() => {
-                changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"]);
-            }, 200);
-
             return;
+        }
+
+        async function handleLeftClickUp(event) {
+            clearInterval(intervalId);
+        }
+
+        async function handleLeftClickDownDuration(event) {
+            let clickDuration = Date.now() - clickStartTime;
+            if (
+                isCursorZone(Zone.POINT) &&
+                clickDuration > 500 &&
+                !IS_VULNERABLE
+            ) {
+                IS_VULNERABLE = true;
+                clearInterval(intervalId);
+                stopCursor();
+                await clickPoint();
+            }
         }
 
         async function clickPoint() {
             $BUTTON.css("pointer-events", "none");
-            $BUTTON.attr("disabled", true);
 
             showVideo();
-
-            // $BUTTON.addClass("d-none");
-            // await flash(generateFlashArray(3));
-            // await flash(generateFlashArray(3));
-            // $BUTTON.removeClass("d-none");
-
-            let number = 2;
-            flash([
-                ...generateFlashArray(number),
-                ...generateFlashArray(number),
-            ]);
 
             $BUTTON.removeClass("hovered");
             $BUTTON.removeClass("active");
             $BUTTON.attr("disabled", true);
 
+            startVideo();
+        }
+
+        async function clickButton() {
+            $BUTTON.addClass("active");
+            setTimeout(() => {
+                $BUTTON.removeClass("active");
+            }, 300);
+        }
+
+        async function startFlashes() {
+            let number = getRandomInt(1, 2);
+            await flash([...generateFlashArray(number)]);
+        }
+
+        function startVideo() {
             playVideo();
 
             setTimeout(() => {
@@ -351,51 +373,12 @@
 
             setTimeout(() => {
                 $BUTTON.attr("disabled", false);
-                $INVOIOLABLE.removeClass("d-none");
-                changeCursorSrc(null);
             }, 22 * 1000);
 
             setTimeout(() => {
-                number = 2;
-                flash([
-                    ...generateFlashArray(number),
-                    ...generateFlashArray(number),
-                    ...generateFlashArray(number),
-                ]);
-            }, 25 * 1000);
-
-            // setTimeout(async () => {
-            //     number = 2;
-            //     flash([
-            //         ...generateFlashArray(number),
-            //         ...generateFlashArray(number),
-            //         ...generateFlashArray(number),
-            //     ]);
-            //     // playVideo();
-            // }, 24 * 1000);
-
-            // setTimeout(() => {
-            //     number = 2;
-            //     flash([
-            //         ...generateFlashArray(number),
-            //         ...generateFlashArray(number),
-            //         ...generateFlashArray(number),
-            //     ]);
-            // }, 47 * 1000);
-
-            // setTimeout(() => {
-            //     qwerty();
-            //     window.location.reload();
-            // }, 30 * 1000);
-        }
-
-        async function clickButton() {
-            $BUTTON.addClass("active");
-            // number = getRandomInt(1, 2);
-            // await flash([number, 0, number, 0, number, number, number]);
-            setTimeout(() => {
-                $BUTTON.removeClass("active");
-            }, 300);
+                disableCursor();
+                changeCursorSrc(null);
+            }, 28 * 1000);
         }
 
         //
