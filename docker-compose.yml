@@ -9,6 +9,7 @@ services:
     user: root
     volumes:
       - ./site/uploads:${HOST_DIR}/uploads
+      - ./site/OwSllZ44/server/data:${HOST_DIR}/OwSllZ44/server/data
     environment:
       TZ: Europe/Moscow
     healthcheck:
