@@ -16,7 +16,7 @@ function getVisitorPositions(): array | null
     foreach ($data as $key => $value) {
         unset($data[$key]['created']);
         unset($data[$key]['last_visit']);
-        unset($data[$key]['visits']);
+        unset($data[$key]['count_click']);
     }
 
     return $data;
@@ -39,7 +39,7 @@ function createOrGenerateUUID(): string
     return $visitorId;
 }
 
-function updateVisitor(string $visitorId, float $positionX, float $positionY)
+function updateVisitorPosition(string $visitorId, float $positionX, float $positionY)
 {
     global $dataFileName;
 
@@ -52,14 +52,14 @@ function updateVisitor(string $visitorId, float $positionX, float $positionY)
             'positionY' => $positionY,
             'created' => date('Y-m-d H:i:s'),
             'last_visit' => date('Y-m-d H:i:s'),
-            'visits' => 1
+            'count_click' => 1,
         ];
     } else {
         // Существующий - обновляем
         $data[$visitorId]['positionX'] = $positionX;
         $data[$visitorId]['positionY'] = $positionY;
         $data[$visitorId]['last_visit'] = date('Y-m-d H:i:s');
-        $data[$visitorId]['visits']++;
+        $data[$visitorId]['count_click']++;
     }
 
     writeFileSafe($dataFileName, json_encode($data, JSON_PRETTY_PRINT));
