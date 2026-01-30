@@ -35,16 +35,15 @@
     <div id="div-photo" class="portrait-container">
         <div id="cursors-container">
         </div>
-            <video
-                id="video-portrait"
-                class="portrait not-allowed z-2"
-                poster="./images/НЕПРИКОСНОВЕННА.png"
-                preload="auto"
-                muted
-            >
-                <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
-                <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
-            </video>
+        <video
+            id="video-portrait"
+            class="portrait not-allowed z-2"
+            poster="./images/НЕПРИКОСНОВЕННА.png"
+            preload="auto"
+            muted>
+            <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
+            <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
+        </video>
     </div>
 </body>
 
@@ -91,15 +90,15 @@
 </style>
 
 <script src="/src/jquery-3.7.1.min.js"></script>
-<script src="./js/preload.js"></script>
+<script src="./js/preloadController.js"></script>
 <script src="./js/cursorHandler.js"></script>
 <script type="text/javascript">
     const $IMG_PORTRAIT = $("#video-portrait");
 
     function getPortraitMetrics() {
         return {
-            "leftX": $IMG_PORTRAIT.offset().left, 
-            "topY": $IMG_PORTRAIT.offset().top, 
+            "leftX": $IMG_PORTRAIT.offset().left,
+            "topY": $IMG_PORTRAIT.offset().top,
             "width": $IMG_PORTRAIT.outerWidth(), // Use .outerWidth() to include padding/border
             "height": $IMG_PORTRAIT.outerHeight() // Use .outerHeight() to include padding/border
         }
@@ -123,7 +122,7 @@
             src: './images/cursors/pointer.png',
             alt: 'муха'
         }).appendTo('#cursors-container'); // или к нужному контейнеру
-        
+
         $cursorElseElements.push($element)
     }
 
@@ -227,6 +226,6 @@
 </script>
 <script src="./js/cursorController.js"></script>
 <script src="./js/videoController.js"></script>
-<script src="./js/random.js"></script>
+<script src="./js/randomHandler.js"></script>
 
 </html>

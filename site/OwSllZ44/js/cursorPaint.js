@@ -187,6 +187,7 @@ function isCanvasBlank() {
 //     BG_CONTEXT.fillStyle = color;
 //     BG_CONTEXT.fillRect(0, 0, BG_CANVAS.width, BG_CANVAS.height);
 // }
-
-CANVAS.addEventListener("mousedown", mouseWins)
-CANVAS.addEventListener("touchstart", touchWins)
+function initCursorPaint() {
+    CANVAS.addEventListener("mousedown", mouseWins)
+    CANVAS.addEventListener("touchstart", touchWins)
+}

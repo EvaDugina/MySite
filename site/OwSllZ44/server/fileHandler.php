@@ -1,6 +1,7 @@
 <?php
 
-function readFileSafe($fileName) {
+function readFileSafe(string $fileName): string
+{
     $fp = fopen($fileName, 'r+');
     flock($fp, LOCK_SH); // Разделяемая блокировка для чтения
     $content = fread($fp, filesize($fileName) ?: 1);
@@ -8,7 +9,8 @@ function readFileSafe($fileName) {
     return $content;
 }
 
-function writeFileSafe($fileName, $data) {
+function writeFileSafe(string $fileName, string $data)
+{
     $fp = fopen($fileName, 'w');
     flock($fp, LOCK_EX);
     fwrite($fp, $data);

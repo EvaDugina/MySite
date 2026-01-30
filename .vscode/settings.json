@@ -2,7 +2,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.prettier": "explicit"
   },
-
   "[html]": {
     "prettier.tabWidth": 4
   },
@@ -11,7 +10,8 @@
     "prettier.semi": false
   },
   "[php]": {
-    "prettier.tabWidth": 4
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    "editor.formatOnSave": true // Optional: enables format on save
   },
   "[json]": {
     "prettier.tabWidth": 4

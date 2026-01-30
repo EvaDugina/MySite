@@ -60,7 +60,7 @@ async function uploadScreenshot(blob) {
     try {
         response = await $.ajax({
             type: "POST",
-            url: "/php/uploadScreenshots.php#content",
+            url: "/server/uploadScreenshots.php#content",
             cache: false,
             contentType: false,
             processData: false,

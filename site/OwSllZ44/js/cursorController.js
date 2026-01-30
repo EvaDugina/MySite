@@ -22,12 +22,15 @@ var clickStartTime = 0
 // PUBLIC FUNCTIONS
 //
 
-function isStoped() {
-    return IS_STOPPED
-}
-
 function isCursorZone(zoneType) {
     return CurrentZone == zoneType
+}
+
+function getCursorPosition() {
+    return {
+        currentX: currentX,
+        currentY: currentY,
+    }
 }
 
 function stopCursor() {
@@ -44,28 +47,20 @@ function restartCursor() {
     updateCurrentZone()
 }
 
-//
-// WINDOW.ON
-//
-
-window.onload = function () {
+function initCursorController() {
     initPosition()
     initRectZones()
     start()
+
+    window.onresize = function () {
+        window.location.reload()
+    }
+
+    window.addEventListener("mousedown", onMouseDown)
+    window.addEventListener("touchstart", onMouseDown)
+    window.addEventListener("mouseup", onMouseUp)
+    window.addEventListener("touchend", onMouseUp)
 }
-
-window.onresize = function () {
-    window.location.reload()
-}
-
-//
-// CLICK CONTROLL
-//
-
-window.addEventListener("mousedown", onMouseDown)
-window.addEventListener("touchstart", onMouseDown)
-window.addEventListener("mouseup", onMouseUp)
-window.addEventListener("touchend", onMouseUp)
 
 function disableCursor() {
     window.removeEventListener("mousedown", onMouseDown)
@@ -73,6 +68,10 @@ function disableCursor() {
     window.removeEventListener("mouseup", onMouseUp)
     window.removeEventListener("touchend", onMouseUp)
 }
+
+//
+// LOCAL FUNCTIONS
+//
 
 async function onMouseDown(event) {
     if (event.which === 1) {
@@ -117,9 +116,7 @@ async function onMouseUp(event) {
 function initPosition() {
     currentX = targetX =
         window.innerWidth * SETTINGS.startX - SETTINGS.elementCursor.width() / 2
-    currentY = targetY =
-        window.innerHeight * SETTINGS.startY -
-        SETTINGS.elementCursor.height() / 2
+    currentY = targetY = window.innerHeight * SETTINGS.startY
 
     // Устанавливаем начальную позицию
     SETTINGS.elementCursor.css({
