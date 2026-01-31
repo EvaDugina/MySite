@@ -213,13 +213,15 @@ $uuid = createOrGenerateUUID();
 </style>
 
 <script src="/src/jquery-3.7.1.min.js"></script>
-<script src="./js/preloadController.js"></script>
 <script src="./js/deviceHandler.js"></script>
 <script src="./js/cursorHandler.js"></script>
+<script src="./js/portraitHandler.js"></script>
+<script src="./js/flashHandler.js"></script>
+<script src="./js/randomHandler.js"></script>
 <!-- <script src="./js/links/index.js"></script> -->
 <script type="text/javascript">
     const $CURSORS_CONTAINER = $("#cursors-container");
-    const $IMG_PORTRAIT = $("#img-portrait");
+    const $PORTRAIT = $("#img-portrait");
     const $BUTTON = $("#btn-click");
     const $POINT = $("#div-point");
     const $INVOIOLABLE = $("#div-inviolable");
@@ -227,7 +229,34 @@ $uuid = createOrGenerateUUID();
 
     const VISITORS_DATA = <?php echo json_encode($visitorsJSON); ?>;
     const UUID = '<?php echo $uuid; ?>';
-    var $cursorElseElements = []
+
+    $("body").hide();
+    $(document).ready(function() {
+        $("body").show();
+    });
+
+    $(window).on("load", function() {
+        if (typeof VISITORS_DATA !== 'undefined') {
+            $.each(VISITORS_DATA, function(key, visitor) {
+                if (visitor.positionX == null || visitor.positionY == null)
+                    return
+                if (key == UUID) {
+                    let portraitMetrics = getPortraitMetrics($PORTRAIT)
+                    let startX = (visitor.positionX / 100 * portraitMetrics['width'] + portraitMetrics['leftX']) / window.innerWidth
+                    let startY = (visitor.positionY / 100 * portraitMetrics['height'] + portraitMetrics['topY']) / window.innerHeight
+                    if (startX < 1 && startY < 1) {
+                        SETTINGS.startX = startX
+                        SETTINGS.startY = startY
+                    }
+                    return
+                }
+                createCursorElse($CURSORS_CONTAINER, visitor.positionX, visitor.positionY)
+            });
+        }
+        setInterval(clickCursorsElse, 500);
+
+        initCursorController()
+    });
 
     //
     // CURSOR MOVE CONTROLL
@@ -266,7 +295,7 @@ $uuid = createOrGenerateUUID();
             handleOff: null,
         },
         [Zone.PHOTO]: {
-            element: $IMG_PORTRAIT,
+            element: $PORTRAIT,
             imgCursor: CURSOR_IMAGES.POINTER,
             imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
             handleOn: null,
@@ -295,147 +324,6 @@ $uuid = createOrGenerateUUID();
         },
     };
 
-    //
-    // CURSOR CLICK CONTROLL
-    //
-
-    const LIMIT_CLICK = 3;
-    var countClick = 0;
-    var intervalId = null;
-    var IS_VULNERABLE = false;
-
-    //
-    // FLASH CONTROLL
-    //
-
-    const FLASH_SETTINGS = {
-        duration: 150,
-    };
-
-    //
-    // VIDEO CONTROLL
-    //
-
-    const VIDEO_SETTINGS = {
-        $element: $("#video-portrait"),
-    };
-
-    $(document).ready(function() {
-
-        if (typeof VISITORS_DATA !== 'undefined') {
-            $.each(VISITORS_DATA, function(key, visitor) {
-                if (visitor.positionX == null || visitor.positionY == null)
-                    return
-                if (key == UUID) {
-                    let portraitMetrics = getPortraitMetrics()
-                    let startX = (visitor.positionX / 100 * portraitMetrics['width'] + portraitMetrics['leftX']) / window.innerWidth
-                    let startY = (visitor.positionY / 100 * portraitMetrics['height'] + portraitMetrics['topY']) / window.innerHeight
-                    if (startX < 1 && startY < 1) {
-                        SETTINGS.startX = startX
-                        SETTINGS.startY = startY
-                    }
-                    return
-                }
-                createCursorElse(visitor.positionX, visitor.positionY)
-            });
-        }
-        setInterval(clickCursorsElse, 500);
-
-        initCursorController()
-
-    });
-
-    // 
-    // CURSOR ELSE CONTROLL
-    // 
-
-    function createCursorElse(positionX, positionY) {
-        let $element = $('<img>', {
-            class: 'cursor cursor-else not-allowed z-998',
-            css: {
-                position: 'absolute',
-                left: positionX + '%',
-                top: positionY + '%'
-            },
-            src: './images/cursors/pointer.png',
-            alt: 'муха'
-        }).appendTo('#cursors-container'); // или к нужному контейнеру
-
-        $cursorElseElements.push($element)
-    }
-
-    // Функция для смены изображений
-    function clickCursorsElse() {
-
-        $cursorElseElements.forEach(($this, index) => {
-            setTimeout(async () => {
-                changeCursorSrc(CURSOR_IMAGES.POINTER_CLICKED, $this)
-                setTimeout(async () => {
-                    changeCursorSrc(CURSOR_IMAGES.POINTER, $this)
-                }, 50);
-            }, getRandomInt(0, 4) * 100);
-        });
-    }
-
-    function updateLastClickPosition(clientX, clientY) {
-        let portraitMetrics = getPortraitMetrics()
-        let cursorPosition = getCursorPosition()
-
-        let positionX = cursorPosition['currentX'] - portraitMetrics['leftX']
-        let positionY = cursorPosition['currentY'] - portraitMetrics['topY']
-
-        let percentX = ((positionX / portraitMetrics['width']) * 100).toFixed(6)
-        let percentY = ((positionY / portraitMetrics['height']) * 100).toFixed(6)
-
-        ajaxSaveLastCursorPosition(percentX, percentY)
-
-    }
-
-    function getPortraitMetrics() {
-        return {
-            "leftX": $IMG_PORTRAIT.offset().left,
-            "topY": $IMG_PORTRAIT.offset().top,
-            "width": $IMG_PORTRAIT.outerWidth(), // Use .outerWidth() to include padding/border
-            "height": $IMG_PORTRAIT.outerHeight() // Use .outerHeight() to include padding/border
-        }
-    }
-
-    async function ajaxSaveLastCursorPosition(percentX, percentY) {
-        if (percentX == null || percentY == null)
-            return
-
-        const formData = new FormData()
-
-        // Добавляем дополнительные данные, если нужно
-        formData.append("flag-updateVisitorData", true)
-        formData.append("uuid", UUID)
-        formData.append("positionX", percentX)
-        formData.append("positionY", percentY)
-
-        let response = null
-        try {
-            response = await $.ajax({
-                type: "POST",
-                url: "./server/visitorController.php#content",
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: formData,
-                dataType: "html",
-            })
-            response = JSON.parse(response.trim())
-        } catch (error) {
-            console.error("Ошибка запроса:", error)
-            return null
-        }
-
-        return
-    }
-
-    //
-    // CURSOR MOVE CONTROLL
-    //
-
     function cursorOnPoint() {
         $BACKGROUND.removeClass("bg-blue");
         $BUTTON.addClass("hovered");
@@ -450,6 +338,11 @@ $uuid = createOrGenerateUUID();
     //
     // CURSOR CLICK CONTROLL
     //
+
+    const LIMIT_CLICK = 3;
+    var countClick = 0;
+    var intervalId = null;
+    var IS_VULNERABLE = false;
 
     async function handleLeftClickDown(event) {
 
@@ -543,17 +436,44 @@ $uuid = createOrGenerateUUID();
         }, 28 * 1000);
     }
 
+    // 
+    // CURSOR ELSE CONTROLL
+    // 
+
+    function updateLastClickPosition(clientX, clientY) {
+        let portraitMetrics = getPortraitMetrics($PORTRAIT)
+        let cursorPosition = getCursorPosition()
+
+        let positionX = cursorPosition["currentX"] - portraitMetrics["leftX"]
+        let positionY = cursorPosition["currentY"] - portraitMetrics["topY"]
+
+        let percentX = ((positionX / portraitMetrics["width"]) * 100).toFixed(6)
+        let percentY = ((positionY / portraitMetrics["height"]) * 100).toFixed(6)
+
+        ajaxSaveLastCursorPosition(UUID, percentX, percentY)
+    }
+
     //
     // FLASH CONTROLL
     //
 
+    const FLASH_SETTINGS = {
+        duration: 150,
+    };
+
     function generateFlashArray(number) {
         return [number, 0, number, 0, number, number, number];
     }
+
+    //
+    // VIDEO CONTROLL
+    //
+
+    const VIDEO_SETTINGS = {
+        $element: $("#video-portrait"),
+    };
 </script>
 <script src="./js/cursorController.js"></script>
 <script src="./js/videoController.js"></script>
-<script src="./js/flashHandler.js"></script>
-<script src="./js/randomHandler.js"></script>
 
 </html>
