@@ -39,13 +39,13 @@ function stopCursor() {
     window.removeEventListener("blur", handleBlur)
 }
 
-function restartCursor() {
-    IS_STOPPED = false
-    initRectZones()
-    start(true)
-    handleBlur()
-    updateCurrentZone()
-}
+// function restartCursor() {
+//     IS_STOPPED = false
+//     initRectZones()
+//     start(true)
+//     handleBlur()
+//     updateCurrentZone()
+// }
 
 function initCursorController() {
     initRectZones()
@@ -126,18 +126,19 @@ function initRectZones() {
 
 // Инициализация начальной позиции
 function initPosition() {
-    currentX = targetX =
-        window.innerWidth * SETTINGS.startX - SETTINGS.elementCursor.width() / 2
-    currentY = targetY = window.innerHeight * SETTINGS.startY
+    if (SETTINGS.startX != null && SETTINGS.startY != null) {
+        currentX = targetX = window.innerWidth * SETTINGS.startX
+        currentY = targetY = window.innerHeight * SETTINGS.startY
 
-    // Устанавливаем начальную позицию
-    SETTINGS.elementCursor.css({
-        position: "fixed",
-        left: currentX + "px",
-        top: currentY + "px",
-    })
-
-    changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
+        // Устанавливаем начальную позицию
+        SETTINGS.elementCursor.css({
+            left: currentX + "px",
+            top: currentY + "px",
+        })
+    } else {
+        currentX = null
+        currentY = null
+    }
 }
 
 function start(isRestart = false) {
@@ -164,6 +165,11 @@ function handleMosemove(e) {
     targetX = e.clientX
     targetY = e.clientY
 
+    if (currentX == null || currentY == null) {
+        currentX = targetX
+        currentY = targetY
+    }
+
     // Запускаем анимацию, если она еще не запущена
     if (!animationId) {
         animationId = requestAnimationFrame(updatePosition)
@@ -184,6 +190,14 @@ function handleBlur() {
 // Функция для плавного обновления позиции
 function updatePosition() {
     if (IS_STOPPED) return
+    if (
+        (currentX == null || currentY == null) &&
+        targetX == 0 &&
+        targetY == 0
+    ) {
+        animationId = requestAnimationFrame(updatePosition)
+        return
+    }
 
     // Рассчитываем силу (разница между текущей и целевой позицией)
     const forceX = (targetX - currentX) * SETTINGS.stiffness
@@ -259,6 +273,7 @@ function updateCurrentZone() {
 
 function isCursorInZone(zoneType) {
     if (zoneType == Zone.NONE) return true
+    if (currentX == null || currentY == null) return false
 
     let radius = 0
     let rect = RectZones.get(zoneType)

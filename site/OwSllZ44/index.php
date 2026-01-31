@@ -220,6 +220,12 @@ $uuid = createOrGenerateUUID();
 <script src="./js/randomHandler.js"></script>
 <!-- <script src="./js/links/index.js"></script> -->
 <script type="text/javascript">
+    const $BODY = $("body");
+    $BODY.hide();
+    $(document).ready(function() {
+        $BODY.show();
+    });
+
     const $CURSORS_CONTAINER = $("#cursors-container");
     const $PORTRAIT = $("#img-portrait");
     const $BUTTON = $("#btn-click");
@@ -229,11 +235,6 @@ $uuid = createOrGenerateUUID();
 
     const VISITORS_DATA = <?php echo json_encode($visitorsJSON); ?>;
     const UUID = '<?php echo $uuid; ?>';
-
-    $("body").hide();
-    $(document).ready(function() {
-        $("body").show();
-    });
 
     $(window).on("load", function() {
         if (typeof VISITORS_DATA !== 'undefined') {
@@ -266,35 +267,43 @@ $uuid = createOrGenerateUUID();
     const SETTINGS = {
         elementCursor: $("#img-cursor"), // Объект курсора
         timeout: 0, // Задержка перед началом
-        startX: 0.9, // Начальная позиция от width по X
-        startY: 0.25, // Начальная позиция от рушпре по Y
+        startX: null, // Начальная позиция от width по X
+        startY: null, // Начальная позиция от рушпре по Y
         handleLeftClickDown: handleLeftClickDown,
         handleLeftClickUp: handleLeftClickUp,
         handleDoubleLeftClick: null,
         stiffness: 0.4, // Жесткость пружины (скорость реакции)
         damping: 0.1, // Затухание (плавность остановки)
         mass: 0.1, // Масса объекта
-        maxSpeed: 0.5, // Максимальная скорость
-        // maxSpeed: 10, // Максимальная скорость (для отладки)
+        // maxSpeed: 0.5, // Максимальная скорость
+        maxSpeed: 10, // Максимальная скорость (для отладки)
     };
 
     const Zone = {
         NONE: 0,
-        PHOTO: 1,
-        BUTTON: 2,
-        POINT: 3,
-        INVOIOLABLE: 4,
+        BACK: 1,
+        PORTRAIT: 2,
+        BUTTON: 3,
+        POINT: 4,
+        INVOIOLABLE: 5,
     };
 
     const ZONES_SETTINGS = {
         [Zone.NONE]: {
             element: null,
+            imgCursor: CURSOR_IMAGES.NONE,
+            imgCursorClicked: CURSOR_IMAGES.NONE,
+            handleOn: null,
+            handleOff: null,
+        },
+        [Zone.BACK]: {
+            element: $BODY,
             imgCursor: CURSOR_IMAGES.POINTER,
             imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
             handleOn: null,
             handleOff: null,
         },
-        [Zone.PHOTO]: {
+        [Zone.PORTRAIT]: {
             element: $PORTRAIT,
             imgCursor: CURSOR_IMAGES.POINTER,
             imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,

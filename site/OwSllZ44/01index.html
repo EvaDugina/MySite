@@ -90,13 +90,14 @@
     <script src="./js/cursorHandler.js"></script>
     <script src="./js/randomHandler.js"></script>
     <script type="text/javascript">
+        const $BODY = $("body");
+        $BODY.hide();
+        $(document).ready(function () {
+            $BODY.show();
+        });
+
         const $PORTRAIT = $("#video-portrait");
         const $CURSORS_CONTAINER = $("#cursors-container");
-
-        $("body").hide();
-        $(document).ready(function () {
-            $("body").show();
-        });
 
         $(window).on("load", function () {
             setInterval(clickCursorsElse, 500);
@@ -113,8 +114,8 @@
         const SETTINGS = {
             elementCursor: $("#img-cursor"), // Объект курсора
             timeout: 0, // Задержка перед началом
-            startX: 0.9, // Начальная позиция от width по X
-            startY: 0.25, // Начальная позиция от рушпре по Y
+            startX: null, // Начальная позиция от width по X
+            startY: null, // Начальная позиция от рушпре по Y
             handleLeftClickDown: handleLeftClickDown,
             handleLeftClickUp: null,
             handleDoubleLeftClick: null,
@@ -126,18 +127,26 @@
 
         const Zone = {
             NONE: 0,
-            PHOTO: 1,
+            BACK: 1,
+            PORTRAIT: 2,
         };
 
         const ZONES_SETTINGS = {
             [Zone.NONE]: {
                 element: null,
+                imgCursor: CURSOR_IMAGES.NONE,
+                imgCursorClicked: CURSOR_IMAGES.NONE,
+                handleOn: null,
+                handleOff: null,
+            },
+            [Zone.BACK]: {
+                element: $BODY,
                 imgCursor: CURSOR_IMAGES.POINTER,
                 imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
                 handleOn: null,
                 handleOff: null,
             },
-            [Zone.PHOTO]: {
+            [Zone.PORTRAIT]: {
                 element: $PORTRAIT,
                 imgCursor: CURSOR_IMAGES.POINTER,
                 imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
