@@ -86,58 +86,21 @@
     </style>
 
     <script src="/src/jquery-3.7.1.min.js"></script>
-    <script src="./js/preloadController.js"></script>
+    <script src="./js/portraitHandler.js"></script>
     <script src="./js/cursorHandler.js"></script>
+    <script src="./js/randomHandler.js"></script>
     <script type="text/javascript">
-        const $IMG_PORTRAIT = $("#video-portrait");
+        const $PORTRAIT = $("#video-portrait");
+        const $CURSORS_CONTAINER = $("#cursors-container");
 
-        function getPortraitMetrics() {
-            return {
-                leftX: $IMG_PORTRAIT.offset().left,
-                topY: $IMG_PORTRAIT.offset().top,
-                width: $IMG_PORTRAIT.outerWidth(), // Use .outerWidth() to include padding/border
-                height: $IMG_PORTRAIT.outerHeight(), // Use .outerHeight() to include padding/border
-            };
-        }
-
-        //
-        // CURSOR ELSE CONTROLL
-        //
-        var $cursorElseElements = [];
-
-        function createCursorElse(positionX, positionY) {
-            let $element = $("<img>", {
-                class: "cursor cursor-else not-allowed z-998",
-                css: {
-                    position: "absolute",
-                    left: positionX + "%",
-                    top: positionY + "%",
-                },
-                src: "./images/cursors/pointer.png",
-                alt: "муха",
-            }).appendTo("#cursors-container"); // или к нужному контейнеру
-
-            $cursorElseElements.push($element);
-        }
-
-        // Функция для смены изображений
-        function clickCursorsElse() {
-            $cursorElseElements.forEach(($this, index) => {
-                setTimeout(
-                    async () => {
-                        changeCursorSrc(CURSOR_IMAGES.POINTER_CLICKED, $this);
-                        setTimeout(async () => {
-                            changeCursorSrc(CURSOR_IMAGES.POINTER, $this);
-                        }, 50);
-                    },
-                    getRandomInt(0, 4) * 100,
-                );
-            });
-        }
-
+        $("body").hide();
         $(document).ready(function () {
-            setInterval(clickCursorsElse, 500);
+            $("body").show();
+        });
 
+        $(window).on("load", function () {
+            setInterval(clickCursorsElse, 500);
+            initCursorController();
             playVideo();
         });
 
@@ -146,13 +109,16 @@
         //
 
         // Настройки cursorController
+
         const SETTINGS = {
             elementCursor: $("#img-cursor"), // Объект курсора
             timeout: 0, // Задержка перед началом
-            startX: 0.75, // Начальная позиция от width по X
+            startX: 0.9, // Начальная позиция от width по X
             startY: 0.25, // Начальная позиция от рушпре по Y
-            handleDbLeftClick: null,
-            stiffness: 1, // Жесткость пружины (скорость реакции)
+            handleLeftClickDown: handleLeftClickDown,
+            handleLeftClickUp: null,
+            handleDoubleLeftClick: null,
+            stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.1, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
             maxSpeed: 50, // Максимальная скорость
@@ -172,7 +138,7 @@
                 handleOff: null,
             },
             [Zone.PHOTO]: {
-                element: $IMG_PORTRAIT,
+                element: $PORTRAIT,
                 imgCursor: CURSOR_IMAGES.POINTER,
                 imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
                 handleOn: null,
@@ -184,32 +150,20 @@
         // CURSOR CLICK CONTROLL
         //
 
-        async function handleLeftClick(event) {
+        async function handleLeftClickDown(event) {
             changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
-            // setTimeout(() => {
-            //     changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"]);
-            // }, 200);
 
-            let portraitMetrics = getPortraitMetrics();
+            let cursorPosition = getCursorPosition();
+            let percents = getCursorPositionRelativePortrait(
+                cursorPosition.x,
+                cursorPosition.y,
+                $PORTRAIT,
+            );
 
-            let positionX = event.clientX - portraitMetrics["leftX"];
-            let positionY = event.clientY - portraitMetrics["topY"];
-
-            let percentX = (
-                (positionX / portraitMetrics["width"]) *
-                100
-            ).toFixed(2);
-            let percentY = (
-                (positionY / portraitMetrics["height"]) *
-                100
-            ).toFixed(2);
-
-            createCursorElse(percentX, percentY);
+            createCursorElse($CURSORS_CONTAINER, percents.x, percents.y);
 
             return;
         }
-
-        function fixCursorPosition() {}
 
         //
         // VIDEO CONTROLL
@@ -221,5 +175,4 @@
     </script>
     <script src="./js/cursorController.js"></script>
     <script src="./js/videoController.js"></script>
-    <script src="./js/randomHandler.js"></script>
 </html>

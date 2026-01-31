@@ -28,8 +28,8 @@ function isCursorZone(zoneType) {
 
 function getCursorPosition() {
     return {
-        currentX: currentX,
-        currentY: currentY,
+        x: currentX,
+        y: currentY,
     }
 }
 
@@ -48,8 +48,8 @@ function restartCursor() {
 }
 
 function initCursorController() {
-    initPosition()
     initRectZones()
+    initPosition()
     start()
 
     window.onresize = function () {
@@ -112,6 +112,18 @@ async function onMouseUp(event) {
 // INIT FUNCTIONS
 //
 
+// Инициализация Rect Zones
+function initRectZones() {
+    RectZones = new Map()
+    Object.entries(Zone).forEach(([key, value]) => {
+        if (ZONES_SETTINGS[value]["element"] != null)
+            RectZones.set(
+                value,
+                ZONES_SETTINGS[value]["element"][0].getBoundingClientRect(),
+            )
+    })
+}
+
 // Инициализация начальной позиции
 function initPosition() {
     currentX = targetX =
@@ -126,18 +138,6 @@ function initPosition() {
     })
 
     changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
-}
-
-// Инициализация Rect Zones
-function initRectZones() {
-    RectZones = new Map()
-    Object.entries(Zone).forEach(([key, value]) => {
-        if (ZONES_SETTINGS[value]["element"] != null)
-            RectZones.set(
-                value,
-                ZONES_SETTINGS[value]["element"][0].getBoundingClientRect(),
-            )
-    })
 }
 
 function start(isRestart = false) {
@@ -259,9 +259,6 @@ function updateCurrentZone() {
 
 function isCursorInZone(zoneType) {
     if (zoneType == Zone.NONE) return true
-
-    // if (CurrentZone == Zone.POINT && zoneType == Zone.POINT)
-    //     console.log("isCursorInZone(POINT)")
 
     let radius = 0
     let rect = RectZones.get(zoneType)

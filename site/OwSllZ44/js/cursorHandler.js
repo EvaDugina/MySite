@@ -38,6 +38,21 @@ function clickCursorsElse() {
     })
 }
 
+function getCursorPositionRelativePortrait(cursorX, cursorY, $portrait) {
+    let portraitMetrics = getPortraitMetrics($portrait)
+
+    let positionX = cursorX - portraitMetrics["leftX"]
+    let positionY = cursorY - portraitMetrics["topY"]
+
+    let percentX = ((positionX / portraitMetrics["width"]) * 100).toFixed(6)
+    let percentY = ((positionY / portraitMetrics["height"]) * 100).toFixed(6)
+
+    return {
+        x: percentX,
+        y: percentY,
+    }
+}
+
 async function ajaxSaveLastCursorPosition(uuid, percentX, percentY) {
     if (percentX == null || percentY == null) return
 

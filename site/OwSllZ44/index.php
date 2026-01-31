@@ -441,16 +441,15 @@ $uuid = createOrGenerateUUID();
     // 
 
     function updateLastClickPosition(clientX, clientY) {
-        let portraitMetrics = getPortraitMetrics($PORTRAIT)
+
         let cursorPosition = getCursorPosition()
+        let percents = getCursorPositionRelativePortrait(
+            cursorPosition.x,
+            cursorPosition.y,
+            $PORTRAIT,
+        );
 
-        let positionX = cursorPosition["currentX"] - portraitMetrics["leftX"]
-        let positionY = cursorPosition["currentY"] - portraitMetrics["topY"]
-
-        let percentX = ((positionX / portraitMetrics["width"]) * 100).toFixed(6)
-        let percentY = ((positionY / portraitMetrics["height"]) * 100).toFixed(6)
-
-        ajaxSaveLastCursorPosition(UUID, percentX, percentY)
+        ajaxSaveLastCursorPosition(UUID, percents.x, percents.y)
     }
 
     //
