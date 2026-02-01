@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Неприкосновенна</title>
+
+        <link
+            rel="icon"
+            href="./images/НЕПРИКОСНОВЕННА.jpg"
+            type="image/x-icon"
+        />
+
+        <link rel="stylesheet" href="./css/style.css" />
+        <link rel="stylesheet" href="./css/cursor.css" />
+    </head>
+
+    <body class="d-none">
+        <img
+            id="img-cursor"
+            class="cursor not-allowed z-999"
+            src="./images/cursors/none.png"
+            alt="icon"
+        />
+        <div id="div-photo" class="portrait-container">
+            <img
+                id="portrait"
+                class="portrait not-allowed z-1"
+                src="./images/ПРИКОСНОВЕННА.png"
+                alt="НЕПРИКОСНОВЕННА"
+            />
+                <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
+                <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
+            </video>
+
+            <button id="btn-spittle" class="z-4" onclick="spittle()">
+                Плюнуть
+            </button>
+            <button id="btn-kiss" class="z-4" onclick="kiss()">
+                Поцеловать
+            </button>
+        </div>
+    </body>
+
+    <style>
+        #div-photo {
+            width: 100%;
+            height: 100%;
+        }
+
+        #portrait {
+            position: absolute;
+            width: 400%;
+            height: 100%;
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            object-fit: fill;
+        }
+
+        #btn-spittle {
+            position: fixed;
+            top: 30.5%;
+            left: 45%;
+            font-size: var(--font-size);
+        }
+
+        #btn-kiss {
+            position: fixed;
+            top: 73%;
+            left: 36%;
+            font-size: var(--font-size);
+        }
+
+        @media (min-width: 768px) {
+            #portrait {
+                width: 400%;
+                left: 50%;
+            }
+
+            #btn-kiss {
+                top: 74%;
+                left: 34%;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            #portrait {
+                width: 350%;
+                left: 50%;
+            }
+            
+            #btn-kiss {
+                top: 74%;
+                left: 40%;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            #portrait {
+                width: 300%;
+                left: 50%;
+            }
+
+            #btn-kiss {
+                top: 74%;
+                left: 40%;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            #portrait {
+                width: 250%;
+                left: 50%;
+            }
+
+            #btn-kiss {
+                top: 74%;
+                left: 40%;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            #portrait {
+                width: 200%;
+                left: 50%;
+            }
+
+            #btn-kiss {
+                top: 74%;
+                left: 42%;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            #portrait {
+                width: 200%;
+                left: 50%;
+            }
+
+            #btn-kiss {
+                top: 74%;
+                left: 42%;
+            }
+        }
+    </style>
+
+    <script src="/src/jquery-3.7.1.min.js"></script>
+    <script src="./js/links/02index.js"></script>
+    <script src="./js/cursorHandler.js"></script>
+    <script type="text/javascript">
+        const $BODY = $("body");
+        $BODY.hide();
+        $(document).ready(function () {
+            $BODY.show();
+        });
+
+        const $CURSOR = $("#img-cursor");
+        const $PORTRAIT = $("#portrait");
+        const $BUTTON_SPITTLE = $("#btn-spittle");
+        const $BUTTON_KISS = $("#btn-kiss");
+
+        $(window).on("load", function () {
+            initCursorController();
+        });
+
+        //
+        // CURSOR MOVE CONTROLL
+        //
+
+        // Настройки cursorController
+        const SETTINGS = {
+            elementCursor: $CURSOR, // Объект курсора
+            timeout: 0, // Задержка перед началом
+            startX: 0.5, // Начальная позиция от width по X
+            startY: 0.5, // Начальная позиция от рушпре по Y
+            handleLeftClickDown: handleLeftClickDown,
+            handleLeftClickUp: null,
+            handleDoubleLeftClick: null,
+            stiffness: 0.4, // Жесткость пружины (скорость реакции)
+            damping: 0.1, // Затухание (плавность остановки)
+            mass: 0.1, // Масса объекта
+            maxSpeed: 0.1, // Максимальная скорость
+        };
+
+        const Zone = {
+            NONE: 0,
+            BACK: 1,
+            PORTRAIT: 2,
+            BUTTON_SPITTLE: 3,
+            BUTTON_KISS: 4,
+        };
+
+        const ZONES_SETTINGS = {
+            [Zone.NONE]: {
+                element: null,
+                imgCursor: CURSOR_IMAGES.NONE,
+                imgCursorClicked: CURSOR_IMAGES.NONE,
+                handleOn: null,
+                handleOff: null,
+            },
+            [Zone.BACK]: {
+                element: $BODY,
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER,
+                handleOn: null,
+                handleOff: null,
+            },
+            [Zone.PORTRAIT]: {
+                element: $PORTRAIT,
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER,
+                handleOn: null,
+                handleOff: null,
+            },
+            [Zone.BUTTON_SPITTLE]: {
+                element: $BUTTON_SPITTLE,
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
+                handleOn: cursorOnButtonSpittle,
+                handleOff: cursorOffButtonSpittle,
+            },
+            [Zone.BUTTON_KISS]: {
+                element: $BUTTON_KISS,
+                imgCursor: CURSOR_IMAGES.POINTER,
+                imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
+                handleOn: cursorOnButtonKiss,
+                handleOff: cursorOffButtonKiss,
+            },
+        };
+
+        function cursorOnButtonSpittle() {
+            $BUTTON_SPITTLE.addClass("hovered");
+            $BUTTON_SPITTLE.css("pointer-events", "all");
+        }
+
+        function cursorOffButtonSpittle() {
+            $BUTTON_SPITTLE.removeClass("hovered");
+            $BUTTON_SPITTLE.css("pointer-events", "none");
+        }
+
+        function cursorOnButtonKiss() {
+            $BUTTON_KISS.addClass("hovered");
+            $BUTTON_KISS.css("pointer-events", "all");
+        }
+
+        function cursorOffButtonKiss() {
+            $BUTTON_KISS.removeClass("hovered");
+            $BUTTON_KISS.css("pointer-events", "none");
+        }
+
+        //
+        // CURSOR CLICK CONTROLL
+        //
+
+        // const DURATION = 70 * 1000;
+
+        async function handleLeftClickDown(e) {
+            changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
+            if (e.which === 1) {
+                // 1 - левая кнопка
+                if (isCursorZone(Zone.BUTTON_SPITTLE)) {
+                    spittle();
+                } else if (isCursorZone(Zone.BUTTON_KISS)) {
+                    kiss();
+                }
+            }
+        }
+
+        function spittle() {
+            $BUTTON_SPITTLE.prop("disabled", true);
+            toUnizit()
+        }
+
+        function kiss() {
+            $BUTTON_KISS.prop("disabled", true);
+            toUnizitsya()
+        }
+
+    </script>
+    <script src="./js/cursorController.js"></script>
+</html>

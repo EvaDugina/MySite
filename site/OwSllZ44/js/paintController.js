@@ -1,19 +1,14 @@
-CANVAS.width = window.innerWidth - PADDING_CANVAS * 2
-CANVAS.height = window.innerHeight - PADDING_CANVAS * 2
+const CANVAS = PAINT_SETTINGS.$canvas
+CANVAS.width = window.innerWidth - PAINT_SETTINGS.padding_canvas * 2
+CANVAS.height = window.innerHeight - PAINT_SETTINGS.padding_canvas * 2
 
 const CONTEXT = CANVAS.getContext("2d", { willReadFrequently: true })
 CONTEXT.strokeStyle = "#000000"
 CONTEXT.lineJoin = "round"
 CONTEXT.lineWidth = 5
 
-// BG_CANVAS.width = window.innerWidth - PADDING_CANVAS * 2;
-// BG_CANVAS.height = window.innerHeight - PADDING_CANVAS * 2;
-
-// const BG_CONTEXT = BG_CANVAS.getContext('2d');
-
+const PEN_COLOR = PAINT_SETTINGS.$penColor
 PEN_COLOR.oninput = fill
-// BACK_COLOR.oninput = setBackgroundColor;
-// setBackgroundColor();
 
 var clickX = []
 var clickY = []
@@ -182,11 +177,6 @@ function isCanvasBlank() {
     return true // All pixels are transparent/blank
 }
 
-// function setBackgroundColor() {
-//     const color = back_color.value;
-//     BG_CONTEXT.fillStyle = color;
-//     BG_CONTEXT.fillRect(0, 0, BG_CANVAS.width, BG_CANVAS.height);
-// }
 function initCursorPaint() {
     CANVAS.addEventListener("mousedown", mouseWins)
     CANVAS.addEventListener("touchstart", touchWins)

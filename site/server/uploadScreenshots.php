@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/screenshotHandler.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -24,13 +25,12 @@ if (isset($_FILES['screenshot'])) {
     }
 
     // Создаем папку, если не существует
-    $uploadDir = '../uploads/screenshots/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
+    if (!is_dir($UPLOAD_DIR)) {
+        mkdir($UPLOAD_DIR, 0777, true);
     }
 
     // Генерируем имя файла
-    $filePath = $uploadDir . $file['name'];
+    $filePath = $UPLOAD_DIR . $file['name'];
 
     // Перемещаем файл
     if (move_uploaded_file($file['tmp_name'], $filePath)) {

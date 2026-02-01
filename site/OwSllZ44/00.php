@@ -17,14 +17,10 @@ $uuid = createOrGenerateUUID();
         rel="icon"
         href="./images/ОПЛОДОТВОРЕНИЕ_LOD2.jpg"
         type="image/x-icon" />
-    <link
-        rel="shortcut icon"
-        href="./images/ОПЛОДОТВОРЕНИЕ_LOD2.jpg"
-        type="image/x-icon" />
 
     <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="./css/flash.css" />
     <link rel="stylesheet" href="./css/cursor.css" />
+    <link rel="stylesheet" href="./css/flash.css" />
 </head>
 
 <body>

@@ -12,11 +12,6 @@
             href="./images/НЕПРИКОСНОВЕННА.jpg"
             type="image/x-icon"
         />
-        <link
-            rel="shortcut icon"
-            href="./images/НЕПРИКОСНОВЕННА.jpg"
-            type="image/x-icon"
-        />
 
         <link rel="stylesheet" href="./css/style.css" />
         <link rel="stylesheet" href="./css/cursor.css" />
@@ -26,7 +21,7 @@
         <img
             id="img-cursor"
             class="z-6"
-            src="./images/icons8-3d-pointer-50_1.png"
+            src="./images/cursors/hand-close.png"
             alt="icon"
         />
         <div id="div-photo">
@@ -52,6 +47,12 @@
     
         */
 
+        #img-cursor {
+            position: absolute;
+            align-self: center;
+            height: 40%;
+        }
+
         #div-photo {
             position: absolute;
             width: 40vw;
@@ -72,7 +73,7 @@
 
         #btn-click {
             position: absolute;
-            width: 125%;
+            width: 140%;
             top: 105%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -81,6 +82,10 @@
         }
 
         @media (min-width: 768px) {
+            #img-cursor {
+                height: 48%;
+            }
+
             #div-photo {
                 width: 35vw;
             }
@@ -92,6 +97,10 @@
         }
 
         @media (min-width: 1024px) {
+            #img-cursor {
+                height: 74%;
+            }
+
             #div-photo {
                 width: 30vw;
             }
@@ -103,6 +112,10 @@
         }
 
         @media (min-width: 1280px) {
+            #img-cursor {
+                height: 62%;
+            }
+
             #div-photo {
                 width: 25vw;
             }
@@ -114,6 +127,10 @@
         }
 
         @media (min-width: 1440px) {
+            #img-cursor {
+                height: 74%;
+            }
+
             #div-photo {
                 width: 25vw;
             }
@@ -125,6 +142,10 @@
         }
 
         @media (min-width: 1600px) {
+            #img-cursor {
+                height: 66%;
+            }
+
             #div-photo {
                 width: 20vw;
             }
@@ -136,6 +157,10 @@
         }
 
         @media (min-width: 1920px) {
+            #img-cursor {
+                height: 78%;
+            }
+
             #div-photo {
                 width: 20vw;
             }
@@ -148,73 +173,11 @@
     </style>
 
     <script src="/src/jquery-3.7.1.min.js"></script>
+    <script src="./js/randomHandler.js"></script>
     <script type="text/javascript">
         $("body").hide();
         $(document).ready(function () {
             $("body").show();
         });
-
-        // Настройки физики движения
-        const settings = {
-            stiffness: 0.4, // Жесткость пружины (скорость реакции)
-            damping: 0.97, // Затухание (плавность остановки)
-            mass: 0.1, // Масса объекта
-            // maxSpeed: 0.1, // Максимальная скорость
-            maxSpeed: 50, // Максимальная скорость
-        };
-        const TIMEOUT = 0;
-        const ELEMENT_CURSOR = $("#img-cursor");
-        const Zone = {
-            NONE: 0,
-            PHOTO: 1,
-            BUTTON: 2,
-        };
-
-        var CurrentZone = Zone.NONE;
-
-        const element = document.getElementsByTagName("body")[0];
-        element.addEventListener("mousedown", function (e) {
-            if (e.which === 1) {
-                // 1 - левая кнопка
-                if (CurrentZone == Zone.BUTTON) {
-                    clickButton();
-                } else {
-                    number = getRandomInt(1, 3);
-                    flash([number, 0, number, 0, number, number, number]);
-                }
-            }
-        });
-
-        function updateCurrentZone() {
-            if (isPosInElementBoundary($("#btn-click"))) {
-                if (CurrentZone != Zone.BUTTON) {
-                    changeSrc(
-                        ELEMENT_CURSOR,
-                        "./images/icons8-hand-cursor-48_1.png",
-                    );
-                    CurrentZone = Zone.BUTTON;
-                    $("#btn-click").attr("disabled", false);
-                }
-            } else if (isPosInElementBoundary($("#img-portrait"))) {
-                if (CurrentZone != Zone.PHOTO) {
-                    changeSrc(
-                        ELEMENT_CURSOR,
-                        "./images/icons8-unavailable-48.png",
-                    );
-                    CurrentZone = Zone.PHOTO;
-                    $("#btn-click").attr("disabled", true);
-                }
-            } else {
-                if (CurrentZone != Zone.NONE) {
-                    changeSrc(
-                        ELEMENT_CURSOR,
-                        "./images/icons8-3d-pointer-50_1.png",
-                    );
-                    CurrentZone = Zone.NONE;
-                    $("#btn-click").attr("disabled", true);
-                }
-            }
-        }
     </script>
-    <script src="./js/cursorController.js"></script>
 </html>
