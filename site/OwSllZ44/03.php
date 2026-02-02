@@ -1,8 +1,11 @@
 <?php
 require_once __DIR__ . "/../server/screenshotHandler.php";
 $screeenshotPaths = getScreenshotNames("Портрет госпожи Лизы дель Джокондо_", "png");
-if (count($screeenshotPaths) > 2)
-    $screeenshotPaths = array_slice($screeenshotPaths, -2);
+$screenshotPath = null;
+if (count($screeenshotPaths) > 0) {
+    $randIndex = rand(0, count($screeenshotPaths) - 1);
+    $screenshotPath = $screeenshotPaths[$randIndex];
+}
 ?>
 
 <!doctype html>
@@ -23,7 +26,7 @@ if (count($screeenshotPaths) > 2)
 </head>
 
 <body>
-    <div id="div-settings" class="z-4">
+    <div id="div-settings" class="z-5">
         <label>
             <input type="color" id="pen_color" value="#000000" /><span
                 class="me-1">Fill</span>
@@ -44,9 +47,9 @@ if (count($screeenshotPaths) > 2)
 
     <div id="images-container">
         <?php
-        foreach ($screeenshotPaths as $key => $screenshotPath) { ?>
+        if ($screenshotPath != null) { ?>
             <img
-                class="img-blend not-allowed" style="z-index: <?= $key ?>"
+                class="img-blend not-allowed z-2"
                 src="<?= $screenshotPath ?>"
                 alt="ЗАПИСКА" />
         <?php }

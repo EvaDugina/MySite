@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>Неприкосновенна</title>
+        <title>Презрение</title>
 
         <link
             rel="icon"
@@ -27,15 +27,12 @@
             <img
                 id="portrait"
                 class="portrait not-allowed z-1"
-                src="./images/ПРИКОСНОВЕННА.png"
-                alt="НЕПРИКОСНОВЕННА"
+                src="./images/ПОЛЬЩЕНА.png"
+                alt="ПОЛЬЩЕНА"
             />
 
             <button id="btn-spittle" class="z-4" onclick="spittle()">
                 Плюнуть
-            </button>
-            <button id="btn-kiss" class="z-4" onclick="kiss()">
-                Поцеловать
             </button>
         </div>
     </body>
@@ -48,7 +45,7 @@
 
         #portrait {
             position: absolute;
-            width: 400%;
+            width: 105%;
             height: 100%;
             top: 50%;
             left: 55%;
@@ -58,87 +55,50 @@
 
         #btn-spittle {
             position: fixed;
-            top: 30.5%;
-            left: 45%;
-            font-size: var(--font-size);
-        }
-
-        #btn-kiss {
-            position: fixed;
-            top: 73%;
-            left: 36%;
+            top: 49%;
+            left: 55%;
             font-size: var(--font-size);
         }
 
         @media (min-width: 768px) {
             #portrait {
-                width: 400%;
+                width: 105%;
                 left: 50%;
-            }
-
-            #btn-kiss {
-                top: 74%;
-                left: 34%;
             }
         }
 
         @media (min-width: 1024px) {
             #portrait {
-                width: 350%;
+                width: 105%;
                 left: 50%;
-            }
-
-            #btn-kiss {
-                top: 74%;
-                left: 40%;
             }
         }
 
         @media (min-width: 1280px) {
             #portrait {
-                width: 300%;
+                width: 105%;
                 left: 50%;
-            }
-
-            #btn-kiss {
-                top: 74%;
-                left: 40%;
             }
         }
 
         @media (min-width: 1440px) {
             #portrait {
-                width: 250%;
+                width: 105%;
                 left: 50%;
-            }
-
-            #btn-kiss {
-                top: 74%;
-                left: 40%;
             }
         }
 
         @media (min-width: 1600px) {
             #portrait {
-                width: 200%;
+                width: 105%;
                 left: 50%;
-            }
-
-            #btn-kiss {
-                top: 74%;
-                left: 42%;
             }
         }
 
         @media (min-width: 1920px) {
             #portrait {
-                width: 200%;
+                width: 105%;
                 left: 50%;
-            }
-
-            #btn-kiss {
-                top: 74%;
-                left: 42%;
             }
         }
     </style>
@@ -156,7 +116,6 @@
         const $CURSOR = $("#img-cursor");
         const $PORTRAIT = $("#portrait");
         const $BUTTON_SPITTLE = $("#btn-spittle");
-        const $BUTTON_KISS = $("#btn-kiss");
 
         $(window).on("load", function () {
             initCursorController();
@@ -186,7 +145,6 @@
             BACK: 1,
             PORTRAIT: 2,
             BUTTON_SPITTLE: 3,
-            BUTTON_KISS: 4,
         };
 
         const ZONES_SETTINGS = {
@@ -218,13 +176,6 @@
                 handleOn: cursorOnButtonSpittle,
                 handleOff: cursorOffButtonSpittle,
             },
-            [Zone.BUTTON_KISS]: {
-                element: $BUTTON_KISS,
-                imgCursor: CURSOR_IMAGES.POINTER,
-                imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
-                handleOn: cursorOnButtonKiss,
-                handleOff: cursorOffButtonKiss,
-            },
         };
 
         function cursorOnButtonSpittle() {
@@ -235,16 +186,6 @@
         function cursorOffButtonSpittle() {
             $BUTTON_SPITTLE.removeClass("hovered");
             $BUTTON_SPITTLE.css("pointer-events", "none");
-        }
-
-        function cursorOnButtonKiss() {
-            $BUTTON_KISS.addClass("hovered");
-            $BUTTON_KISS.css("pointer-events", "all");
-        }
-
-        function cursorOffButtonKiss() {
-            $BUTTON_KISS.removeClass("hovered");
-            $BUTTON_KISS.css("pointer-events", "none");
         }
 
         //
@@ -259,20 +200,13 @@
                 // 1 - левая кнопка
                 if (isCursorZone(Zone.BUTTON_SPITTLE)) {
                     spittle();
-                } else if (isCursorZone(Zone.BUTTON_KISS)) {
-                    kiss();
                 }
             }
         }
 
         function spittle() {
             $BUTTON_SPITTLE.prop("disabled", true);
-            toUnizit();
-        }
-
-        function kiss() {
-            $BUTTON_KISS.prop("disabled", true);
-            toUnizitsya();
+            toEnd();
         }
     </script>
     <script src="./js/cursorController.js"></script>

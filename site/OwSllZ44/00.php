@@ -214,7 +214,6 @@ $uuid = createOrGenerateUUID();
 <script src="./js/portraitHandler.js"></script>
 <script src="./js/flashHandler.js"></script>
 <script src="./js/randomHandler.js"></script>
-<!-- <script src="./js/links/index.js"></script> -->
 <script type="text/javascript">
     const $BODY = $("body");
     $BODY.hide();
