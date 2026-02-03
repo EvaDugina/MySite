@@ -28,46 +28,35 @@ $uuid = createOrGenerateUUID();
         id="img-cursor"
         class="cursor not-allowed z-999"
         src="./images/cursors/none.png"
-        alt="icon" />
-    <div id="div-inviolable" class="background z-6 d-none"></div>
+        alt="icon"
+        crossorigin="anonymous" />
+    <div id="div-inviolable" class="background z-7 d-none"></div>
     <div id="div-photo" class="portrait-container">
 
         <div id="cursors-container">
         </div>
 
-        <button id="btn-click" class="not-allowed z-5">
+        <button id="btn-click" class="not-allowed z-6">
             неприкосновенна
         </button>
 
-        <div id="div-point" class="point z-4"></div>
+        <div id="div-point" class="point z-5"></div>
 
-        <div id="div-flash-4" class="flash-container z-3 d-none">
-            <img
-                id="img-flash-4"
-                class="flash not-allowed"
-                src="./images/УКРАЛИ.jpg"
-                alt="УКРАЛИ" />
-        </div>
-        <div id="div-flash-3" class="flash-container z-3 d-none">
-            <img
-                id="img-flash-3"
-                class="flash not-allowed"
-                src="./images/ОПЛОДОТВОРЕНИЕ.jpg"
-                alt="ОПЛОДОТВОРЕНИЕ" />
-        </div>
         <div id="div-flash-2" class="flash-container z-3 d-none">
             <img
                 id="img-flash-2"
                 class="flash not-allowed"
                 src="./images/04.jpg"
-                alt="ВСПЫШКА" />
+                alt="ВСПЫШКА"
+                crossorigin="anonymous" />
         </div>
         <div id="div-flash-1" class="flash-container z-3 d-none">
             <img
                 id="img-flash-1"
                 class="flash not-allowed"
                 src="./images/01_2.jpg"
-                alt="ВСПЫШКА" />
+                alt="ВСПЫШКА"
+                crossorigin="anonymous" />
         </div>
         <div id="div-flash-0" class="flash-container z-3 d-none">
             <div id="div-flash-0-back" class="flash-container"></div>
@@ -78,9 +67,12 @@ $uuid = createOrGenerateUUID();
             class="portrait not-allowed z-2 d-none"
             poster="./images/НЕПРИКОСНОВЕННА.png"
             preload="auto"
-            muted>
-            <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
-            <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
+            muted
+            crossorigin="anonymous">
+            <source src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).webm" type="video/webm" />
+            <source src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).mp4" type="video/mp4" />
+            <!-- <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
+            <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" /> -->
         </video>
 
         <img
@@ -167,10 +159,6 @@ $uuid = createOrGenerateUUID();
         transform: translate(-50%, -50%);
     }
 
-    #div-back {
-        opacity: 1;
-    }
-
     @media (min-width: 768px) {
         #div-photo {
             width: 50%;
@@ -209,6 +197,10 @@ $uuid = createOrGenerateUUID();
 </style>
 
 <script src="/src/jquery-3.7.1.min.js"></script>
+<script src="/src/html2canvas.min.js"></script>
+
+<script src="./js/links/00.js"></script>
+<script src="/js/screenshotHandler.js"></script>
 <script src="./js/deviceHandler.js"></script>
 <script src="./js/cursorHandler.js"></script>
 <script src="./js/portraitHandler.js"></script>
@@ -232,6 +224,9 @@ $uuid = createOrGenerateUUID();
     const UUID = '<?php echo $uuid; ?>';
 
     $(window).on("load", function() {
+
+        showVideo();
+
         if (typeof VISITORS_DATA !== 'undefined') {
             $.each(VISITORS_DATA, function(key, visitor) {
                 if (visitor.positionX == null || visitor.positionY == null)
@@ -270,7 +265,7 @@ $uuid = createOrGenerateUUID();
         stiffness: 0.4, // Жесткость пружины (скорость реакции)
         damping: 0.1, // Затухание (плавность остановки)
         mass: 0.1, // Масса объекта
-        maxSpeed: 0.5, // Максимальная скорость
+        maxSpeed: 1, // Максимальная скорость
         // maxSpeed: 10, // Максимальная скорость (для отладки)
     };
 
@@ -302,14 +297,14 @@ $uuid = createOrGenerateUUID();
             element: $PORTRAIT,
             imgCursor: CURSOR_IMAGES.POINTER,
             imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
-            handleOn: null,
+            handleOn: cursorOnPortrait,
             handleOff: null,
         },
         [Zone.BUTTON]: {
             element: $BUTTON,
             imgCursor: CURSOR_IMAGES.POINTER,
             imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
-            handleOn: null,
+            handleOn: cursorOnButton,
             handleOff: null,
         },
         [Zone.POINT]: {
@@ -328,116 +323,113 @@ $uuid = createOrGenerateUUID();
         },
     };
 
+    function cursorOnPortrait() {
+        $BUTTON.removeClass("hovered");
+        unclickButton()
+    }
+
+    function cursorOnButton() {
+        $BUTTON.addClass("hovered");
+    }
+
     function cursorOnPoint() {
         $BACKGROUND.removeClass("bg-blue");
         $BUTTON.addClass("hovered");
     }
 
     function cursorOffPoint() {
-        clearInterval(intervalId);
         $BACKGROUND.addClass("bg-blue");
         $BUTTON.removeClass("hovered");
+        unclickPoint()
     }
 
     //
     // CURSOR CLICK CONTROLL
     //
 
-    const LIMIT_CLICK = 3;
-    var countClick = 0;
-    var intervalId = null;
-    var IS_VULNERABLE = false;
+    var IS_POINT_CLICKED = false;
+    var IS_BOLNO = false
+
+    var intervalId = null
 
     async function handleLeftClickDown(event) {
 
-        updateLastClickPosition(event.clientX, event.clientY)
-
         if (isCursorZone(Zone.POINT)) {
-            if (!IS_VULNERABLE) {
-                if (isSensoreDevice()) {
-                    countClick += 1;
-                    if (countClick > LIMIT_CLICK) {
-                        qwerty();
-                    }
-                } else {
-                    clearInterval(intervalId);
-                    intervalId = setInterval(
-                        handleLeftClickDownDuration,
-                        100,
-                    );
-                }
+            if (!IS_POINT_CLICKED) {
+                // stopCursor()
+                intervalId = setInterval(
+                    handleVideoDuration,
+                    100,
+                );
+                IS_POINT_CLICKED = true;
             }
-            startFlashes();
+            clickPoint();
             return;
         } else if (isCursorZone(Zone.BUTTON)) {
             clickButton();
+        } else {
+
         }
+
+        updateLastClickPosition(event.clientX, event.clientY)
 
         return;
     }
 
     async function handleLeftClickUp(event) {
-        clearInterval(intervalId);
-    }
-
-    async function handleLeftClickDownDuration(event) {
-        let clickDuration = Date.now() - clickStartTime;
-        if (
-            isCursorZone(Zone.POINT) &&
-            clickDuration > 500 &&
-            !IS_VULNERABLE
-        ) {
-            qwerty();
+        if (isCursorZone(Zone.POINT)) {
+            unclickPoint()
+        } else if (isCursorZone(Zone.BUTTON)) {
+            unclickButton()
         }
     }
 
-    async function qwerty() {
-        IS_VULNERABLE = true;
-        clearInterval(intervalId);
-        stopCursor();
-        await clickPoint();
+    async function handleVideoDuration() {
+        if (getVideoCurrentTime() > 6) {
+            clearInterval(intervalId);
+            if (!isVideoPlaying())
+                playVideo()
+            IS_BOLNO = true
+            $BACKGROUND.addClass("d-none");
+            // $BUTTON.addClass("hovered");
+            // $BUTTON.attr("disabled", false);
+            // startFlashes()
+        }
     }
 
     async function clickPoint() {
-        $BUTTON.css("pointer-events", "none");
-
-        showVideo();
-
+        startFlashes();
+        $CURSORS_CONTAINER.addClass("d-none");
         $BUTTON.removeClass("hovered");
-        $BUTTON.removeClass("active");
         $BUTTON.attr("disabled", true);
+        if (IS_BOLNO) return
+        playVideo();
+    }
 
-        startVideo();
+    async function unclickPoint() {
+        $CURSORS_CONTAINER.removeClass("d-none");
+        $BUTTON.addClass("hovered");
+        $BUTTON.attr("disabled", false);
+        if (IS_BOLNO) return
+        pauseVideo();
     }
 
     async function clickButton() {
         $BUTTON.addClass("active");
-        setTimeout(() => {
-            $BUTTON.removeClass("active");
-        }, 300);
     }
 
-    async function startFlashes() {
-        let number = getRandomInt(1, 2);
-        await flash([...generateFlashArray(number)]);
+    async function unclickButton() {
+        $BUTTON.removeClass("active");
     }
 
-    function startVideo() {
-        playVideo();
-
+    async function startFlashes(n = 1) {
+        for (let i = 0; i < n; i++) {
+            let number = getRandomInt(1, 2);
+            await flash([...generateFlashArray(number)]);
+        }
         setTimeout(() => {
-            changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"]);
-        }, 3.75 * 1000);
-
-        setTimeout(() => {
-            $BUTTON.attr("disabled", false);
-        }, 22 * 1000);
-
-        setTimeout(() => {
-            $CURSORS_CONTAINER.addClass("d-none");
-            disableCursor();
-            changeCursorSrc(null);
-        }, 28 * 1000);
+            makeScreenshot()
+        }, 500);
     }
 
     // 
@@ -474,7 +466,34 @@ $uuid = createOrGenerateUUID();
 
     const VIDEO_SETTINGS = {
         $element: $("#video-portrait"),
+        onEnded: handleVideoEnded
     };
+
+    async function handleVideoEnded(event) {
+        disableCursor()
+        stopCursor()
+        startFlashes();
+        $BUTTON.attr("disabled", false);
+        $BUTTON.removeClass("hovered");
+        setTimeout(() => {
+            hideCursor()
+            $CURSORS_CONTAINER.removeClass("d-none");
+            startFlashes(3);
+        }, 1.5 * 1000);
+    }
+
+    // 
+    // SCREENSHOT CONTROLL
+    // 
+
+    const SCREENSHOT_SETTINGS = {
+        screenshot_name: "Неприкосновенна",
+        $canvas: null,
+    };
+
+    async function makeScreenshot() {
+        await captureScreenshot(false);
+    }
 </script>
 <script src="./js/cursorController.js"></script>
 <script src="./js/videoController.js"></script>

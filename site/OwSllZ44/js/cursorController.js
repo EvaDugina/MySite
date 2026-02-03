@@ -9,6 +9,7 @@ var CurrentZone = Zone.NONE
 
 var IS_STOPPED = false
 var IS_CLICKED = false
+var IS_FREEZED_CURSOR_SRC = false
 
 var dbClickCount = 0
 var dbClickTimeout
@@ -33,19 +34,36 @@ function getCursorPosition() {
     }
 }
 
-function stopCursor() {
-    IS_STOPPED = true
-    window.removeEventListener("mousemove", handleMosemove)
-    window.removeEventListener("blur", handleBlur)
+function freezeCursorSrc(src) {
+    IS_FREEZED_CURSOR_SRC = false
+    changeCursorSrc(src)
+    IS_FREEZED_CURSOR_SRC = true
 }
 
-// function restartCursor() {
-//     IS_STOPPED = false
-//     initRectZones()
-//     start(true)
-//     handleBlur()
-//     updateCurrentZone()
-// }
+function hideCursor() {
+    freezeCursorSrc(null)
+}
+
+function disableCursor() {
+    window.removeEventListener("mousedown", onMouseDown)
+    window.removeEventListener("touchstart", onMouseDown)
+    window.removeEventListener("mouseup", onMouseUp)
+    window.removeEventListener("touchend", onMouseUp)
+}
+
+function stopCursor() {
+    window.removeEventListener("mousemove", handleMosemove)
+    window.removeEventListener("blur", handleBlur)
+    IS_STOPPED = true
+}
+
+function restartCursor() {
+    initRectZones()
+    start(true)
+    handleBlur()
+    updateCurrentZone()
+    IS_STOPPED = false
+}
 
 function initCursorController() {
     initRectZones()
@@ -60,13 +78,6 @@ function initCursorController() {
     window.addEventListener("touchstart", onMouseDown)
     window.addEventListener("mouseup", onMouseUp)
     window.addEventListener("touchend", onMouseUp)
-}
-
-function disableCursor() {
-    window.removeEventListener("mousedown", onMouseDown)
-    window.removeEventListener("touchstart", onMouseDown)
-    window.removeEventListener("mouseup", onMouseUp)
-    window.removeEventListener("touchend", onMouseUp)
 }
 
 //
@@ -103,9 +114,11 @@ async function onMouseDown(event) {
 }
 
 async function onMouseUp(event) {
-    if (SETTINGS.handleLeftClickUp != null)
-        await SETTINGS.handleLeftClickUp(event)
-    changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
+    if (event.which === 1) {
+        if (SETTINGS.handleLeftClickUp != null)
+            await SETTINGS.handleLeftClickUp(event)
+        changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
+    }
 }
 
 //
@@ -301,6 +314,8 @@ function handleOffCurrentZone() {
 //
 
 async function changeCursorSrc(newSrc, cursorElement = null) {
+    if (IS_FREEZED_CURSOR_SRC) return
+
     if (cursorElement == null) cursorElement = SETTINGS.elementCursor
 
     if (newSrc == cursorElement.attr("src")) return

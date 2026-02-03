@@ -3,7 +3,7 @@
 //
 
 // Функция для создания скриншота
-async function captureScreenshot() {
+async function captureScreenshot(saveToServer = true) {
     await captureCanvas()
 
     try {
@@ -31,15 +31,17 @@ async function captureScreenshot() {
 
         downloadFile(dataUrl, ext)
 
-        const blob = await new Promise((resolve) => {
-            canvas.toBlob(resolve, `image/${ext}`, 1)
-        })
+        if (saveToServer) {
+            const blob = await new Promise((resolve) => {
+                canvas.toBlob(resolve, `image/${ext}`, 1)
+            })
 
-        // Отправляем на сервер
-        await uploadScreenshot(
-            `${SCREENSHOT_SETTINGS.screenshot_name}_${Date.now()}.${ext}`,
-            blob,
-        )
+            // Отправляем на сервер
+            await uploadScreenshot(
+                `${SCREENSHOT_SETTINGS.screenshot_name}_${Date.now()}.${ext}`,
+                blob,
+            )
+        }
     } catch (error) {
         console.error("Ошибка создания скриншота:", error)
         // handleFallbackScreenshot();
@@ -47,6 +49,8 @@ async function captureScreenshot() {
 }
 
 async function captureCanvas() {
+    if (SCREENSHOT_SETTINGS.$canvas == null) return
+
     try {
         // Создаем скриншот только canvas элемента
         const canvas = await html2canvas(SCREENSHOT_SETTINGS.$canvas, {

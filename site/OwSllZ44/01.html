@@ -25,6 +25,11 @@
         />
         <div id="div-photo" class="portrait-container">
             <div id="cursors-container"></div>
+
+            <button id="btn-click" class="not-allowed z-6">
+                неприкосновенна
+            </button>
+
             <video
                 id="video-portrait"
                 class="portrait not-allowed z-2"
@@ -32,8 +37,14 @@
                 preload="auto"
                 muted
             >
-                <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
-                <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" />
+                <source
+                    src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).webm"
+                    type="video/webm"
+                />
+                <source
+                    src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).mp4"
+                    type="video/mp4"
+                />
             </video>
         </div>
     </body>
@@ -41,6 +52,14 @@
     <style>
         #div-photo {
             width: 40%;
+        }
+
+        #btn-click {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 75%;
+            left: 50%;
+            font-size: var(--font-size-sm);
         }
 
         @media (min-width: 768px) {

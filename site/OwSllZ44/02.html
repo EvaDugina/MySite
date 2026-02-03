@@ -38,6 +38,7 @@
                 Поцеловать
             </button>
         </div>
+        <div id="div-back" class="background bg-blue z-3"></div>
     </body>
 
     <style>
@@ -157,6 +158,7 @@
         const $PORTRAIT = $("#portrait");
         const $BUTTON_SPITTLE = $("#btn-spittle");
         const $BUTTON_KISS = $("#btn-kiss");
+        const $BACKGROUND = $("#div-back");
 
         $(window).on("load", function () {
             initCursorController();
@@ -170,15 +172,15 @@
         const SETTINGS = {
             elementCursor: $CURSOR, // Объект курсора
             timeout: 0, // Задержка перед началом
-            startX: 0.5, // Начальная позиция от width по X
+            startX: 0.75, // Начальная позиция от width по X
             startY: 0.5, // Начальная позиция от рушпре по Y
-            handleLeftClickDown: handleLeftClickDown,
-            handleLeftClickUp: null,
+            handleLeftClickDown: null,
+            handleLeftClickUp: handleLeftClickUp,
             handleDoubleLeftClick: null,
             stiffness: 0.4, // Жесткость пружины (скорость реакции)
             damping: 0.1, // Затухание (плавность остановки)
             mass: 0.1, // Масса объекта
-            maxSpeed: 0.1, // Максимальная скорость
+            maxSpeed: 0.25, // Максимальная скорость
         };
 
         const Zone = {
@@ -228,51 +230,61 @@
         };
 
         function cursorOnButtonSpittle() {
+            $BACKGROUND.removeClass("bg-blue");
             $BUTTON_SPITTLE.addClass("hovered");
-            $BUTTON_SPITTLE.css("pointer-events", "all");
         }
 
         function cursorOffButtonSpittle() {
+            $BACKGROUND.addClass("bg-blue");
             $BUTTON_SPITTLE.removeClass("hovered");
-            $BUTTON_SPITTLE.css("pointer-events", "none");
         }
 
         function cursorOnButtonKiss() {
+            $BACKGROUND.removeClass("bg-blue");
             $BUTTON_KISS.addClass("hovered");
-            $BUTTON_KISS.css("pointer-events", "all");
         }
 
         function cursorOffButtonKiss() {
+            $BACKGROUND.addClass("bg-blue");
             $BUTTON_KISS.removeClass("hovered");
-            $BUTTON_KISS.css("pointer-events", "none");
         }
 
         //
         // CURSOR CLICK CONTROLL
         //
 
-        // const DURATION = 70 * 1000;
+        const DURATION = 1.5 * 1000;
 
-        async function handleLeftClickDown(e) {
-            changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
-            if (e.which === 1) {
-                // 1 - левая кнопка
-                if (isCursorZone(Zone.BUTTON_SPITTLE)) {
-                    spittle();
-                } else if (isCursorZone(Zone.BUTTON_KISS)) {
-                    kiss();
-                }
+        // async function handleLeftClickDown(e) {
+        //     changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursorClicked"]);
+        // }
+
+        async function handleLeftClickUp(event) {
+            if (isCursorZone(Zone.BUTTON_SPITTLE)) {
+                disableCursor();
+                stopCursor();
+                spittle();
+            } else if (isCursorZone(Zone.BUTTON_KISS)) {
+                disableCursor();
+                stopCursor();
+                kiss();
             }
         }
 
         function spittle() {
-            $BUTTON_SPITTLE.prop("disabled", true);
-            toUnizit();
+            $BUTTON_SPITTLE.addClass("active");
+            // $BUTTON_SPITTLE.prop("disabled", true);
+            setTimeout(() => {
+                toUnizit();
+            }, DURATION);
         }
 
         function kiss() {
-            $BUTTON_KISS.prop("disabled", true);
-            toUnizitsya();
+            $BUTTON_KISS.addClass("active");
+            // $BUTTON_KISS.prop("disabled", true);
+            setTimeout(() => {
+                toUnizitsya();
+            }, DURATION);
         }
     </script>
     <script src="./js/cursorController.js"></script>

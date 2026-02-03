@@ -3,6 +3,8 @@ const CURSOR_IMAGES = {
     DEFAULT: "./images/cursors/default.png",
     POINTER: "./images/cursors/pointer.png",
     POINTER_CLICKED: "./images/cursors/pointer-clicked.png",
+    HAND_OPEN: "./images/cursors/hand-open.png",
+    HAND_CLOSE: "./images/cursors/hand-close.png",
     UNAVAILABLE: "./images/cursors/unavailable.png",
 }
 
@@ -18,6 +20,7 @@ function createCursorElse($cursorsContainer, positionX, positionY) {
         },
         src: "./images/cursors/pointer.png",
         alt: "муха",
+        // crossorigin: "anonymous",
     }).appendTo($cursorsContainer)
 
     $cursorElseElements.push($element)
