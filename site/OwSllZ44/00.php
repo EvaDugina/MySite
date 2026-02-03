@@ -199,7 +199,6 @@ $uuid = createOrGenerateUUID();
 <script src="/src/jquery-3.7.1.min.js"></script>
 <script src="/src/html2canvas.min.js"></script>
 
-<script src="./js/links/00.js"></script>
 <script src="/js/screenshotHandler.js"></script>
 <script src="./js/deviceHandler.js"></script>
 <script src="./js/cursorHandler.js"></script>
@@ -266,7 +265,6 @@ $uuid = createOrGenerateUUID();
         damping: 0.1, // Затухание (плавность остановки)
         mass: 0.1, // Масса объекта
         maxSpeed: 1, // Максимальная скорость
-        // maxSpeed: 10, // Максимальная скорость (для отладки)
     };
 
     const Zone = {
