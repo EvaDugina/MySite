@@ -14,8 +14,8 @@ $returnJson = array(
 );
 
 if (isset($_POST['flag-updateVisitorData'])) {
-    if (isset($_POST['uuid']) && isset($_POST['positionX']) && isset($_POST['positionY'])) {
-        updateVisitorPosition($_POST['uuid'], (float)$_POST['positionX'], (float)$_POST['positionY']);
+    if (isset($_POST['uuid']) && isset($_POST['positionX']) && isset($_POST['positionY']) && isset($_POST['src'])) {
+        updateVisitorPosition($_POST['uuid'], (float)$_POST['positionX'], (float)$_POST['positionY'], $_POST['src']);
         $returnJson['exitCode'] = 0;
     }
     $returnJson['exitCode'] = 1;

@@ -221,7 +221,7 @@ $uuid = createOrGenerateUUID();
                     }
                     return
                 }
-                createCursorElse($CURSORS_CONTAINER, visitor.positionX, visitor.positionY)
+                createCursorElse($CURSORS_CONTAINER, visitor.positionX, visitor.positionY, visitor.src)
             });
         }
 
@@ -322,7 +322,7 @@ $uuid = createOrGenerateUUID();
 
     async function handleLeftClickDown(event) {
 
-        updateLastClickPosition(event.clientX, event.clientY)
+        updateLastClickPosition()
         if (isCursorZone(Zone.BUTTON)) {
             clickButton();
         }
@@ -376,7 +376,7 @@ $uuid = createOrGenerateUUID();
     // CURSOR ELSE CONTROLL
     //
 
-    function updateLastClickPosition(clientX, clientY) {
+    function updateLastClickPosition() {
 
         let cursorPosition = getCursorPosition()
         let percents = getCursorPositionRelativePortrait(
@@ -385,7 +385,7 @@ $uuid = createOrGenerateUUID();
             $PORTRAIT,
         );
 
-        ajaxSaveLastCursorPosition(UUID, percents.x, percents.y)
+        ajaxSaveLastCursorPosition(UUID, percents.x, percents.y, getCursorSrc())
     }
 
     //
@@ -415,6 +415,7 @@ $uuid = createOrGenerateUUID();
         setTimeout(() => {
             stopCursor()
             disableCursor()
+            updateLastClickPosition()
             $BUTTON.attr("disabled", false);
             startFlashes(3);
             setTimeout(() => {

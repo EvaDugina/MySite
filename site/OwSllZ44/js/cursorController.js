@@ -6,6 +6,7 @@ var velocityX = 0
 var velocityY = 0
 
 var CurrentZone = Zone.NONE
+var currentCusorSrc = null
 
 var IS_STOPPED = false
 var IS_CLICKED = false
@@ -32,6 +33,10 @@ function getCursorPosition() {
         x: currentX,
         y: currentY,
     }
+}
+
+function getCursorSrc() {
+    return currentCusorSrc
 }
 
 function freezeCursorSrc(src) {
@@ -327,6 +332,7 @@ async function changeCursorSrc(newSrc, cursorElement = null) {
     cursorElement.fadeOut(durationAnimation, function () {
         // Change the src attribute after the fade out is complete
         cursorElement.attr("src", newSrc)
+        currentCusorSrc = newSrc
 
         // Wait for the new image to load before fading it in
         // Use .one('load', ...) to ensure the callback runs only once

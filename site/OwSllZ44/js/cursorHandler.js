@@ -10,7 +10,9 @@ const CURSOR_IMAGES = {
 
 var $cursorElseElements = []
 
-function createCursorElse($cursorsContainer, positionX, positionY) {
+function createCursorElse($cursorsContainer, positionX, positionY, src) {
+    if (src == null || !Object.values(CURSOR_IMAGES).includes(src))
+        src = CURSOR_IMAGES.POINTER
     let $element = $("<img>", {
         class: "cursor cursor-else not-allowed z-998",
         css: {
@@ -18,7 +20,7 @@ function createCursorElse($cursorsContainer, positionX, positionY) {
             left: positionX + "%",
             top: positionY + "%",
         },
-        src: "./images/cursors/pointer.png",
+        src: src,
         alt: "муха",
         // crossorigin: "anonymous",
     }).appendTo($cursorsContainer)
@@ -56,7 +58,7 @@ function getCursorPositionRelativePortrait(cursorX, cursorY, $portrait) {
     }
 }
 
-async function ajaxSaveLastCursorPosition(uuid, percentX, percentY) {
+async function ajaxSaveLastCursorPosition(uuid, percentX, percentY, cursorSrc) {
     if (percentX == null || percentY == null) return
 
     const formData = new FormData()
@@ -66,6 +68,7 @@ async function ajaxSaveLastCursorPosition(uuid, percentX, percentY) {
     formData.append("uuid", uuid)
     formData.append("positionX", percentX)
     formData.append("positionY", percentY)
+    formData.append("src", cursorSrc)
 
     let response = null
     try {

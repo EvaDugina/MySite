@@ -38,7 +38,7 @@ function createOrGenerateUUID(): string
     return $visitorId;
 }
 
-function updateVisitorPosition(string $visitorId, float $positionX, float $positionY)
+function updateVisitorPosition(string $visitorId, float $positionX, float $positionY, string $src)
 {
     global $dataFileName;
 
@@ -51,12 +51,14 @@ function updateVisitorPosition(string $visitorId, float $positionX, float $posit
             'positionY' => $positionY,
             'created' => date('Y-m-d H:i:s'),
             'last_visit' => date('Y-m-d H:i:s'),
+            'src' => $src
         ];
     } else {
         // Существующий - обновляем
         $data[$visitorId]['positionX'] = $positionX;
         $data[$visitorId]['positionY'] = $positionY;
         $data[$visitorId]['last_visit'] = date('Y-m-d H:i:s');
+        $data[$visitorId]['src'] = $src;
     }
 
     writeFileSafe($dataFileName, json_encode($data, JSON_PRETTY_PRINT));
