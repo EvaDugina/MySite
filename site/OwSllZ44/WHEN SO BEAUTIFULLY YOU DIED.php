@@ -362,15 +362,10 @@ $uuid = createOrGenerateUUID();
     }
 
     async function startFlashes(n = 1) {
-        // let intervalCursorsId = setInterval(clickCursorsElse, 400);
         for (let i = 0; i < n; i++) {
             let number = getRandomInt(1, 2);
-
-            $CURSORS_CONTAINER.removeClass("d-none")
             await flash([...generateFlashArray(number)]);
-            $CURSORS_CONTAINER.addClass("d-none")
         }
-        // clearInterval(intervalCursorsId)
 
         setTimeout(() => {
             makeScreenshot()
@@ -415,13 +410,16 @@ $uuid = createOrGenerateUUID();
     };
 
     async function handleVideoEnded(event) {
-        // stopCursor()
-        // disableCursor()
         startFlashes();
+        // setInterval(clickCursorsElse, 600);
         setTimeout(() => {
-            // hideCursor()
+            stopCursor()
+            disableCursor()
             $BUTTON.attr("disabled", false);
             startFlashes(3);
+            setTimeout(() => {
+                $CURSORS_CONTAINER.removeClass("d-none")
+            }, 500);
         }, 2 * 1000);
     }
 
