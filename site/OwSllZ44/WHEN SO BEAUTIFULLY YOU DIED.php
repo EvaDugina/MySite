@@ -318,6 +318,7 @@ $uuid = createOrGenerateUUID();
     //
 
     var intervalId = null
+    var currentStage = 0;
 
     async function handleLeftClickDown(event) {
 
@@ -336,15 +337,17 @@ $uuid = createOrGenerateUUID();
     }
 
     async function handleVideoDuration() {
-        if (getVideoCurrentTime() > 4) {
+        if (getVideoCurrentTime() > 5 && currentStage == 2) {
+            currentStage += 1
             clearInterval(intervalId);
             startFlashes()
-            // $BUTTON.attr("disabled", false);
-        } else if (getVideoCurrentTime() > 2) {
-            if (!$BUTTON.attr("disabled")) {
-                $BUTTON.attr("disabled", true);
-                startFlashes()
-            }
+        } else if (getVideoCurrentTime() > 3 && currentStage == 1) {
+            currentStage += 1
+            $BUTTON.attr("disabled", true);
+            startFlashes()
+        } else if (getVideoCurrentTime() > 1 && currentStage == 0) {
+            currentStage += 1
+            $BUTTON.attr("disabled", true);
         }
     }
 
@@ -412,11 +415,11 @@ $uuid = createOrGenerateUUID();
     };
 
     async function handleVideoEnded(event) {
-        stopCursor()
-        disableCursor()
+        // stopCursor()
+        // disableCursor()
         startFlashes();
         setTimeout(() => {
-            hideCursor()
+            // hideCursor()
             $BUTTON.attr("disabled", false);
             startFlashes(3);
         }, 2 * 1000);
@@ -427,7 +430,7 @@ $uuid = createOrGenerateUUID();
     //
 
     const SCREENSHOT_SETTINGS = {
-        screenshot_name: "Неприкосновенна",
+        screenshot_name: "Когда ты так прекрасно умирала, я",
         $canvas: null,
     };
 
