@@ -9,8 +9,8 @@ button {
 
 .cursor {
   position: fixed;
-  width: 30px;
-  height: 30px;
+  width: 1.9rem;
+  height: 1.9rem;
   pointer-events: "none";
   will-change: transform; /* Для оптимизации анимации */
 }

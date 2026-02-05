@@ -193,7 +193,7 @@ $uuid = createOrGenerateUUID();
     const $BODY = $("body");
     $BODY.hide();
     $(document).ready(async function() {
-        await showVideo();
+        showVideo();
         $BODY.show();
     });
 
@@ -226,15 +226,6 @@ $uuid = createOrGenerateUUID();
         }
 
         initCursorController()
-
-        setTimeout(() => {
-            playVideo()
-            intervalId = setInterval(
-                handleVideoDuration,
-                100,
-            );
-            startFlashes()
-        }, 1 * 1000);
     });
 
     //
@@ -248,7 +239,7 @@ $uuid = createOrGenerateUUID();
         startX: 0.9, // Начальная позиция от width по X
         startY: 0.25, // Начальная позиция от рушпре по Y
         handleLeftClickDown: handleLeftClickDown,
-        handleLeftClickUp: handleLeftClickUp,
+        handleLeftClickUp: null,
         handleDoubleLeftClick: null,
         stiffness: 0.4, // Жесткость пружины (скорость реакции)
         damping: 0.1, // Затухание (плавность остановки)
@@ -303,13 +294,10 @@ $uuid = createOrGenerateUUID();
     };
 
     function cursorOffButton() {
-        // $BACKGROUND.addClass("bg-blue");
         $BUTTON.removeClass("hovered");
-        unclickButton()
     }
 
     function cursorOnButton() {
-        // $BACKGROUND.removeClass("bg-blue");
         $BUTTON.addClass("hovered");
     }
 
@@ -323,17 +311,16 @@ $uuid = createOrGenerateUUID();
     async function handleLeftClickDown(event) {
 
         updateLastClickPosition()
-        if (isCursorZone(Zone.BUTTON)) {
-            clickButton();
+        if ((isCursorZone(Zone.PORTRAIT) || isCursorZone(Zone.BUTTON)) && intervalId == null) {
+            playVideo()
+            intervalId = setInterval(
+                handleVideoDuration,
+                100,
+            );
+            startFlashes()
         }
 
         return;
-    }
-
-    async function handleLeftClickUp(event) {
-        if (isCursorZone(Zone.BUTTON)) {
-            unclickButton()
-        }
     }
 
     async function handleVideoDuration() {
@@ -349,16 +336,6 @@ $uuid = createOrGenerateUUID();
             currentStage += 1
             $BUTTON.attr("disabled", true);
         }
-    }
-
-    async function clickButton() {
-        if ($BUTTON.attr("disabled")) return
-        $BUTTON.addClass("active");
-    }
-
-    async function unclickButton() {
-        if ($BUTTON.attr("disabled")) return
-        $BUTTON.removeClass("active");
     }
 
     async function startFlashes(n = 1) {

@@ -1,3 +1,5 @@
+const IS_SENSORE_DEVICE = isSensoreDevice()
+
 var targetX = 0
 var targetY = 0
 var currentX = 0
@@ -51,8 +53,8 @@ function hideCursor() {
 
 function disableCursor() {
     window.removeEventListener("mousedown", onMouseDown)
-    window.removeEventListener("touchstart", onMouseDown)
     window.removeEventListener("mouseup", onMouseUp)
+    window.removeEventListener("touchstart", onMouseDown)
     window.removeEventListener("touchend", onMouseUp)
 }
 
@@ -104,13 +106,13 @@ async function onMouseDown(event) {
                 // Если не было второго клика за 300мс
                 dbClickCount = 0
             }, 300)
-            if (SETTINGS.handleLeftClickDown != null)
+            if (SETTINGS.handleLeftClickDown !== null)
                 await SETTINGS.handleLeftClickDown(event)
         } else if (dbClickCount === 2) {
             // Второй клик - это двойной клик
             clearTimeout(dbClickTimeout)
-            if (SETTINGS.handleDbLeftClick != null)
-                SETTINGS.handleDbLeftClick(event)
+            if (SETTINGS.handleDoubleLeftClick !== null)
+                SETTINGS.handleDoubleLeftClick(event)
             dbClickCount = 0
         }
 
@@ -120,9 +122,13 @@ async function onMouseDown(event) {
 
 async function onMouseUp(event) {
     if (event.which === 1) {
-        if (SETTINGS.handleLeftClickUp != null)
-            await SETTINGS.handleLeftClickUp(event)
-        changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
+        let timeout = 0
+        if (IS_SENSORE_DEVICE) timeout = 200
+        setTimeout(async () => {
+            if (SETTINGS.handleLeftClickUp !== null)
+                await SETTINGS.handleLeftClickUp(event)
+            changeCursorSrc(ZONES_SETTINGS[CurrentZone]["imgCursor"])
+        }, timeout)
     }
 }
 
@@ -134,7 +140,7 @@ async function onMouseUp(event) {
 function initRectZones() {
     RectZones = new Map()
     Object.entries(Zone).forEach(([key, value]) => {
-        if (ZONES_SETTINGS[value]["element"] != null)
+        if (ZONES_SETTINGS[value]["element"] !== null)
             RectZones.set(
                 value,
                 ZONES_SETTINGS[value]["element"][0].getBoundingClientRect(),
@@ -144,7 +150,7 @@ function initRectZones() {
 
 // Инициализация начальной позиции
 function initPosition() {
-    if (SETTINGS.startX != null && SETTINGS.startY != null) {
+    if (SETTINGS.startX !== null && SETTINGS.startY !== null) {
         currentX = targetX = window.innerWidth * SETTINGS.startX
         currentY = targetY = window.innerHeight * SETTINGS.startY
 
@@ -183,7 +189,7 @@ function handleMosemove(e) {
     targetX = e.clientX
     targetY = e.clientY
 
-    if (currentX == null || currentY == null) {
+    if (currentX === null || currentY === null) {
         currentX = targetX
         currentY = targetY
     }
@@ -209,9 +215,9 @@ function handleBlur() {
 function updatePosition() {
     if (IS_STOPPED) return
     if (
-        (currentX == null || currentY == null) &&
-        targetX == 0 &&
-        targetY == 0
+        (currentX === null || currentY === null) &&
+        targetX === 0 &&
+        targetY === 0
     ) {
         animationId = requestAnimationFrame(updatePosition)
         return
@@ -291,7 +297,7 @@ function updateCurrentZone() {
 
 function isCursorInZone(zoneType) {
     if (zoneType == Zone.NONE) return true
-    if (currentX == null || currentY == null) return false
+    if (currentX === null || currentY === null) return false
 
     let radius = 0
     let rect = RectZones.get(zoneType)
@@ -305,12 +311,12 @@ function isCursorInZone(zoneType) {
 }
 
 function handleOnCurrentZone() {
-    if (ZONES_SETTINGS[CurrentZone]["handleOn"] == null) return
+    if (ZONES_SETTINGS[CurrentZone]["handleOn"] === null) return
     ZONES_SETTINGS[CurrentZone]["handleOn"]()
 }
 
 function handleOffCurrentZone() {
-    if (ZONES_SETTINGS[CurrentZone]["handleOff"] == null) return
+    if (ZONES_SETTINGS[CurrentZone]["handleOff"] === null) return
     ZONES_SETTINGS[CurrentZone]["handleOff"]()
 }
 
@@ -321,10 +327,10 @@ function handleOffCurrentZone() {
 async function changeCursorSrc(newSrc, cursorElement = null) {
     if (IS_FREEZED_CURSOR_SRC) return
 
-    if (cursorElement == null) cursorElement = SETTINGS.elementCursor
+    if (cursorElement === null) cursorElement = SETTINGS.elementCursor
 
-    if (newSrc == cursorElement.attr("src")) return
-    else if (newSrc == null) newSrc = CURSOR_IMAGES.NONE
+    if (newSrc === cursorElement.attr("src")) return
+    else if (newSrc === null) newSrc = CURSOR_IMAGES.NONE
 
     let durationAnimation = 0
 
