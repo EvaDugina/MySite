@@ -16,7 +16,6 @@ function getVisitorPositions(): array | null
     foreach ($data as $key => $value) {
         unset($data[$key]['created']);
         unset($data[$key]['last_visit']);
-        unset($data[$key]['count_click']);
     }
 
     return $data;
@@ -52,14 +51,12 @@ function updateVisitorPosition(string $visitorId, float $positionX, float $posit
             'positionY' => $positionY,
             'created' => date('Y-m-d H:i:s'),
             'last_visit' => date('Y-m-d H:i:s'),
-            'count_click' => 1,
         ];
     } else {
         // Существующий - обновляем
         $data[$visitorId]['positionX'] = $positionX;
         $data[$visitorId]['positionY'] = $positionY;
         $data[$visitorId]['last_visit'] = date('Y-m-d H:i:s');
-        $data[$visitorId]['count_click']++;
     }
 
     writeFileSafe($dataFileName, json_encode($data, JSON_PRETTY_PRINT));

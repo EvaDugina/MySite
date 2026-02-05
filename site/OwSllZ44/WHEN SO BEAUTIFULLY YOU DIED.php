@@ -11,7 +11,7 @@ $uuid = createOrGenerateUUID();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Неприкосновенна</title>
+    <title>Когда ты так прекрасно умирала</title>
 
     <link
         rel="icon"
@@ -32,15 +32,11 @@ $uuid = createOrGenerateUUID();
         crossorigin="anonymous" />
     <div id="div-inviolable" class="background z-7 d-none"></div>
     <div id="div-photo" class="portrait-container">
-
-        <div id="cursors-container">
-        </div>
+        <div id="cursors-container" class="d-none"></div>
 
         <button id="btn-click" class="not-allowed z-6">
             неприкосновенна
         </button>
-
-        <div id="div-point" class="point z-5"></div>
 
         <div id="div-flash-2" class="flash-container z-3 d-none">
             <img
@@ -69,10 +65,12 @@ $uuid = createOrGenerateUUID();
             preload="auto"
             muted
             crossorigin="anonymous">
-            <source src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).webm" type="video/webm" />
-            <source src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).mp4" type="video/mp4" />
-            <!-- <source src="./videos/ЛИЗА ПЛАЧЕТ.webm" type="video/webm" />
-            <source src="./videos/ЛИЗА ПЛАЧЕТ.mp4" type="video/mp4" /> -->
+            <source
+                src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).webm"
+                type="video/webm" />
+            <source
+                src="./videos/ЛИЗА ПЛАЧЕТ (22 секунды).mp4"
+                type="video/mp4" />
         </video>
 
         <img
@@ -82,7 +80,7 @@ $uuid = createOrGenerateUUID();
             alt="НЕПРИКОСНОВЕННА" />
     </div>
 
-    <div id="div-back" class="background bg-blue z-3"></div>
+    <div id="div-back" class="background bg-blue z-3 d-none"></div>
 </body>
 
 <style>
@@ -126,7 +124,7 @@ $uuid = createOrGenerateUUID();
     /*
 
 
-        */
+    */
 
     #div-photo {
         width: 75%;
@@ -143,20 +141,6 @@ $uuid = createOrGenerateUUID();
         top: 75%;
         left: 50%;
         font-size: var(--font-size-sm);
-    }
-
-    #div-point {
-        position: absolute;
-        top: 75.4%;
-        left: 54.5%;
-        width: 3px;
-        height: 3px;
-        display: block;
-        margin: 0;
-        align-self: center;
-        background-color: red;
-        opacity: 0;
-        transform: translate(-50%, -50%);
     }
 
     @media (min-width: 768px) {
@@ -208,23 +192,20 @@ $uuid = createOrGenerateUUID();
 <script type="text/javascript">
     const $BODY = $("body");
     $BODY.hide();
-    $(document).ready(function() {
+    $(document).ready(async function() {
+        await showVideo();
         $BODY.show();
     });
 
     const $CURSORS_CONTAINER = $("#cursors-container");
     const $PORTRAIT = $("#img-portrait");
     const $BUTTON = $("#btn-click");
-    const $POINT = $("#div-point");
     const $INVOIOLABLE = $("#div-inviolable");
-    const $BACKGROUND = $("#div-back");
 
     const VISITORS_DATA = <?php echo json_encode($visitorsJSON); ?>;
     const UUID = '<?php echo $uuid; ?>';
 
     $(window).on("load", function() {
-
-        showVideo();
 
         if (typeof VISITORS_DATA !== 'undefined') {
             $.each(VISITORS_DATA, function(key, visitor) {
@@ -234,7 +215,7 @@ $uuid = createOrGenerateUUID();
                     let portraitMetrics = getPortraitMetrics($PORTRAIT)
                     let startX = (visitor.positionX / 100 * portraitMetrics['width'] + portraitMetrics['leftX']) / window.innerWidth
                     let startY = (visitor.positionY / 100 * portraitMetrics['height'] + portraitMetrics['topY']) / window.innerHeight
-                    if (startX < 1 && startY < 1) {
+                    if (startX > 0 && startX < 1 && startY > 0 && startY < 1) {
                         SETTINGS.startX = startX
                         SETTINGS.startY = startY
                     }
@@ -243,9 +224,17 @@ $uuid = createOrGenerateUUID();
                 createCursorElse($CURSORS_CONTAINER, visitor.positionX, visitor.positionY)
             });
         }
-        setInterval(clickCursorsElse, 500);
 
         initCursorController()
+
+        setTimeout(() => {
+            playVideo()
+            intervalId = setInterval(
+                handleVideoDuration,
+                100,
+            );
+            startFlashes()
+        }, 1 * 1000);
     });
 
     //
@@ -256,8 +245,8 @@ $uuid = createOrGenerateUUID();
     const SETTINGS = {
         elementCursor: $("#img-cursor"), // Объект курсора
         timeout: 0, // Задержка перед началом
-        startX: null, // Начальная позиция от width по X
-        startY: null, // Начальная позиция от рушпре по Y
+        startX: 0.9, // Начальная позиция от width по X
+        startY: 0.25, // Начальная позиция от рушпре по Y
         handleLeftClickDown: handleLeftClickDown,
         handleLeftClickUp: handleLeftClickUp,
         handleDoubleLeftClick: null,
@@ -272,7 +261,6 @@ $uuid = createOrGenerateUUID();
         BACK: 1,
         PORTRAIT: 2,
         BUTTON: 3,
-        POINT: 4,
         INVOIOLABLE: 5,
     };
 
@@ -295,7 +283,7 @@ $uuid = createOrGenerateUUID();
             element: $PORTRAIT,
             imgCursor: CURSOR_IMAGES.POINTER,
             imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
-            handleOn: cursorOnPortrait,
+            handleOn: null,
             handleOff: null,
         },
         [Zone.BUTTON]: {
@@ -303,14 +291,7 @@ $uuid = createOrGenerateUUID();
             imgCursor: CURSOR_IMAGES.POINTER,
             imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
             handleOn: cursorOnButton,
-            handleOff: null,
-        },
-        [Zone.POINT]: {
-            element: $POINT,
-            imgCursor: CURSOR_IMAGES.POINTER,
-            imgCursorClicked: CURSOR_IMAGES.POINTER_CLICKED,
-            handleOn: cursorOnPoint,
-            handleOff: cursorOffPoint,
+            handleOff: cursorOffButton,
         },
         [Zone.INVOIOLABLE]: {
             element: $INVOIOLABLE,
@@ -321,7 +302,7 @@ $uuid = createOrGenerateUUID();
         },
     };
 
-    function cursorOnPortrait() {
+    function cursorOffButton() {
         // $BACKGROUND.addClass("bg-blue");
         $BUTTON.removeClass("hovered");
         unclickButton()
@@ -332,108 +313,70 @@ $uuid = createOrGenerateUUID();
         $BUTTON.addClass("hovered");
     }
 
-    function cursorOnPoint() {
-        $BACKGROUND.removeClass("bg-blue");
-        $BUTTON.addClass("hovered");
-    }
-
-    function cursorOffPoint() {
-        $BACKGROUND.addClass("bg-blue");
-        $BUTTON.removeClass("hovered");
-        unclickPoint()
-    }
-
     //
     // CURSOR CLICK CONTROLL
     //
-
-    var IS_POINT_CLICKED = false;
-    var IS_BOLNO = false
 
     var intervalId = null
 
     async function handleLeftClickDown(event) {
 
-        if (isCursorZone(Zone.POINT)) {
-            if (!IS_POINT_CLICKED) {
-                // stopCursor()
-                intervalId = setInterval(
-                    handleVideoDuration,
-                    100,
-                );
-                IS_POINT_CLICKED = true;
-            }
-            clickPoint();
-            return;
-        } else if (isCursorZone(Zone.BUTTON)) {
+        updateLastClickPosition(event.clientX, event.clientY)
+        if (isCursorZone(Zone.BUTTON)) {
             clickButton();
-        } else {
-            updateLastClickPosition(event.clientX, event.clientY)
         }
 
         return;
     }
 
     async function handleLeftClickUp(event) {
-        if (isCursorZone(Zone.POINT)) {
-            unclickPoint()
-        } else if (isCursorZone(Zone.BUTTON)) {
+        if (isCursorZone(Zone.BUTTON)) {
             unclickButton()
         }
     }
 
     async function handleVideoDuration() {
-        if (getVideoCurrentTime() > 2) {
+        if (getVideoCurrentTime() > 4) {
             clearInterval(intervalId);
-            if (!isVideoPlaying())
-                playVideo()
-            IS_BOLNO = true
-            $BACKGROUND.addClass("d-none");
-            $BUTTON.attr("disabled", true);
             startFlashes()
+            // $BUTTON.attr("disabled", false);
+        } else if (getVideoCurrentTime() > 2) {
+            if (!$BUTTON.attr("disabled")) {
+                $BUTTON.attr("disabled", true);
+                startFlashes()
+            }
         }
     }
 
-    async function clickPoint() {
-        startFlashes();
-        $CURSORS_CONTAINER.addClass("d-none");
-        if (IS_BOLNO) return
-        $BUTTON.removeClass("hovered");
-        $BUTTON.attr("disabled", true);
-        playVideo();
-    }
-
-    async function unclickPoint() {
-        $CURSORS_CONTAINER.removeClass("d-none");
-        if (IS_BOLNO) return
-        $BUTTON.addClass("hovered");
-        $BUTTON.attr("disabled", false);
-        pauseVideo();
-    }
-
     async function clickButton() {
-        if (IS_BOLNO) return
+        if ($BUTTON.attr("disabled")) return
         $BUTTON.addClass("active");
     }
 
     async function unclickButton() {
-        if (IS_BOLNO) return
+        if ($BUTTON.attr("disabled")) return
         $BUTTON.removeClass("active");
     }
 
     async function startFlashes(n = 1) {
+        // let intervalCursorsId = setInterval(clickCursorsElse, 400);
         for (let i = 0; i < n; i++) {
             let number = getRandomInt(1, 2);
+
+            $CURSORS_CONTAINER.removeClass("d-none")
             await flash([...generateFlashArray(number)]);
+            $CURSORS_CONTAINER.addClass("d-none")
         }
+        // clearInterval(intervalCursorsId)
+
         setTimeout(() => {
             makeScreenshot()
         }, 500);
     }
 
-    // 
+    //
     // CURSOR ELSE CONTROLL
-    // 
+    //
 
     function updateLastClickPosition(clientX, clientY) {
 
@@ -469,19 +412,19 @@ $uuid = createOrGenerateUUID();
     };
 
     async function handleVideoEnded(event) {
-        disableCursor()
         stopCursor()
+        disableCursor()
         startFlashes();
-        $BUTTON.attr("disabled", false);
-        $BUTTON.removeClass("hovered");
         setTimeout(() => {
+            hideCursor()
+            $BUTTON.attr("disabled", false);
             startFlashes(3);
-        }, 1.5 * 1000);
+        }, 2 * 1000);
     }
 
-    // 
+    //
     // SCREENSHOT CONTROLL
-    // 
+    //
 
     const SCREENSHOT_SETTINGS = {
         screenshot_name: "Неприкосновенна",
